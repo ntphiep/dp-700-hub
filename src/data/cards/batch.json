@@ -1,0 +1,209 @@
+[
+  {
+    "id": "bat-c01",
+    "front": "Watermark-based incremental copy cannot detect ...",
+    "back": "Rows deleted in the source; use CDC to capture deletes. Watermark chỉ bắt insert và update.",
+    "ref": {
+      "label": "Incremental copy in Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+    }
+  },
+  {
+    "id": "bat-c02",
+    "front": "Copy job watermark column types",
+    "back": "ROWVERSION, datetime, date, integer, and string interpreted as datetime. Cột khác thì cast trong Query của Copy job.",
+    "ref": {
+      "label": "Incremental copy in Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+    }
+  },
+  {
+    "id": "bat-c03",
+    "front": "Copy job: rows with NULL in the watermark column",
+    "back": "Excluded from subsequent incremental loads. NULL không so sánh được nên bị bỏ qua.",
+    "ref": {
+      "label": "Incremental copy in Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+    }
+  },
+  {
+    "id": "bat-c04",
+    "front": "Reset incremental copy + Append write method",
+    "back": "Can create duplicates; Reset clears the watermark but does not truncate the destination. Dùng Merge hoặc truncate trước full load.",
+    "ref": {
+      "label": "Incremental copy in Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+    }
+  },
+  {
+    "id": "bat-c05",
+    "front": "Copy job update methods",
+    "back": "Append (default), Merge, Overwrite, SCD Type 2. Merge mặc định dùng primary key nếu có.",
+    "ref": {
+      "label": "What is Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job"
+    }
+  },
+  {
+    "id": "bat-c06",
+    "front": "Keep history with validity dates, no code, CDC source",
+    "back": "Copy job CDC with the SCD Type 2 write method (Preview). Copy job tự thêm Valid_From, Valid_To, Is_Current.",
+    "ref": {
+      "label": "CDC in Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job"
+    }
+  },
+  {
+    "id": "bat-c07",
+    "front": "SCD Type 1 vs Type 2",
+    "back": "Type 1 overwrites the attribute; Type 2 expires the current row and inserts a new version. Type 2 cần surrogate key và cột validity.",
+    "ref": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "bat-c08",
+    "front": "Fact arrives before its dimension member",
+    "back": "Insert an inferred member with the natural key and IsInferredMember = TRUE. Khi chi tiết đến thì update, không tạo version SCD.",
+    "ref": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "bat-c09",
+    "front": "Load order for a star schema",
+    "back": "Stage, dimensions (by dependency), facts, then refresh the semantic model. Dimension trước để fact lookup được surrogate key.",
+    "ref": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "bat-c10",
+    "front": "Truncate and reload a dimension with IDENTITY surrogate keys?",
+    "back": "Never; keys regenerate and break facts and SCD Type 2 history. Dùng incremental update và soft delete.",
+    "ref": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "bat-c11",
+    "front": "PySpark team, files, data science",
+    "back": "Lakehouse. Spark ghi Delta; user T-SQL đọc qua SQL analytics endpoint.",
+    "ref": {
+      "label": "Decision guide: data store",
+      "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+    }
+  },
+  {
+    "id": "bat-c12",
+    "front": "T-SQL DML, multi-table transactions, star schema",
+    "back": "Warehouse. SQL analytics endpoint của lakehouse không cho INSERT, UPDATE, DELETE.",
+    "ref": {
+      "label": "SQL analytics endpoint",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint"
+    }
+  },
+  {
+    "id": "bat-c13",
+    "front": "Telemetry, logs, time series, KQL",
+    "back": "Eventhouse (KQL database). OneLake availability của eventhouse là opt-in.",
+    "ref": {
+      "label": "Decision guide: data store",
+      "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+    }
+  },
+  {
+    "id": "bat-c14",
+    "front": "No-code transforms, Power Query, 150+ connectors",
+    "back": "Dataflow Gen2. Có incremental refresh theo cột DateTime.",
+    "ref": {
+      "label": "Decision guide: copy activity, dataflow, Spark",
+      "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+    }
+  },
+  {
+    "id": "bat-c15",
+    "front": "Dataflow Gen2 incremental refresh destinations",
+    "back": "Fabric Lakehouse, Fabric Warehouse, Azure SQL Database. Phải đặt destination rõ ràng, không dùng default destination.",
+    "ref": {
+      "label": "Incremental refresh in Dataflow Gen2",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-incremental-refresh"
+    }
+  },
+  {
+    "id": "bat-c16",
+    "front": "Where can you create OneLake shortcuts?",
+    "back": "In lakehouses (Tables top level or anywhere in Files) and KQL databases. Warehouse không chứa shortcut.",
+    "ref": {
+      "label": "OneLake shortcuts",
+      "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+    }
+  },
+  {
+    "id": "bat-c17",
+    "front": "Shortcut caching supports ...",
+    "back": "Google Cloud Storage, S3, S3 compatible, and on-premises gateway shortcuts; retention 1 to 28 days. Giảm egress cost khi đọc lặp.",
+    "ref": {
+      "label": "OneLake shortcuts",
+      "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+    }
+  },
+  {
+    "id": "bat-c18",
+    "front": "Delete a folder inside a shortcut",
+    "back": "Deletes the folder in the target if you have write permission there. Chỉ xoá chính shortcut mới giữ nguyên target.",
+    "ref": {
+      "label": "OneLake shortcuts",
+      "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+    }
+  },
+  {
+    "id": "bat-c19",
+    "front": "Read-only replica of an operational database, MOST cost-effective",
+    "back": "Mirroring. Compute replicate miễn phí và 1 TB storage mirroring miễn phí cho mỗi CU.",
+    "ref": {
+      "label": "Mirroring overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+    }
+  },
+  {
+    "id": "bat-c20",
+    "front": "Open mirroring landing zone requirements",
+    "back": "_metadata.json with keyColumns, Parquet or delimited text files, __rowMarker__ as the last column. 0 insert, 1 update, 2 delete, 4 upsert.",
+    "ref": {
+      "label": "Open mirroring landing zone format",
+      "url": "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring-landing-zone-format"
+    }
+  },
+  {
+    "id": "bat-c21",
+    "front": "Highest-throughput T-SQL load from files in ADLS Gen2 or OneLake",
+    "back": "COPY INTO. Hỗ trợ CSV, JSONL, Parquet.",
+    "ref": {
+      "label": "Ingest data into the warehouse",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data"
+    }
+  },
+  {
+    "id": "bat-c22",
+    "front": "Delta MERGE fails: multiple source rows matched one target row",
+    "back": "Deduplicate the source per key before MERGE. Delta coi update đó là ambiguous.",
+    "ref": {
+      "label": "Delta Lake: table deletes, updates, and merges",
+      "url": "https://docs.delta.io/latest/delta-update.html"
+    }
+  },
+  {
+    "id": "bat-c23",
+    "front": "KQL: keep the latest row per key",
+    "back": "summarize arg_max(Timestamp, *) by Key. Cách dedup chuẩn trong KQL.",
+    "ref": {
+      "label": "summarize operator",
+      "url": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric"
+    }
+  }
+]

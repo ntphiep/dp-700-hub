@@ -1,0 +1,361 @@
+[
+  {
+    "id": "eventstream",
+    "term": "Eventstream",
+    "full": "",
+    "aliases": [
+      "eventstreams",
+      "Fabric eventstream"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Item Fabric ingest, transform no-code và route event tới nhiều đích, chạy trên Event Hubs và Stream Analytics.",
+    "means": [
+      "Có Kafka endpoint; message tối đa 1 MB, retention tối đa 90 ngày, at-least-once.",
+      "Đề hỏi khi cần no-code, filter, route tới eventhouse, lakehouse, Activator."
+    ],
+    "related": [
+      "derived-stream",
+      "direct-ingestion",
+      "sql-operator"
+    ],
+    "src": {
+      "label": "Eventstreams overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview"
+    }
+  },
+  {
+    "id": "eventhouse",
+    "term": "Eventhouse",
+    "full": "",
+    "aliases": [
+      "eventhouses"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Item Fabric chứa một hoặc nhiều KQL database, tối ưu cho event theo thời gian, cùng engine với Azure Data Explorer.",
+    "means": [
+      "Query hàng tỷ event trong vài giây bằng KQL.",
+      "Chọn khi đề nói telemetry, log, time series, query ngay sau khi ingest."
+    ],
+    "related": [
+      "kql-database",
+      "onelake-availability",
+      "update-policy"
+    ],
+    "src": {
+      "label": "Eventhouse overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse"
+    }
+  },
+  {
+    "id": "kql-database",
+    "term": "KQL database",
+    "full": "",
+    "aliases": [
+      "KQL databases"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Database bên trong eventhouse, chứa table, function, materialized view và policy, query bằng Kusto Query Language.",
+    "means": [
+      "Update policy và materialized view chỉ áp trong KQL database.",
+      "Bật OneLake availability ở mức database hoặc table."
+    ],
+    "related": [
+      "eventhouse",
+      "update-policy",
+      "kql-materialized-view"
+    ],
+    "src": {
+      "label": "Eventhouse overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse"
+    }
+  },
+  {
+    "id": "derived-stream",
+    "term": "Derived stream",
+    "full": "",
+    "aliases": [
+      "derived streams",
+      "default stream"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Destination đặc biệt chứa output sau operator của eventstream; default stream là stream raw tự sinh từ source.",
+    "means": [
+      "Hiện trong Real-Time hub để team khác dùng; pause và resume được.",
+      "Làm cầu cho đích không nhận operator trực tiếp, như custom endpoint."
+    ],
+    "related": [
+      "eventstream",
+      "real-time-hub"
+    ],
+    "src": {
+      "label": "Create default and derived streams",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/create-default-derived-streams"
+    }
+  },
+  {
+    "id": "direct-ingestion",
+    "term": "Direct ingestion",
+    "full": "",
+    "aliases": [
+      "Event processing before ingestion"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Chế độ eventhouse destination nhận event nguyên trạng; chế độ còn lại là Event processing before ingestion.",
+    "means": [
+      "Direct ingestion: không qua operator, mapping cột ở bước Get data.",
+      "Có Filter hay aggregate trước eventhouse thì chọn Event processing before ingestion."
+    ],
+    "related": [
+      "eventstream",
+      "eventhouse"
+    ],
+    "src": {
+      "label": "Add an Eventhouse destination",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-kql-database"
+    }
+  },
+  {
+    "id": "sql-operator",
+    "term": "SQL operator",
+    "full": "",
+    "aliases": [
+      "SQL Code"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Operator của eventstream (Preview) viết query kiểu Stream Analytics, gồm window, join, aggregation.",
+    "means": [
+      "Nhiều SELECT ... INTO ghi ra nhiều destination từ một query.",
+      "Không hỗ trợ UDF tuỳ ý như JavaScript UDF của Stream Analytics."
+    ],
+    "related": [
+      "eventstream",
+      "snapshot-window"
+    ],
+    "src": {
+      "label": "Process events using a SQL operator",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-sql-code-editor"
+    }
+  },
+  {
+    "id": "update-policy",
+    "term": "Update policy",
+    "full": "",
+    "aliases": [
+      "update policies"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Policy trên target table chạy một query KQL trên data mới ingest vào source table và ghi kết quả vào target.",
+    "means": [
+      "Chạy trong lúc ingest, chỉ thấy batch hiện tại nên không aggregate toàn bộ data.",
+      "IsTransactional mặc định false; source và target cùng database."
+    ],
+    "related": [
+      "kql-materialized-view",
+      "kql-database"
+    ],
+    "src": {
+      "label": "Update policy overview",
+      "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "kql-materialized-view",
+    "term": "KQL materialized view",
+    "full": "",
+    "aliases": [
+      "materialized views",
+      "materialized_view()"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Aggregation query trên một source table, luôn trả kết quả mới bằng cách gộp phần đã materialize với delta.",
+    "means": [
+      "Dùng cho aggregate theo bin(), dedup bằng take_any(), bản mới nhất bằng arg_max().",
+      "materialized_view() chỉ đọc phần đã materialize, nhanh hơn nhưng có thể thiếu record mới nhất."
+    ],
+    "related": [
+      "update-policy",
+      "kql-database"
+    ],
+    "src": {
+      "label": "Materialized views overview",
+      "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-overview?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "real-time-hub",
+    "term": "Real-Time hub",
+    "full": "",
+    "aliases": [],
+    "cat": "Real-Time Intelligence",
+    "what": "Catalog tenant-wide có sẵn, liệt kê mọi stream và KQL table bạn có quyền, kèm connector tới nhiều source.",
+    "means": [
+      "Không cần tạo hay quản lý.",
+      "Chứa Fabric events (workspace item, OneLake, job, capacity) và Azure Blob Storage events."
+    ],
+    "related": [
+      "eventstream",
+      "derived-stream",
+      "activator"
+    ],
+    "src": {
+      "label": "Real-Time hub overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-hub/real-time-hub-overview"
+    }
+  },
+  {
+    "id": "activator",
+    "term": "Activator",
+    "full": "",
+    "aliases": [
+      "Fabric Activator",
+      "Data Activator"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Rule engine no-code theo dõi stream và event, gọi action khi điều kiện đúng.",
+    "means": [
+      "Gom event thành object theo ID và theo dõi state từng object.",
+      "Action: Teams, email, Power Automate, pipeline, notebook, Spark job definition."
+    ],
+    "related": [
+      "real-time-hub",
+      "eventstream"
+    ],
+    "src": {
+      "label": "What is Fabric Activator?",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction"
+    }
+  },
+  {
+    "id": "structured-streaming",
+    "term": "Spark Structured Streaming",
+    "full": "",
+    "aliases": [
+      "Structured Streaming"
+    ],
+    "cat": "Transformation",
+    "what": "Engine streaming của Apache Spark xem stream như table được append liên tục, cùng API với Databricks.",
+    "means": [
+      "Trong Fabric đọc Event Hubs, Kafka, eventstream; sink chính là Delta table.",
+      "Production chạy bằng Spark job definition có retry policy."
+    ],
+    "related": [
+      "checkpoint-location",
+      "available-now-trigger",
+      "event-time-watermark"
+    ],
+    "src": {
+      "label": "Overview of Structured Streaming in Fabric",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-overview"
+    }
+  },
+  {
+    "id": "checkpoint-location",
+    "term": "Checkpoint location",
+    "full": "",
+    "aliases": [
+      "checkpointLocation",
+      "streaming checkpoint"
+    ],
+    "cat": "Transformation",
+    "what": "Đường dẫn Spark lưu offset, tiến độ và state của một streaming query để chạy tiếp sau khi dừng.",
+    "means": [
+      "Mỗi query một checkpoint riêng, không dùng chung.",
+      "Đổi logic stateful lớn thường cần checkpoint mới."
+    ],
+    "related": [
+      "structured-streaming",
+      "available-now-trigger"
+    ],
+    "src": {
+      "label": "Stateful processing with Structured Streaming",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-stateful-processing"
+    }
+  },
+  {
+    "id": "available-now-trigger",
+    "term": "Available-now trigger",
+    "full": "",
+    "aliases": [
+      "availableNow",
+      "Trigger.AvailableNow"
+    ],
+    "cat": "Transformation",
+    "what": "Trigger xử lý hết data có sẵn qua nhiều micro-batch rồi tự dừng, giữ tiến độ trong checkpoint.",
+    "means": [
+      "Dùng cho incremental theo lịch, tắt compute giữa các lần chạy.",
+      "Thay cho trigger once đã deprecated."
+    ],
+    "related": [
+      "structured-streaming",
+      "checkpoint-location"
+    ],
+    "src": {
+      "label": "Apache Spark: Structured Streaming guide",
+      "url": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html"
+    }
+  },
+  {
+    "id": "event-time-watermark",
+    "term": "Event-time watermark",
+    "full": "",
+    "aliases": [
+      "withWatermark"
+    ],
+    "cat": "Transformation",
+    "what": "Ngưỡng Spark dùng để biết event trễ tối đa bao lâu, từ đó dọn state cũ của window.",
+    "means": [
+      "Append mode với aggregation bắt buộc có watermark.",
+      "Khác watermark column của incremental load batch."
+    ],
+    "related": [
+      "structured-streaming",
+      "checkpoint-location"
+    ],
+    "src": {
+      "label": "Stateful processing with Structured Streaming",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-stateful-processing"
+    }
+  },
+  {
+    "id": "onelake-availability",
+    "term": "OneLake availability",
+    "full": "",
+    "aliases": [],
+    "cat": "OneLake & Storage",
+    "what": "Tuỳ chọn của KQL database hoặc table tạo bản Delta logic trong OneLake cho Spark, SQL, Direct Lake.",
+    "means": [
+      "Không tính thêm storage; ghi ra OneLake có thể trễ tới 3 giờ.",
+      "Khi bật: không rename table, đổi kiểu cột, delete, truncate, purge."
+    ],
+    "related": [
+      "eventhouse",
+      "kql-database"
+    ],
+    "src": {
+      "label": "Eventhouse OneLake availability",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability"
+    }
+  },
+  {
+    "id": "snapshot-window",
+    "term": "Snapshot window",
+    "full": "",
+    "aliases": [
+      "snapshot windows"
+    ],
+    "cat": "Real-Time Intelligence",
+    "what": "Window của eventstream gom các event có timestamp giống hệt nhau, không cần độ dài window.",
+    "means": [
+      "Viết bằng GROUP BY System.Timestamp().",
+      "Bốn loại còn lại: tumbling, hopping, sliding, session."
+    ],
+    "related": [
+      "sql-operator",
+      "eventstream"
+    ],
+    "src": {
+      "label": "Learn module: Understand window functions",
+      "url": "https://learn.microsoft.com/en-us/training/modules/introduction-to-data-streaming/3b-understand-windows"
+    }
+  }
+]

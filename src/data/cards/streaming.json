@@ -1,0 +1,182 @@
+[
+  {
+    "id": "str-c01",
+    "front": "What runs underneath a Fabric eventstream?",
+    "back": "An Event Hubs namespace plus the Stream Analytics engine; it exposes a Kafka endpoint. Producer Event Hubs hay Kafka chỉ cần đổi connection string.",
+    "ref": {
+      "label": "Eventstream for Event Hubs and Stream Analytics users",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/migrate-from-azure-event-hubs-stream-analytics"
+    }
+  },
+  {
+    "id": "str-c02",
+    "front": "Eventstream limits: message size, retention, delivery guarantee",
+    "back": "1 MB per message, up to 90 days retention, at-least-once delivery. Consumer phải chịu được duplicate.",
+    "ref": {
+      "label": "Eventstreams overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview"
+    }
+  },
+  {
+    "id": "str-c03",
+    "front": "Default stream vs derived stream",
+    "back": "Default stream = raw events from the sources; derived stream = output of operators such as Filter. Cả hai hiện trong Real-Time hub và route được tới nhiều đích.",
+    "ref": {
+      "label": "Create default and derived streams",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/create-default-derived-streams"
+    }
+  },
+  {
+    "id": "str-c04",
+    "front": "Eventhouse destination: Direct ingestion vs Event processing before ingestion",
+    "back": "Direct ingestion writes events as-is; event processing runs operators (filter, aggregate) before writing. Có operator trước eventhouse thì chọn chế độ thứ hai.",
+    "ref": {
+      "label": "Add an Eventhouse destination",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-kql-database"
+    }
+  },
+  {
+    "id": "str-c05",
+    "front": "Destination does not accept operators directly (for example custom endpoint)",
+    "back": "Add a derived stream as the operator output, then attach the destination to it. Derived stream làm cầu.",
+    "ref": {
+      "label": "Process events with the event processing editor",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor"
+    }
+  },
+  {
+    "id": "str-c06",
+    "front": "Lakehouse destination produces small files",
+    "back": "Raise Minimum rows (1 to 2 million) and Maximum duration (1 minute to 2 hours); run Optimize table in notebook. Giá trị nhỏ sinh nhiều file.",
+    "ref": {
+      "label": "Add a lakehouse destination",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-lakehouse"
+    }
+  },
+  {
+    "id": "str-c07",
+    "front": "CDC snapshot missing after publishing an eventstream",
+    "back": "Clear Activate ingestion, publish, then activate with a Custom time earlier than publish. Ingestion có thể chạy trước routing.",
+    "ref": {
+      "label": "Add an Eventhouse destination",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-kql-database"
+    }
+  },
+  {
+    "id": "str-c08",
+    "front": "Update policy: when does it run and on what data?",
+    "back": "During ingestion, on the newly ingested batch only; source and target in the same database. Schema output phải khớp kiểu và thứ tự cột target.",
+    "ref": {
+      "label": "Update policy overview",
+      "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "str-c09",
+    "front": "Update policy IsTransactional default",
+    "back": "false. Set true in production so a failed policy fails the whole ingestion and nothing is lost silently.",
+    "ref": {
+      "label": "Update policy overview",
+      "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "str-c10",
+    "front": "Need an always-fresh aggregation in KQL",
+    "back": "Materialized view, not update policy; update policies aggregate only within one ingestion batch. Materialized view gộp phần đã materialize với delta.",
+    "ref": {
+      "label": "Materialized views use cases",
+      "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-use-cases?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "str-c11",
+    "front": "materialized_view('V') vs querying V",
+    "back": "materialized_view() reads only the materialized part: faster, may be slightly stale. Query V trả kết quả luôn mới.",
+    "ref": {
+      "label": "Materialized views overview",
+      "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-overview?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "str-c12",
+    "front": ".create materialized-view backfill default",
+    "back": "backfill=false: only data ingested from now on; backfill=true needs the async keyword. Backfill lỗi tạm thời không tự retry.",
+    "ref": {
+      "label": ".create materialized-view",
+      "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-create?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "str-c13",
+    "front": "Five window types in eventstream",
+    "back": "Tumbling, hopping, sliding, session, snapshot; max window size 7 days, output at window end. Snapshot chỉ cần GROUP BY System.Timestamp().",
+    "ref": {
+      "label": "Windowing (Fabric Eventstream)",
+      "url": "https://learn.microsoft.com/en-us/stream-analytics-query/windowing-azure-stream-analytics?context=/fabric/context/context-rti&pivots=fabric"
+    }
+  },
+  {
+    "id": "str-c14",
+    "front": "Spark window(col, '10 minutes', '1 minute') is which eventstream window?",
+    "back": "Hopping (Spark calls it a sliding window). Eventstream sliding chỉ ra kết quả khi event vào hoặc ra window.",
+    "ref": {
+      "label": "Stateful processing with Structured Streaming",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-stateful-processing"
+    }
+  },
+  {
+    "id": "str-c15",
+    "front": "Session window parameters",
+    "back": "Timeout, maximum duration, optional partition key. Spark dùng session_window(); KQL dùng row_window_session().",
+    "ref": {
+      "label": "Learn module: Understand window functions",
+      "url": "https://learn.microsoft.com/en-us/training/modules/introduction-to-data-streaming/3b-understand-windows"
+    }
+  },
+  {
+    "id": "str-c16",
+    "front": "KQL: show empty time bins as zero",
+    "back": "make-series ... default = 0 on Timestamp step 5m; summarize by bin() skips empty bins. bin() làm tròn xuống bội số của bin size.",
+    "ref": {
+      "label": "make-series operator",
+      "url": "https://learn.microsoft.com/en-us/kusto/query/make-series-operator?view=microsoft-fabric"
+    }
+  },
+  {
+    "id": "str-c17",
+    "front": "Spark trigger to process all available data then stop",
+    "back": "trigger(availableNow=True); trigger(once=True) is deprecated. Available-now chạy nhiều micro-batch rồi dừng.",
+    "ref": {
+      "label": "Apache Spark: Structured Streaming guide",
+      "url": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html"
+    }
+  },
+  {
+    "id": "str-c18",
+    "front": "Spark streaming in production must restart automatically",
+    "back": "Spark job definition with a retry policy and a dedicated checkpointLocation. Notebook chỉ để phát triển và test.",
+    "ref": {
+      "label": "Data streaming into a lakehouse with Spark",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-streaming-data"
+    }
+  },
+  {
+    "id": "str-c19",
+    "front": "OneLake availability on an eventhouse",
+    "back": "Exposes KQL tables as Delta in OneLake at no extra storage cost; while on, no rename, column type change, delete, truncate or purge. Ghi ra OneLake có thể trễ tới 3 giờ.",
+    "ref": {
+      "label": "Eventhouse OneLake availability",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability"
+    }
+  },
+  {
+    "id": "str-c20",
+    "front": "Activator actions",
+    "back": "Teams, email, Power Automate, pipeline, notebook, Spark job definition, dataflow, copy job, User Data Function. Rule theo dõi state từng object.",
+    "ref": {
+      "label": "What is Fabric Activator?",
+      "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction"
+    }
+  }
+]

@@ -1,0 +1,1656 @@
+{
+  "id": "monitor",
+  "title": "Monitor, troubleshoot & optimize",
+  "domain": [
+    "D3"
+  ],
+  "icon": "gauge",
+  "summary": "Trả lời câu hỏi chọn công cụ monitor, kiểu alert và cách sửa lỗi theo từng item.\nChương cũng phủ tối ưu lakehouse table, Spark, pipeline, warehouse, eventstream và eventhouse.",
+  "sections": [
+    {
+      "id": "mon-tools",
+      "title": "Bản đồ công cụ monitor trong Fabric",
+      "icon": "gauge",
+      "task": "3.1",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Công cụ nào trả lời câu hỏi nào",
+          "columns": [
+            "Công cụ",
+            "Trả lời câu hỏi",
+            "Bạn đã biết từ Azure, Databricks"
+          ],
+          "rows": [
+            [
+              "**Monitor hub**",
+              "Job nào chạy, fail, chạy bao lâu, trên mọi item bạn có quyền xem",
+              "Tab Monitor của ADF và Synapse Studio; trang Jobs của Databricks"
+            ],
+            [
+              "**Recent runs** của item",
+              "Lịch sử chạy của đúng 1 pipeline, notebook, dataflow",
+              "Run history của 1 pipeline ADF"
+            ],
+            [
+              "**Workspace monitoring**",
+              "Log và metric chi tiết đổ vào eventhouse, query bằng KQL, giữ mặc định 30 ngày",
+              "Diagnostic settings gửi về Log Analytics rồi query KQL"
+            ],
+            [
+              "**Capacity Metrics app**",
+              "Item nào tiêu nhiều CU, capacity có bị throttle không",
+              "Azure Monitor metrics của Synapse pool; system tables billing của Databricks"
+            ],
+            [
+              "**Query insights**",
+              "Query T-SQL nào chậm, tốn CPU, có dùng cache không, giữ 30 ngày",
+              "DMV và Query Store của Synapse dedicated SQL pool"
+            ],
+            [
+              "**Spark monitoring**",
+              "Job, stage, executor, log và Spark advisor của 1 Spark application",
+              "Spark UI và Spark history server"
+            ],
+            [
+              "**Data insights**, **Runtime logs** của eventstream",
+              "Event vào, ra, backlog, lỗi deserialization theo từng node",
+              "Metrics của Event Hubs và Stream Analytics"
+            ]
+          ],
+          "src": [
+            {
+              "label": "What is the Monitor hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub"
+            },
+            {
+              "label": "Workspace monitoring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+            },
+            {
+              "label": "What is the Microsoft Fabric Capacity Metrics app",
+              "url": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app"
+            },
+            {
+              "label": "Query insights in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+            },
+            {
+              "label": "Apache Spark monitoring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-monitoring-overview"
+            },
+            {
+              "label": "Monitor the status and performance of an eventstream",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/monitor"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Trang Job runs của Monitor hub mới",
+          "img": "figs/monitor-monitor-hub-job-runs.png",
+          "alt": "Monitor hub mới, trang Job runs với filter Time, Item type, Status, Workspace và bảng item gồm Item type, Last run status, Success rate, Average duration, Run history, Workspace.",
+          "caption": "Monitor hub mới liệt kê job của mọi item bạn có quyền xem, kèm Last run status, Success rate, Run history. Menu trái có Capacities, Applications, Agents, Alerts; link Back to legacy Monitor hub mở giao diện cũ.",
+          "credit": {
+            "label": "Microsoft Learn: What Is Monitor Hub in Microsoft Fabric?",
+            "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "Monitor hub và workspace monitoring đổi năm 2026",
+          "md": "- **Monitor hub** mới (preview) có các trang Job runs, Alerts, Capacity and cost, Applications, Agents\n- Giao diện cũ vẫn còn, docs gọi là legacy **Monitoring hub**; đề có thể dùng tên cũ\n- Workspace monitoring giờ chạy qua một **monitoring item** gồm eventhouse, Activator, Operations agent\n- Data collection mặc định tắt khi tạo monitoring item và không backfill hoạt động trước đó",
+          "src": [
+            {
+              "label": "What is the Monitor hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub"
+            },
+            {
+              "label": "Monitor pipeline runs in the legacy Monitoring hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/monitoring-hub-pipeline-runs"
+            },
+            {
+              "label": "Workspace monitoring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Tín hiệu trong đề",
+          "md": "- \"single place to view runs across items\": Monitor hub\n- \"query historical logs with KQL, custom report\": workspace monitoring\n- \"which item consumes the most CU\": Capacity Metrics app\n- Monitor hub chỉ hiện item bạn có quyền xem; query monitoring database cần ít nhất role Contributor",
+          "src": [
+            {
+              "label": "Monitor job runs in the Monitor hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-jobs"
+            },
+            {
+              "label": "Workspace monitoring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+            },
+            {
+              "label": "Learn Microsoft Fabric with Will, Monitor & Optimize Solutions in Microsoft Fabric, DP-700 Exam Prep 10 of 11",
+              "url": "https://www.youtube.com/watch?v=0M4t6ljwZ9A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-ingest-transform",
+      "title": "Monitor ingestion, transformation và semantic model refresh",
+      "icon": "activity",
+      "task": "3.1",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Mỗi item xem run và lỗi ở đâu",
+          "columns": [
+            "Item",
+            "Xem ở đâu",
+            "Chi tiết đáng nhớ"
+          ],
+          "rows": [
+            [
+              "**Pipeline**",
+              "Monitor hub, run detail view, bảng activity run trong workspace monitoring",
+              "Detail view có Gantt, input, output, error từng activity; Export to CSV; Load more khi quá 2,000 activity run"
+            ],
+            [
+              "**Copy job**",
+              "Monitor hub, workspace monitoring",
+              "Có log Copy job activity run details"
+            ],
+            [
+              "**Dataflow Gen2**",
+              "Recent runs với Tables và Activities; Download detailed logs",
+              "Hiện tối đa 50 refresh hoặc 6 tháng; detailed logs giữ 28 ngày, cần role Viewer"
+            ],
+            [
+              "**Notebook**, **Spark job definition**",
+              "Monitor hub, output của cell, trang Spark application detail",
+              "Notebook activity trong pipeline có deep link tới Spark application và log"
+            ],
+            [
+              "**Semantic model** Import",
+              "Refresh history trong semantic model settings, Monitor hub",
+              "Tối đa 48 scheduled refresh mỗi ngày trên Fabric capacity"
+            ],
+            [
+              "**Semantic model** Direct Lake",
+              "Tab Direct Lake trong refresh history",
+              "Refresh chỉ là framing, cập nhật metadata trong vài giây; tab chủ yếu liệt kê lần framing lỗi"
+            ],
+            [
+              "**Eventstream**",
+              "Tab Data insights và Runtime logs của từng node",
+              "Cần role Viewer trở lên"
+            ],
+            [
+              "**Eventhouse**",
+              "System overview, bảng log trong workspace monitoring",
+              "Có Ingestion results, Query, Command, Capacity throttling logs"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Monitor pipeline runs in the legacy Monitoring hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/monitoring-hub-pipeline-runs"
+            },
+            {
+              "label": "Workspace monitoring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+            },
+            {
+              "label": "View refresh history and monitor your dataflows",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-monitor"
+            },
+            {
+              "label": "Apache Spark monitoring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-monitoring-overview"
+            },
+            {
+              "label": "Data refresh in Power BI",
+              "url": "https://learn.microsoft.com/en-us/power-bi/connect-data/refresh-data"
+            },
+            {
+              "label": "Direct Lake overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview"
+            },
+            {
+              "label": "Monitor the status and performance of an eventstream",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/monitor"
+            },
+            {
+              "label": "Manage and monitor an eventhouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/manage-monitor-eventhouse"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Refresh semantic model đúng lúc",
+          "md": "- Import model: đặt **Semantic model refresh** activity sau bước load trong cùng pipeline\n- Activity mặc định full refresh và bật Wait on completion; chọn table, partition để refresh nhanh hơn\n- Activity chỉ refresh semantic model bạn tự tạo\n- Direct Lake không copy data; dữ liệu mới hiện ra sau framing, bằng automatic updates hoặc reframe bằng code",
+          "src": [
+            {
+              "label": "Semantic model refresh activity",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/semantic-model-refresh-activity"
+            },
+            {
+              "label": "Direct Lake overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Email báo lỗi refresh của semantic model",
+          "md": "- Schedule failure emails trong Monitor hub chưa hỗ trợ semantic model\n- Power BI mặc định gửi refresh failure email cho owner; thêm người nhận ở Email these contacts when the refresh fails",
+          "src": [
+            {
+              "label": "Set up job alerts in the Monitor hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
+            },
+            {
+              "label": "Data refresh in Power BI",
+              "url": "https://learn.microsoft.com/en-us/power-bi/connect-data/refresh-data"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-capacity",
+      "title": "Capacity Metrics app, smoothing và throttling",
+      "icon": "chart-line",
+      "task": "3.1",
+      "blocks": [
+        {
+          "type": "text",
+          "md": "Khác cluster riêng của Databricks, mọi item trong một Fabric capacity dùng chung capacity unit (CU).\n- **Capacity Metrics app** là app Power BI cài riêng cho capacity admin, hỗ trợ cả P SKU và EM, A SKU; data trễ khoảng 10 tới 15 phút\n- Trang **Compute** xem 14 ngày; trang **Timepoint** drill vào 1 điểm 30 giây để thấy operation nào tiêu CU\n- Trang **Storage** xem 30 ngày theo workspace\n- App **không có alert**; alert về capacity dùng Fabric capacity overview events hoặc capacity operation events\n- **Smoothing** trải CU của background job trên 24 giờ nên nhiều job lịch có thể chạy cùng lúc",
+          "src": [
+            {
+              "label": "What is the Microsoft Fabric Capacity Metrics app",
+              "url": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app"
+            },
+            {
+              "label": "Understand your Fabric capacity throttling",
+              "url": "https://learn.microsoft.com/en-us/fabric/enterprise/throttling"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "docs",
+          "title": "Bursting và smoothing",
+          "img": "figs/monitor-bursting-smoothing.png",
+          "alt": "Minh hoạ hệ thống truyền thống với hard compute limit làm job chờ, fail hoặc chậm, so với bursting cho hai job cùng chạy và smoothing trải usage của job ra thời gian sau.",
+          "caption": "Bên trái, giới hạn cứng làm job thứ hai phải chờ, fail hoặc làm chậm job đầu. Bên phải, bursting cho cả hai job chạy vượt limit, smoothing trải CU đã dùng sang khoảng thời gian sau.",
+          "credit": {
+            "label": "Microsoft Learn: Microsoft Fabric Capacity Planning Guide: Plan Your First Deployment",
+            "url": "https://learn.microsoft.com/en-us/fabric/enterprise/capacity-planning-plan-deployment",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "table",
+          "title": "4 nấc throttling theo CU tương lai đã tiêu",
+          "columns": [
+            "CU tương lai đã dùng",
+            "Trạng thái",
+            "Ảnh hưởng"
+          ],
+          "rows": [
+            [
+              "Tới 10 phút",
+              "Overage protection",
+              "Chưa throttle"
+            ],
+            [
+              "10 tới 60 phút",
+              "Interactive delay",
+              "Interactive operation mới bị trễ 20 giây"
+            ],
+            [
+              "60 phút tới 24 giờ",
+              "Interactive rejection",
+              "Interactive mới bị từ chối, background vẫn chạy"
+            ],
+            [
+              "Trên 24 giờ",
+              "Background rejection",
+              "Mọi request mới bị từ chối tới khi trả hết CU đã vay"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Understand your Fabric capacity throttling",
+              "url": "https://learn.microsoft.com/en-us/fabric/enterprise/throttling"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Tín hiệu trong đề",
+          "md": "- \"reports slow at peak, identify the item consuming CU\": Capacity Metrics app, trang Timepoint\n- Spark hết core trả lỗi **HTTP 430 TooManyRequestsForCapacity**\n- Job Spark từ pipeline, scheduler, Spark job definition được queue tối đa 24 giờ; notebook interactive thì không\n- Capacity đang throttled thì Spark job mới bị reject, không vào queue",
+          "src": [
+            {
+              "label": "What is the Microsoft Fabric Capacity Metrics app",
+              "url": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app"
+            },
+            {
+              "label": "Concurrency limits and queueing in Apache Spark for Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-job-concurrency-and-queueing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-alerts",
+      "title": "Alert: failure email, Teams activity và Activator",
+      "icon": "bell",
+      "task": "3.1",
+      "blocks": [
+        {
+          "type": "diagram",
+          "title": "Ba đường alert cho job Fabric",
+          "caption": "Failure email miễn phí, Teams activity theo activity, Activator cho job event và query KQL.",
+          "dir": "RIGHT",
+          "groups": [],
+          "nodes": [
+            {
+              "id": "job",
+              "icon": "fab-pipeline",
+              "label": "Pipeline, notebook",
+              "sub": "job",
+              "info": "Item chạy job: pipeline, notebook, Spark job definition, dataflow, copy job. Người nhận alert là user hoặc group trong Microsoft Entra tenant."
+            },
+            {
+              "id": "teamsact",
+              "icon": "message-2",
+              "label": "Teams activity",
+              "sub": "Teams message",
+              "info": "Alert mức activity: đặt Teams hoặc Office 365 Outlook activity ngay sau activity cần theo dõi."
+            },
+            {
+              "id": "mail",
+              "icon": "bell",
+              "label": "Failure email",
+              "sub": "email miễn phí",
+              "info": "Schedule failure emails: chỉ cho scheduled run, không cho manual run. Cần Contributor hoặc Write trên item."
+            },
+            {
+              "id": "events",
+              "icon": "broadcast",
+              "label": "Job events",
+              "sub": "Real-Time hub",
+              "info": "Event Started, Succeeded, Failed của job. Activator subscribe trực tiếp."
+            },
+            {
+              "id": "wsdb",
+              "icon": "fab-kql-database",
+              "label": "Monitoring DB",
+              "sub": "ItemJobEventLogs",
+              "info": "Eventhouse của workspace monitoring, giữ log mặc định 30 ngày. Một KQL Queryset lọc JobType Pipeline, JobStatus Failed làm trigger cho Activator."
+            },
+            {
+              "id": "act",
+              "icon": "bolt",
+              "label": "Activator",
+              "sub": "email, Teams, run item",
+              "info": "Rule chạy action: email, Teams, chạy pipeline hoặc notebook, Power Automate. Tiêu CU của Activator."
+            }
+          ],
+          "edges": [
+            {
+              "id": "e1",
+              "from": "job",
+              "to": "teamsact",
+              "label": "activity fail"
+            },
+            {
+              "id": "e3",
+              "from": "job",
+              "to": "mail",
+              "label": "schedule fail"
+            },
+            {
+              "id": "e5",
+              "from": "job",
+              "to": "events",
+              "label": "job status",
+              "style": "dashed",
+              "tone": "data"
+            },
+            {
+              "id": "e6",
+              "from": "events",
+              "to": "act",
+              "label": "subscribe",
+              "style": "dashed",
+              "tone": "data"
+            },
+            {
+              "id": "e7",
+              "from": "job",
+              "to": "wsdb",
+              "label": "logs",
+              "style": "dashed",
+              "tone": "data"
+            },
+            {
+              "id": "e8",
+              "from": "wsdb",
+              "to": "act",
+              "label": "KQL query",
+              "style": "dashed",
+              "tone": "data"
+            }
+          ],
+          "legend": [
+            {
+              "style": "solid",
+              "tone": "primary",
+              "label": "Job fail kích hoạt thông báo"
+            },
+            {
+              "style": "dashed",
+              "tone": "data",
+              "label": "Event và log đi vào Activator"
+            }
+          ],
+          "steps": [
+            {
+              "title": "1. Failure email",
+              "md": "Cách rẻ nhất: email miễn phí khi scheduled run fail.",
+              "hl": [
+                "e3",
+                "mail"
+              ]
+            },
+            {
+              "title": "2. Activity level",
+              "md": "Teams hoặc Outlook activity nối sau activity cần theo dõi.",
+              "hl": [
+                "e1",
+                "teamsact"
+              ]
+            },
+            {
+              "title": "3. Job events",
+              "md": "Activator nghe job event để alert cả Started, Succeeded.",
+              "hl": [
+                "e5",
+                "e6",
+                "act"
+              ]
+            },
+            {
+              "title": "4. Toàn workspace",
+              "md": "Một query KQL trên ItemJobEventLogs cộng một Activator rule thay cho alert từng pipeline.",
+              "hl": [
+                "e7",
+                "e8",
+                "wsdb",
+                "act"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Set up job alerts in the Monitor hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
+            },
+            {
+              "label": "Create alerts for pipeline runs",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs"
+            },
+            {
+              "label": "What is Fabric Activator",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Gửi email khi scheduled run lỗi",
+          "img": "figs/monitor-schedule-failure-emails.png",
+          "alt": "Trang Alerts của Monitor hub, tab Schedule failure emails, hộp thoại Select a scheduled item liệt kê workspace và item có schedule.",
+          "caption": "Tab Schedule failure emails của trang Alerts chọn item có schedule để nhận email khi scheduled run fail. Chỉ chọn được item bạn sửa được và có hỗ trợ schedule.",
+          "credit": {
+            "label": "Microsoft Learn: Set up job alerts in the Monitor hub (preview)",
+            "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "decision",
+          "title": "Chọn kiểu alert theo câu hỏi",
+          "rows": [
+            {
+              "says": "Email the team when a scheduled pipeline fails at no extra cost",
+              "pick": "Schedule failure emails",
+              "why": "Miễn phí, cấu hình trong Monitor hub Alerts hoặc job scheduler; không áp dụng cho manual run.",
+              "src": {
+                "label": "Set up job alerts in the Monitor hub",
+                "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
+              }
+            },
+            {
+              "says": "Post a Teams message when one specific Copy activity fails",
+              "pick": "Teams activity trên nhánh On fail",
+              "why": "Alert mức activity: thêm Teams hoặc Outlook activity ngay sau activity cần theo dõi.",
+              "src": {
+                "label": "Create alerts for pipeline runs",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs"
+              }
+            },
+            {
+              "says": "Alert on Started and Succeeded events and trigger a notebook automatically",
+              "pick": "Activator rule trên job events",
+              "why": "Activator hỗ trợ nhiều job event và action chạy pipeline, notebook; schedule failure email chỉ có Failed.",
+              "src": {
+                "label": "Set up job alerts in the Monitor hub",
+                "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
+              }
+            },
+            {
+              "says": "One alert rule for every failed pipeline in the workspace",
+              "pick": "Workspace monitoring, KQL Queryset, Activator",
+              "why": "Query ItemJobEventLogs một lần cho cả workspace; Activator phải poll dày hơn cửa sổ query để không sót.",
+              "src": {
+                "label": "Create alerts for pipeline runs",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs"
+              }
+            },
+            {
+              "says": "Notify when a device temperature stays above a threshold",
+              "pick": "Activator trên eventstream",
+              "why": "Activator nhóm event thành object theo ID và giữ state từng object: BECOMES, INCREASES, absence of data.",
+              "src": {
+                "label": "What is Fabric Activator",
+                "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction"
+              }
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Neo vào Azure",
+          "md": "- Workspace monitoring cộng Activator đóng vai Log Analytics cộng log search alert rule và action group của Azure Monitor\n- Activator rule chỉ tính CU khi đang chạy",
+          "src": [
+            {
+              "label": "Workspace monitoring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+            },
+            {
+              "label": "What is Fabric Activator",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-troubleshoot",
+      "title": "Bảng troubleshoot: triệu chứng, xem ở đâu, cách sửa",
+      "icon": "bug",
+      "task": "3.2",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Lỗi hay gặp theo item",
+          "columns": [
+            "Item",
+            "Triệu chứng",
+            "Xem ở đâu",
+            "Cách sửa"
+          ],
+          "rows": [
+            [
+              "Pipeline",
+              "Activity fail vì lỗi tạm thời của source, network",
+              "Run detail view: error, input, output",
+              "Bật Enable retries; Retry mặc định 1 lần, interval 30 giây"
+            ],
+            [
+              "Pipeline",
+              "Activity treo quá lâu",
+              "Duration breakdown của activity",
+              "Timeout mặc định 12 giờ, tối đa 7 ngày; đặt ngắn hơn"
+            ],
+            [
+              "Pipeline",
+              "Copy có workspace staging fail ở job dài",
+              "Error của Copy activity",
+              "Workspace staging timeout sau 60 phút; dùng external staging ADLS Gen2 hoặc Blob"
+            ],
+            [
+              "Dataflow Gen2",
+              "Refresh fail, cần chi tiết",
+              "Recent runs, Download detailed logs",
+              "Đọc log Mashup engine; qua gateway thì bật Admin consent for gateway diagnostics"
+            ],
+            [
+              "Dataflow Gen2",
+              "Fail khi query bật Require Fast Copy",
+              "Activity error trong refresh",
+              "Source hoặc transform không hợp Fast Copy; tách query copy và query transform"
+            ],
+            [
+              "Notebook",
+              "HTTP 430 TooManyRequestsForCapacity",
+              "Output của cell, Monitor hub",
+              "Hủy Spark job đang chạy, tăng SKU hoặc chạy lại sau"
+            ],
+            [
+              "Notebook",
+              "Bật native execution engine mà không nhanh hơn",
+              "Spark advisor báo fallback, tab Gluten SQL trong Spark UI",
+              "Đổi operator không hỗ trợ; CAST để hai vế so sánh ngày cùng kiểu"
+            ],
+            [
+              "Notebook",
+              "VACUUM với retention dưới 7 ngày bị chặn",
+              "Error message",
+              "Tắt spark.databricks.delta.retentionDurationCheck.enabled trong environment, chấp nhận mất time travel"
+            ],
+            [
+              "Eventstream",
+              "Deserialization errors tăng, destination không nhận event",
+              "Data insights, Runtime logs của node",
+              "Sửa format event ở source; Data conversion errors thì sửa schema output"
+            ],
+            [
+              "Eventstream",
+              "Backlogged input events, Watermark delay tăng",
+              "Data insights",
+              "Tăng Event throughput level; Event Hubs dưới 4 partition bị giới hạn bởi số partition"
+            ],
+            [
+              "Eventhouse",
+              "Target table của update policy thiếu data",
+              ".show ingestion failures, EventhouseIngestionResultsLogs",
+              "Sửa query cho khớp schema target; IsTransactional true để không lệch source và target"
+            ],
+            [
+              "Eventhouse",
+              "Query trên data cũ chậm",
+              "Query logs trong workspace monitoring",
+              "Data nằm ngoài hot cache; nới caching policy hoặc thêm hot_window"
+            ],
+            [
+              "T-SQL",
+              "Error 24556 hoặc 24706, update conflict",
+              "Error message, sys.dm_tran_locks",
+              "Retry transaction bị rollback; tránh UPDATE, DELETE, MERGE đồng thời trên cùng table"
+            ],
+            [
+              "T-SQL",
+              "Query fail vì tempdb hết chỗ",
+              "Error message",
+              "Tạo và update statistics; bớt cột GROUP BY, ORDER BY; chạy lúc ít query"
+            ],
+            [
+              "T-SQL",
+              "SELECT trên sys.tables bị block khi đổi schema",
+              "sys.dm_tran_locks",
+              "Chạy DDL trong maintenance window, không bọc DDL trong transaction dài"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Activity overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview"
+            },
+            {
+              "label": "Copy activity",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-data-activity"
+            },
+            {
+              "label": "View refresh history and monitor your dataflows",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-monitor"
+            },
+            {
+              "label": "Best practices for Dataflow Gen2 performance",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-performance-best-practices"
+            },
+            {
+              "label": "Concurrency limits and queueing in Apache Spark for Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-job-concurrency-and-queueing"
+            },
+            {
+              "label": "Native execution engine for Fabric Data Engineering",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+            },
+            {
+              "label": "Lakehouse table maintenance",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance"
+            },
+            {
+              "label": "Monitor the status and performance of an eventstream",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/monitor"
+            },
+            {
+              "label": "Configure settings for a Fabric eventstream",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings"
+            },
+            {
+              "label": "Update policy overview",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Caching policy (hot and cold cache)",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Transactions in Warehouse tables",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/transactions"
+            },
+            {
+              "label": "Troubleshoot the Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-fabric-data-warehouse"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Tín hiệu trong đề",
+          "md": "- \"transient failure, rerun automatically\": retry của activity, không cần Until loop\n- \"two jobs update the same warehouse table and one fails\": snapshot isolation khóa mức table; retry hoặc chạy tuần tự\n- \"MERGE fails though it only inserts rows\": MERGE vẫn tính là write-write conflict\n- \"source and target table must stay consistent when the policy fails\": IsTransactional true",
+          "src": [
+            {
+              "label": "Activity overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview"
+            },
+            {
+              "label": "Transactions in Warehouse tables",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/transactions"
+            },
+            {
+              "label": "Update policy overview",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-diagnose",
+      "title": "Chẩn đoán sâu: Spark UI, query insights và KQL",
+      "icon": "search",
+      "task": "3.2",
+      "blocks": [
+        {
+          "type": "compare",
+          "title": "Ba công cụ chẩn đoán theo engine",
+          "items": [
+            {
+              "name": "Spark application detail",
+              "icon": "logo-apache-spark",
+              "tag": "giống Spark UI Databricks",
+              "points": [
+                "Mở từ Monitor hub, output của cell hoặc deep link trong pipeline",
+                "Tab Jobs, Resources (executor usage), Logs, Item snapshots",
+                "Diagnostics panel hiện advice của **Spark advisor**: info, warning, error",
+                "Spark history server mở rộng cho app đã chạy xong"
+              ]
+            },
+            {
+              "name": "Query insights",
+              "icon": "fab-data-warehouse",
+              "tag": "giống DMV, Query Store",
+              "points": [
+                "Schema `queryinsights` trong Warehouse và SQL analytics endpoint, giữ 30 ngày",
+                "`exec_requests_history`, `long_running_queries`, `frequently_run_queries`, `sql_pool_insights`",
+                "Query hiện ra sau tối đa khoảng 15 phút",
+                "Gộp query cùng shape qua `query_hash`"
+              ]
+            },
+            {
+              "name": "KQL commands",
+              "icon": "fab-kql-database",
+              "tag": "giống Azure Data Explorer",
+              "points": [
+                "`.show ingestion failures` giữ 14 ngày, chỉ lỗi của ingestion command",
+                "Bảng `EventhouseIngestionResultsLogs` cho queued ingestion thành công và lỗi",
+                "System overview của eventhouse: running state, ingestion, top database"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Apache Spark application detail monitoring",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-detail-monitoring"
+            },
+            {
+              "label": "Apache Spark advisor",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-advisor-introduction"
+            },
+            {
+              "label": "Query insights in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+            },
+            {
+              "label": ".show ingestion failures command",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/ingestion-failures?view=microsoft-fabric"
+            },
+            {
+              "label": "Eventhouse ingestion results logs",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/monitor-logs-ingestion-results"
+            },
+            {
+              "label": "Manage and monitor an eventhouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/manage-monitor-eventhouse"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Bốn view của schema queryinsights",
+          "img": "figs/monitor-query-insights.png",
+          "alt": "Explorer của warehouse với schema queryinsights gồm 4 view exec_requests_history, long_running_queries, frequently_run_queries, exec_sessions_history.",
+          "caption": "Schema queryinsights có 4 view: exec_requests_history, long_running_queries, frequently_run_queries, exec_sessions_history. Query bằng T-SQL để tìm query chậm hoặc chạy nhiều lần.",
+          "credit": {
+            "label": "Microsoft Learn: Query Insights",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "code",
+          "title": "Ba query chẩn đoán hay dùng",
+          "lang": "text",
+          "code": "-- T-SQL: top CPU queries in a Warehouse or SQL analytics endpoint\nSELECT TOP 100 distributed_statement_id, query_hash,\n       allocated_cpu_time_ms, label, command\nFROM queryinsights.exec_requests_history\nORDER BY allocated_cpu_time_ms DESC;\n\n// KQL: update policy failures in the last hour (eventhouse)\n.show ingestion failures\n| where FailedOn > ago(1hr) and OriginatesFromUpdatePolicy == true\n\n// KQL: failed pipelines in the workspace monitoring database\nItemJobEventLogs\n| where JobType == 'Pipeline' and JobStatus == 'Failed'\n| project Timestamp, ItemName, WorkspaceName, JobStatus",
+          "notes": [
+            {
+              "line": 4,
+              "md": "Cột `data_scanned_remote_storage_mb` khác 0 nghĩa là query đọc từ OneLake, tức cold start."
+            },
+            {
+              "line": 9,
+              "md": "Lọc riêng lỗi sinh ra từ update policy."
+            },
+            {
+              "line": 12,
+              "md": "Bảng có sẵn khi bật workspace monitoring; sample query nằm trong repo fabric-samples."
+            }
+          ],
+          "src": [
+            {
+              "label": "Query insights in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+            },
+            {
+              "label": "Update policy overview",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Create alerts for pipeline runs",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs"
+            },
+            {
+              "label": "microsoft/fabric-samples, workspace-monitoring sample queries",
+              "url": "https://github.com/microsoft/fabric-samples/tree/main/workspace-monitoring"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Đừng đo warehouse bằng lần chạy đầu",
+          "md": "- Lần đầu có thể chậm vì nạp data từ OneLake vào cache và tự tạo statistics\n- Xem `data_scanned_remote_storage_mb` trước khi kết luận query chậm\n- Lakehouse table ghi bằng Spark trước 3.5 thiếu rowgroup statistics cho cột timestamp; cần runtime mới và nạp lại table",
+          "src": [
+            {
+              "label": "Performance guidelines in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-opt-map",
+      "title": "Bảng tối ưu theo từng item",
+      "icon": "adjustments",
+      "task": "3.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Đòn bẩy, mặc định và thứ tương đương",
+          "columns": [
+            "Item",
+            "Đòn bẩy chính",
+            "Mặc định cần nhớ",
+            "Tương đương bạn đã biết"
+          ],
+          "rows": [
+            [
+              "**Lakehouse table**",
+              "OPTIMIZE, V-Order, Z-Order, liquid clustering, optimize write, auto compaction, VACUUM",
+              "V-Order Spark tắt ở workspace mới; VACUUM giữ 7 ngày",
+              "OPTIMIZE, ZORDER BY, CLUSTER BY của Databricks; V-Order chỉ có ở Microsoft"
+            ],
+            [
+              "**Spark**",
+              "Resource profile, native execution engine, high concurrency, autotune",
+              "Workspace mới dùng writeHeavy; native execution engine phải tự bật; autotune tắt",
+              "Photon, Spark config của cluster"
+            ],
+            [
+              "**Pipeline**",
+              "Intelligent throughput optimization, Degree of copy parallelism, ForEach song song, staging",
+              "Service tự chọn parallel copy",
+              "DIU và parallel copy của Copy activity ADF"
+            ],
+            [
+              "**Dataflow Gen2**",
+              "Fast Copy, query folding, staging, incremental refresh",
+              "Fast Copy bật trong dataflow settings",
+              "Power Query, mapping data flow của ADF"
+            ],
+            [
+              "**Warehouse**",
+              "Statistics, result set caching, data clustering, batch load, kiểu dữ liệu hẹp",
+              "Auto statistics và result set caching bật; V-Order bật",
+              "Statistics và result set caching của Synapse dedicated SQL pool"
+            ],
+            [
+              "**Eventhouse**",
+              "Caching, retention, partitioning, update policy",
+              "Retention và caching 3,650 ngày khi đặt trong UI",
+              "Policy của Azure Data Explorer, cùng cú pháp KQL"
+            ],
+            [
+              "**Eventstream**",
+              "Event throughput level, retention",
+              "Retention 1 ngày, tối đa 90 ngày",
+              "Partition và throughput của Event Hubs"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Optimize Delta Lake tables with V-order",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+            },
+            {
+              "label": "Configure resource profile configurations",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+            },
+            {
+              "label": "Native execution engine for Fabric Data Engineering",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+            },
+            {
+              "label": "Configure autotune for Apache Spark",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/autotune"
+            },
+            {
+              "label": "Copy activity performance and scalability guide",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-activity-performance-and-scalability-guide"
+            },
+            {
+              "label": "Best practices for Dataflow Gen2 performance",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-performance-best-practices"
+            },
+            {
+              "label": "Statistics in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics"
+            },
+            {
+              "label": "Result set caching",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+            },
+            {
+              "label": "Performance guidelines in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+            },
+            {
+              "label": "Change data policies in a KQL database",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-policies"
+            },
+            {
+              "label": "Configure settings for a Fabric eventstream",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "V-Order: hai engine, hai mặc định",
+          "md": "- Spark: workspace mới dùng profile writeHeavy nên `spark.sql.parquet.vorder.default=false`\n- Warehouse: V-Order bật cho mọi warehouse; tắt rồi không bật lại được\n- Trang Runtime vẫn ghi native writer mặc định V-Order; trang V-Order và resource profile mới hơn ghi tắt, theo trang mới\n- Tài liệu và đề luyện cũ hay ghi V-Order bật mặc định cho Spark",
+          "src": [
+            {
+              "label": "Optimize Delta Lake tables with V-order",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+            },
+            {
+              "label": "Configure resource profile configurations",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+            },
+            {
+              "label": "Performance guidelines in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+            },
+            {
+              "label": "Apache Spark runtimes in Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "Mặc định mới cần cập nhật",
+          "md": "- Resource profile ra đời; workspace mới chuyển sang writeHeavy, V-Order Spark tắt\n- Runtime 2.0 (Spark 4.1) là runtime GA mặc định cho workspace mới\n- Result set caching bật mặc định cho Warehouse và SQL analytics endpoint\n- Data compaction preemption của Warehouse bật từ tháng 10 năm 2025",
+          "src": [
+            {
+              "label": "Configure resource profile configurations",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+            },
+            {
+              "label": "Fabric Runtime 2.0",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime-2-0"
+            },
+            {
+              "label": "Result set caching",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+            },
+            {
+              "label": "Performance guidelines in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-delta",
+      "title": "Tối ưu lakehouse table: OPTIMIZE, V-Order, clustering, VACUUM",
+      "icon": "logo-delta-lake",
+      "task": "3.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Chọn kỹ thuật theo vấn đề",
+          "columns": [
+            "Kỹ thuật",
+            "Giải quyết",
+            "Ghi nhớ cho đề"
+          ],
+          "rows": [
+            [
+              "**OPTIMIZE**",
+              "Quá nhiều file nhỏ",
+              "minFileSize và maxFileSize mặc định 1 GB; fast optimize bỏ qua bin không đáng compact"
+            ],
+            [
+              "**OPTIMIZE ... VORDER**",
+              "Read chậm cho Power BI, SQL analytics endpoint",
+              "Thứ tự: bin compaction, Z-Order, V-Order; write chậm hơn khoảng 15%"
+            ],
+            [
+              "**Z-Order**",
+              "Filter thường xuyên trên 2 cột trở lên",
+              "Ghi lại cột mỗi lần OPTIMIZE; WHERE để giới hạn file cần rewrite"
+            ],
+            [
+              "**Liquid clustering**",
+              "Cột filter đổi theo thời gian, cardinality cao",
+              "CLUSTER BY lưu trong metadata; chỉ cluster khi chạy OPTIMIZE; OPTIMIZE FULL sau khi đổi key (Runtime 2.0)"
+            ],
+            [
+              "**Optimize write**",
+              "Write sinh nhiều file nhỏ: partitioned table, MERGE",
+              "Shuffle trước khi write; bật theo table bằng `delta.autoOptimize.optimizeWrite`"
+            ],
+            [
+              "**Auto compaction**",
+              "Streaming, micro-batch nhiều write nhỏ",
+              "Chạy OPTIMIZE đồng bộ sau commit khi thấy phân mảnh"
+            ],
+            [
+              "**VACUUM**",
+              "File không còn được tham chiếu chiếm storage",
+              "Mặc định giữ 7 ngày (168 giờ); DRY RUN để xem trước; mất time travel quá ngưỡng"
+            ],
+            [
+              "**Lakehouse Maintenance activity** (preview)",
+              "Chạy OPTIMIZE, V-Order, VACUUM theo lịch trong pipeline",
+              "Run từ portal hiện trong Monitor hub với tên TableMaintenance"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Table compaction",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+            },
+            {
+              "label": "Optimize Delta Lake tables with V-order",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+            },
+            {
+              "label": "Z-Order",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-z-order"
+            },
+            {
+              "label": "Liquid clustering",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"
+            },
+            {
+              "label": "Tune file size",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/tune-file-size"
+            },
+            {
+              "label": "VACUUM",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+            },
+            {
+              "label": "Lakehouse table maintenance",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Run maintenance job trên lakehouse table",
+          "img": "figs/monitor-table-maintenance.png",
+          "alt": "Lakehouse explorer, menu Maintenance của table my_table mở hộp thoại Run maintenance job với Optimize file size kèm Apply V-order, Remove unreferenced files sau 7 ngày, Clean deletion vectors.",
+          "caption": "Menu Maintenance của một table chạy OPTIMIZE (kèm tuỳ chọn V-order), VACUUM với retention mặc định 7 ngày, và clean deletion vectors mà không cần viết notebook.",
+          "credit": {
+            "label": "Microsoft Learn: Delta Table Maintenance in Microsoft Fabric",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "code",
+          "title": "Lệnh Spark SQL cho table maintenance",
+          "lang": "text",
+          "code": "-- Compact, then Z-Order, then V-Order in one pass\nOPTIMIZE dbo.sales ZORDER BY (order_date, region) VORDER;\n\n-- Liquid clustering: define once, applied on every OPTIMIZE\nALTER TABLE dbo.sales_lc CLUSTER BY (order_date, region);\nOPTIMIZE dbo.sales_lc;\n\n-- Table-level V-Order default for future writes\nALTER TABLE dbo.sales SET TBLPROPERTIES (\"delta.parquet.vorder.enabled\" = \"true\");\n\n-- List files older than 7 days that VACUUM would delete\nVACUUM dbo.sales RETAIN 168 HOURS DRY RUN;",
+          "notes": [
+            {
+              "line": 2,
+              "md": "`VORDER` ép V-Order cho file được rewrite, bất kể session hay table property."
+            },
+            {
+              "line": 6,
+              "md": "Không cần ghi cột trong OPTIMIZE vì clustering key nằm trong metadata."
+            },
+            {
+              "line": 9,
+              "md": "Chỉ ảnh hưởng write sau này; file cũ cần OPTIMIZE để đổi layout."
+            }
+          ],
+          "src": [
+            {
+              "label": "Table compaction",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+            },
+            {
+              "label": "Liquid clustering",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"
+            },
+            {
+              "label": "Optimize Delta Lake tables with V-order",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+            },
+            {
+              "label": "VACUUM",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Tín hiệu trong đề",
+          "md": "- \"many small files, slow reads\": OPTIMIZE\n- \"Direct Lake or Power BI reads are slow\": V-Order qua OPTIMIZE VORDER hoặc profile readHeavyForPBI\n- \"reclaim storage from old files\": VACUUM\n- \"filter columns change, avoid rewriting partitions\": liquid clustering\n- Data compaction nền tự động chỉ có ở Warehouse; lakehouse cần OPTIMIZE theo lịch hoặc bật auto compaction",
+          "src": [
+            {
+              "label": "Table compaction",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+            },
+            {
+              "label": "Liquid clustering",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"
+            },
+            {
+              "label": "Performance guidelines in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+            },
+            {
+              "label": "Learn Microsoft Fabric with Will, Monitor & Optimize Solutions in Microsoft Fabric, DP-700 Exam Prep 10 of 11",
+              "url": "https://www.youtube.com/watch?v=0M4t6ljwZ9A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-spark",
+      "title": "Tối ưu Spark: resource profile, native execution engine, high concurrency",
+      "icon": "logo-apache-spark",
+      "task": "3.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Resource profile và config mặc định",
+          "columns": [
+            "Profile",
+            "Dùng khi",
+            "Config đặt sẵn"
+          ],
+          "rows": [
+            [
+              "**writeHeavy** (mặc định workspace mới)",
+              "ETL, ingest, streaming",
+              "`vorder.default=false`, `optimizeWrite.partitioned.enabled=true`, binSize 128"
+            ],
+            [
+              "**readHeavyForSpark**",
+              "Spark đọc lặp lại nhiều lần",
+              "`optimizeWrite.enabled=true`, binSize 128"
+            ],
+            [
+              "**readHeavyForPBI**",
+              "Power BI query Delta table",
+              "`vorder.default=true`, `optimizeWrite.enabled=true`, binSize 1g"
+            ],
+            [
+              "**custom**",
+              "Bộ config riêng có tên",
+              "Ví dụ `spark.sql.shuffle.partitions`"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Configure resource profile configurations",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Bật native execution engine trong environment",
+          "img": "figs/monitor-native-execution-engine.png",
+          "alt": "Environment item, mục Spark compute > Acceleration với checkbox Enable native execution engine và nút Save, Publish.",
+          "caption": "Native execution engine nằm ở mục Acceleration của environment, dưới Spark compute. Tick Enable native execution engine rồi Publish thì notebook và Spark job definition dùng environment này được áp dụng.",
+          "credit": {
+            "label": "Microsoft Learn: Native execution engine for Fabric Data Engineering",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "code",
+          "title": "Spark config đã kiểm trên docs",
+          "lang": "text",
+          "code": "%%configure\n{ \"conf\": { \"spark.native.enabled\": \"true\" } }\n\n# Resource profile for this session, overrides the environment value\nspark.conf.set(\"spark.fabric.resourceProfile\", \"readHeavyForPBI\")\n\n# Session-level V-Order\nspark.conf.set(\"spark.sql.parquet.vorder.default\", \"true\")\n\n# Turn the native engine off for one unsupported query, then back on\nspark.conf.set(\"spark.native.enabled\", \"false\")\nspark.conf.set(\"spark.native.enabled\", \"true\")\n\n# Skip compaction bins unlikely to help\nspark.conf.set(\"spark.microsoft.delta.optimize.fast.enabled\", \"true\")",
+          "notes": [
+            {
+              "line": 1,
+              "md": "`%%configure` đặt ở cell đầu tiên của notebook."
+            },
+            {
+              "line": 5,
+              "md": "Giá trị runtime thắng giá trị đặt trong environment."
+            },
+            {
+              "line": 11,
+              "md": "Spark chạy cell tuần tự nên phải bật lại cho cell sau."
+            }
+          ],
+          "src": [
+            {
+              "label": "Native execution engine for Fabric Data Engineering",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+            },
+            {
+              "label": "Configure resource profile configurations",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+            },
+            {
+              "label": "Optimize Delta Lake tables with V-order",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+            },
+            {
+              "label": "Table compaction",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Native execution engine, vai trò giống Photon",
+          "md": "- Engine C++ vectorized dựa trên Velox và Apache Gluten, không cần sửa code\n- Hỗ trợ Runtime 1.3 và 2.0; bật ở tab Acceleration của environment hoặc `spark.native.enabled`\n- Không tự bật; structured streaming, JSON, XML tự fallback về JVM\n- Kiểm tra bằng node có hậu tố Transformer hoặc NativeFileScan trong Spark UI, `df.explain()`",
+          "src": [
+            {
+              "label": "Native execution engine for Fabric Data Engineering",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+            },
+            {
+              "label": "Fabric Runtime 2.0",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime-2-0"
+            },
+            {
+              "label": "Fabric Espresso, Native execution engine for Apache Spark in Fabric",
+              "url": "https://www.youtube.com/watch?v=8GJj4QlFlsw"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "High concurrency và autotune: xem chương Workspace",
+          "md": "- \"many notebooks, reduce session start\": high concurrency, notebook share một Spark session\n- \"tune shuffle partitions from history\": autotune, nhưng preview, chỉ Runtime 1.2, không chạy cùng high concurrency\n- \"slow Power BI reads after switching workspace\": readHeavyForPBI",
+          "src": [
+            {
+              "label": "High concurrency mode overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/high-concurrency-overview"
+            },
+            {
+              "label": "Configure autotune for Apache Spark",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/autotune"
+            },
+            {
+              "label": "Configure resource profile configurations",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-pipeline-wh",
+      "title": "Tối ưu pipeline, Dataflow Gen2 và warehouse",
+      "icon": "database-cog",
+      "task": "3.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Đòn bẩy và khi nào dùng",
+          "columns": [
+            "Item",
+            "Đòn bẩy",
+            "Khi nào"
+          ],
+          "rows": [
+            [
+              "Copy activity",
+              "**Intelligent throughput optimization**: Auto, Standard, Balanced, Maximum hoặc 4 tới 256",
+              "Copy lớn cần nhanh hơn; vai trò như DIU của ADF"
+            ],
+            [
+              "Copy activity",
+              "**Degree of copy parallelism**",
+              "Giới hạn tải lên source hoặc tăng số thread; mặc định service tự chọn"
+            ],
+            [
+              "Pipeline",
+              "ForEach bỏ Sequential, đặt **Batch count**",
+              "Nhiều table độc lập cần copy song song"
+            ],
+            [
+              "Copy activity",
+              "**Enable staging** qua workspace hoặc ADLS Gen2, Blob",
+              "Cần interim store; workspace staging timeout 60 phút"
+            ],
+            [
+              "Dataflow Gen2",
+              "**Fast Copy**, tách query copy và transform, bật staging",
+              "Data lớn, transform không fold về source"
+            ],
+            [
+              "Warehouse",
+              "**CREATE, UPDATE STATISTICS** ... WITH FULLSCAN",
+              "Sau load lớn làm ước lượng sai; chỉ single-column"
+            ],
+            [
+              "Warehouse",
+              "**Result set caching**",
+              "Dashboard chạy lặp cùng một query"
+            ],
+            [
+              "Warehouse",
+              "Gộp insert, **COPY INTO**, file từ 100 MB",
+              "Tránh trickle insert sinh nhiều file nhỏ"
+            ],
+            [
+              "Warehouse",
+              "**Data clustering** (preview) bằng CLUSTER BY trong CREATE TABLE, CTAS",
+              "Filter chọn lọc trên table lớn"
+            ],
+            [
+              "Warehouse",
+              "`varchar(n)` vừa đủ, integer cho số nguyên",
+              "Statistics và ước lượng cost chính xác hơn"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Copy activity performance and scalability guide",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-activity-performance-and-scalability-guide"
+            },
+            {
+              "label": "ForEach activity",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/foreach-activity"
+            },
+            {
+              "label": "Copy activity",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-data-activity"
+            },
+            {
+              "label": "Best practices for Dataflow Gen2 performance",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-performance-best-practices"
+            },
+            {
+              "label": "Statistics in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics"
+            },
+            {
+              "label": "Result set caching",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+            },
+            {
+              "label": "Performance guidelines in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+            },
+            {
+              "label": "Data clustering in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/data-clustering"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "title": "Statistics và result set caching",
+          "lang": "text",
+          "code": "-- Single-column statistics after a large load\nCREATE STATISTICS DimCustomer_CustomerKey_FullScan\nON dbo.DimCustomer (CustomerKey) WITH FULLSCAN;\nUPDATE STATISTICS dbo.DimCustomer (DimCustomer_CustomerKey_FullScan) WITH FULLSCAN;\n\n-- Result set caching is on by default; check the item setting\nSELECT name, is_result_set_caching_on FROM sys.databases WHERE database_id = db_id();\n\n-- Bypass the cache for one query (debugging, A/B tests)\nSELECT Region, SUM(Amount) FROM dbo.FactSales GROUP BY Region\nOPTION ( USE HINT ('DISABLE_RESULT_SET_CACHE') );\n\n-- 2 = cache hit, 1 = cache created, 0 = not eligible\nSELECT result_cache_hit, command FROM queryinsights.exec_requests_history\nORDER BY submit_time DESC;",
+          "notes": [
+            {
+              "line": 2,
+              "md": "Engine cũng tự tạo histogram statistics lúc query, tên dạng `_WA_Sys_`."
+            },
+            {
+              "line": 7,
+              "md": "Tắt cho cả item: `ALTER DATABASE <item> SET RESULT_SET_CACHING OFF`."
+            }
+          ],
+          "src": [
+            {
+              "label": "Statistics in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics"
+            },
+            {
+              "label": "Result set caching",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Khi result set caching không dùng được",
+          "md": "- Không phải SELECT thuần: CTAS, SELECT INTO, DML\n- Cross-database query, temp table, GETDATE(), CURRENT_USER\n- Row-level security, dynamic data masking, time travel\n- Kết quả ước lượng trên 10,000 rows, hoặc không có table nào từ 100,000 rows\n- Cache tự mất hiệu lực khi table đổi",
+          "src": [
+            {
+              "label": "Result set caching",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mon-rti-opt",
+      "title": "Tối ưu eventhouse và eventstream bằng policy",
+      "icon": "fab-event-house",
+      "task": "3.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Policy nào làm gì",
+          "columns": [
+            "Policy, setting",
+            "Làm gì",
+            "Ghi nhớ"
+          ],
+          "rows": [
+            [
+              "**Caching policy**",
+              "Giữ data gần nhất trên SSD local (hot cache)",
+              "Data cold rẻ hơn nhưng query chậm hơn; caching không vượt retention; `hot_window` cho khoảng cũ hay query"
+            ],
+            [
+              "**Retention policy**",
+              "Tự xóa data quá soft-delete period",
+              "Trong UI mặc định 3,650 ngày, tối thiểu 1, tối đa 36,500; đặt ở database hoặc table"
+            ],
+            [
+              "**Partitioning policy**",
+              "Gom extent đồng nhất theo partition key",
+              "Chỉ khi hay filter, join trên cột string hoặc guid nhiều giá trị, hoặc data đến lệch thời gian; bỏ qua nếu mỗi partition dưới 1 GB"
+            ],
+            [
+              "**Update policy**",
+              "Chạy query transform khi data vào source table, ghi sang target",
+              "IsTransactional mặc định false; production nên true"
+            ],
+            [
+              "Eventstream **Event throughput**",
+              "Low dưới 10 MB/s, Medium 10 tới 100, High trên 100 MB/s",
+              "Event Hubs source dưới 4 partition bị giới hạn bởi số partition"
+            ],
+            [
+              "Eventstream **Retention**",
+              "Giữ event trong eventstream",
+              "Mặc định 1 ngày, tối đa 90 ngày, không xóa event thủ công được"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Caching policy (hot and cold cache)",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Change data policies in a KQL database",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-policies"
+            },
+            {
+              "label": "Retention policy",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Partitioning policy",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/partitioning-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Update policy overview",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Configure settings for a Fabric eventstream",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "title": "Lệnh KQL đổi policy",
+          "lang": "text",
+          "code": "// Keep the last 30 days in hot cache\n.alter table Telemetry policy caching hot = 30d\n\n// Delete rows older than 90 days\n.alter-merge table Telemetry policy retention softdelete = 90d recoverability = disabled\n\n// Transform RawEvents into Telemetry at ingestion time\n.alter table Telemetry policy update\n@'[{ \"IsEnabled\": true, \"Source\": \"RawEvents\", \"Query\": \"ParseRaw()\", \"IsTransactional\": true, \"PropagateIngestionProperties\": false}]'\n\n// Keep the raw landing table empty after the update policy runs\n.alter-merge table RawEvents policy retention softdelete = 0s",
+          "notes": [
+            {
+              "line": 2,
+              "md": "Cần ít nhất quyền Table Admin."
+            },
+            {
+              "line": 9,
+              "md": "Policy lỗi thì cả source và target đều không nhận data, ingestion báo fail."
+            },
+            {
+              "line": 12,
+              "md": "Source có soft delete 0s thì mọi update policy tham chiếu nó phải transactional."
+            }
+          ],
+          "src": [
+            {
+              "label": ".alter table policy caching command",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/alter-table-cache-policy-command?view=microsoft-fabric"
+            },
+            {
+              "label": "Retention policy",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Update policy overview",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Tín hiệu trong đề",
+          "md": "- \"queries on the last 7 days must be fast, keep 1 year\": caching hot = 7d, retention 365d\n- \"reduce cost of rarely queried old data\": thu hẹp caching, không giảm retention\n- \"transform at ingestion, no orchestration\": update policy\n- \"eventstream lags behind a high-volume source\": tăng Event throughput level",
+          "src": [
+            {
+              "label": "Caching policy (hot and cold cache)",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Update policy overview",
+              "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+            },
+            {
+              "label": "Configure settings for a Fabric eventstream",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

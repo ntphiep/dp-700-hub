@@ -1,0 +1,386 @@
+[
+  {
+    "id": "watermark-column",
+    "term": "Watermark column",
+    "full": "",
+    "aliases": [
+      "watermark",
+      "high watermark",
+      "incremental column"
+    ],
+    "cat": "Ingestion",
+    "what": "Cột tăng dần khi insert hoặc update, dùng để chỉ lấy dòng mới hoặc đổi kể từ lần load trước.",
+    "means": [
+      "Kiểu thường gặp: datetime, ROWVERSION, integer tăng dần.",
+      "Không bắt được delete; dòng NULL ở cột này bị bỏ qua.",
+      "Pipeline tự lưu giá trị; Copy job tự quản state."
+    ],
+    "related": [
+      "cdc",
+      "copy-job",
+      "copy-activity"
+    ],
+    "src": {
+      "label": "Incremental copy in Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+    }
+  },
+  {
+    "id": "cdc",
+    "term": "CDC",
+    "full": "Change data capture",
+    "aliases": [
+      "change data capture"
+    ],
+    "cat": "Ingestion",
+    "what": "Tính năng của database ghi lại mọi insert, update, delete để công cụ khác đọc phần thay đổi.",
+    "means": [
+      "Bắt được delete, khác với watermark.",
+      "Copy job tự nhận bảng có CDC và cho chọn Merge hoặc SCD Type 2."
+    ],
+    "related": [
+      "watermark-column",
+      "copy-job",
+      "scd-type-2"
+    ],
+    "src": {
+      "label": "CDC in Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job"
+    }
+  },
+  {
+    "id": "copy-job",
+    "term": "Copy job",
+    "full": "",
+    "aliases": [
+      "Copy Job"
+    ],
+    "cat": "Ingestion",
+    "what": "Item Data Factory copy data từ nhiều source tới nhiều destination với full, incremental hoặc CDC, không cần pipeline.",
+    "means": [
+      "Tự giữ state watermark, resume từ lần chạy thành công cuối.",
+      "Write method: Append, Merge, Overwrite, SCD Type 2.",
+      "Đề nói incremental, upsert, không dựng pipeline thì chọn Copy job."
+    ],
+    "related": [
+      "watermark-column",
+      "cdc",
+      "copy-activity"
+    ],
+    "src": {
+      "label": "What is Copy job",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job"
+    }
+  },
+  {
+    "id": "copy-activity",
+    "term": "Copy activity",
+    "full": "",
+    "aliases": [
+      "copy activity"
+    ],
+    "cat": "Ingestion",
+    "what": "Activity trong pipeline copy data giữa source và destination, tuỳ biến và tham số hoá đầy đủ.",
+    "means": [
+      "Hợp ingestion theo metadata với Lookup và ForEach.",
+      "Incremental phải tự lưu watermark, ví dụ bằng Stored procedure activity."
+    ],
+    "related": [
+      "copy-job",
+      "watermark-column"
+    ],
+    "src": {
+      "label": "Decision guide: data movement",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement"
+    }
+  },
+  {
+    "id": "scd-type-1",
+    "term": "SCD Type 1",
+    "full": "Slowly changing dimension type 1",
+    "aliases": [
+      "SCD type 1"
+    ],
+    "cat": "Transformation",
+    "what": "Cách xử lý dimension ghi đè attribute đã đổi trên dòng hiện có, không giữ lịch sử.",
+    "means": [
+      "Dùng cho sửa lỗi dữ liệu như số điện thoại.",
+      "Copy job gọi là Merge update method."
+    ],
+    "related": [
+      "scd-type-2",
+      "merge"
+    ],
+    "src": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "scd-type-2",
+    "term": "SCD Type 2",
+    "full": "Slowly changing dimension type 2",
+    "aliases": [
+      "SCD type 2"
+    ],
+    "cat": "Transformation",
+    "what": "Cách xử lý dimension giữ mọi version: expire dòng hiện tại và insert dòng mới làm current.",
+    "means": [
+      "Cần surrogate key, cột validity và current flag.",
+      "Copy job CDC có write method SCD Type 2 (Preview)."
+    ],
+    "related": [
+      "scd-type-1",
+      "surrogate-key",
+      "inferred-member"
+    ],
+    "src": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "surrogate-key",
+    "term": "Surrogate key",
+    "full": "",
+    "aliases": [
+      "surrogate keys"
+    ],
+    "cat": "Transformation",
+    "what": "Khoá số nguyên do warehouse sinh cho mỗi dòng dimension, tách khỏi business key của source.",
+    "means": [
+      "Fabric Warehouse hỗ trợ IDENTITY column để sinh key.",
+      "Không truncate và reload dimension có surrogate key."
+    ],
+    "related": [
+      "scd-type-2",
+      "inferred-member"
+    ],
+    "src": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "inferred-member",
+    "term": "Inferred member",
+    "full": "",
+    "aliases": [
+      "inferred dimension member",
+      "late arriving dimension"
+    ],
+    "cat": "Transformation",
+    "what": "Dòng dimension do fact load tạo khi chỉ biết natural key, attribute để Unknown, đánh dấu IsInferredMember.",
+    "means": [
+      "Xử lý late-arriving dimension mà không chặn fact.",
+      "Khi chi tiết đến thì update, không tạo version SCD."
+    ],
+    "related": [
+      "surrogate-key",
+      "scd-type-2"
+    ],
+    "src": {
+      "label": "Load tables in a dimensional model",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+    }
+  },
+  {
+    "id": "medallion-architecture",
+    "term": "Medallion architecture",
+    "full": "",
+    "aliases": [
+      "medallion",
+      "medallion lakehouse"
+    ],
+    "cat": "OneLake & Storage",
+    "what": "Design pattern chia lakehouse thành bronze (raw), silver (clean), gold (curated) để nâng chất lượng data theo từng bước.",
+    "means": [
+      "Microsoft khuyên mỗi layer một lakehouse hoặc warehouse, nên ở workspace riêng.",
+      "Bronze dùng shortcut khi source đã ở ADLS, S3, Google."
+    ],
+    "related": [
+      "onelake-shortcut",
+      "mirroring"
+    ],
+    "src": {
+      "label": "Medallion architecture in Fabric",
+      "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture"
+    }
+  },
+  {
+    "id": "onelake-shortcut",
+    "term": "OneLake shortcut",
+    "full": "",
+    "aliases": [
+      "shortcut",
+      "shortcuts"
+    ],
+    "cat": "OneLake & Storage",
+    "what": "Object trong OneLake trỏ tới data ở nơi khác, hiện như folder, không copy data.",
+    "means": [
+      "Tạo trong lakehouse và KQL database, không trong warehouse.",
+      "External: ADLS Gen2, S3, GCS, Dataverse, Blob, Iceberg.",
+      "Xoá file bên trong shortcut là xoá ở target."
+    ],
+    "related": [
+      "mirroring",
+      "medallion-architecture"
+    ],
+    "src": {
+      "label": "OneLake shortcuts",
+      "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+    }
+  },
+  {
+    "id": "mirroring",
+    "term": "Mirroring",
+    "full": "Database mirroring",
+    "aliases": [
+      "mirrored database",
+      "database mirroring"
+    ],
+    "cat": "Ingestion",
+    "what": "Replicate liên tục database bên ngoài vào OneLake thành Delta table, kèm SQL analytics endpoint read-only.",
+    "means": [
+      "Compute replicate miễn phí; 1 TB storage mirroring miễn phí mỗi CU.",
+      "Source: Azure SQL, SQL Server, Cosmos DB, Snowflake, Oracle, BigQuery và khác."
+    ],
+    "related": [
+      "open-mirroring",
+      "metadata-mirroring",
+      "sql-analytics-endpoint"
+    ],
+    "src": {
+      "label": "Mirroring overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+    }
+  },
+  {
+    "id": "open-mirroring",
+    "term": "Open mirroring",
+    "full": "",
+    "aliases": [
+      "open mirrored database"
+    ],
+    "cat": "Ingestion",
+    "what": "Kiểu mirroring cho phép ứng dụng tự ghi change data vào landing zone để Fabric merge thành Delta table.",
+    "means": [
+      "Cần _metadata.json có keyColumns để update và delete.",
+      "Cột __rowMarker__: 0 insert, 1 update, 2 delete, 4 upsert."
+    ],
+    "related": [
+      "mirroring"
+    ],
+    "src": {
+      "label": "Open mirroring landing zone format",
+      "url": "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring-landing-zone-format"
+    }
+  },
+  {
+    "id": "metadata-mirroring",
+    "term": "Metadata mirroring",
+    "full": "",
+    "aliases": [],
+    "cat": "Ingestion",
+    "what": "Kiểu mirroring chỉ sync catalog, schema và table, còn data đọc tại chỗ qua shortcut.",
+    "means": [
+      "Ví dụ: Azure Databricks Unity Catalog, Snowflake, Dremio.",
+      "Không replicate data nên latency phụ thuộc source."
+    ],
+    "related": [
+      "mirroring",
+      "onelake-shortcut"
+    ],
+    "src": {
+      "label": "Mirroring overview",
+      "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+    }
+  },
+  {
+    "id": "sql-analytics-endpoint",
+    "term": "SQL analytics endpoint",
+    "full": "",
+    "aliases": [
+      "SQL endpoint"
+    ],
+    "cat": "OneLake & Storage",
+    "what": "Endpoint T-SQL read-only tự tạo cho lakehouse và mirrored database, đọc Delta table.",
+    "means": [
+      "Không chạy INSERT, UPDATE, DELETE; ghi bằng Spark hoặc dùng warehouse.",
+      "Cho tạo view, function, stored procedure."
+    ],
+    "related": [
+      "mirroring"
+    ],
+    "src": {
+      "label": "SQL analytics endpoint",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint"
+    }
+  },
+  {
+    "id": "copy-into",
+    "term": "COPY INTO",
+    "full": "",
+    "aliases": [
+      "COPY statement"
+    ],
+    "cat": "Ingestion",
+    "what": "Lệnh T-SQL nạp file CSV, JSONL, Parquet từ ADLS Gen2, Blob hoặc OneLake vào bảng Warehouse.",
+    "means": [
+      "Throughput cao nhất khi ingest file vào Warehouse.",
+      "Hỗ trợ CREDENTIAL bằng Workspace Identity."
+    ],
+    "related": [
+      "ctas",
+      "merge"
+    ],
+    "src": {
+      "label": "Ingest data into the warehouse",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data"
+    }
+  },
+  {
+    "id": "ctas",
+    "term": "CTAS",
+    "full": "CREATE TABLE AS SELECT",
+    "aliases": [
+      "CREATE TABLE AS SELECT"
+    ],
+    "cat": "Transformation",
+    "what": "Lệnh T-SQL tạo bảng mới và nạp kết quả của một SELECT trong một bước.",
+    "means": [
+      "Dùng để denormalize bằng JOIN và aggregate bằng GROUP BY.",
+      "Đọc được bảng lakehouse cùng workspace bằng three-part name."
+    ],
+    "related": [
+      "copy-into",
+      "merge"
+    ],
+    "src": {
+      "label": "Ingest data using T-SQL",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-tsql"
+    }
+  },
+  {
+    "id": "merge",
+    "term": "MERGE",
+    "full": "",
+    "aliases": [
+      "MERGE INTO"
+    ],
+    "cat": "Transformation",
+    "what": "Lệnh so khớp source với target theo key để insert, update hoặc delete trong một thao tác.",
+    "means": [
+      "T-SQL MERGE đã GA trong Fabric Warehouse.",
+      "Delta MERGE lỗi khi nhiều dòng source khớp một dòng target."
+    ],
+    "related": [
+      "scd-type-1",
+      "ctas"
+    ],
+    "src": {
+      "label": "MERGE (Transact-SQL)",
+      "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric"
+    }
+  }
+]

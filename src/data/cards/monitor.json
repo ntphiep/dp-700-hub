@@ -1,0 +1,209 @@
+[
+ {
+  "id": "mon-c01",
+  "front": "Single place to see failed runs of pipelines, notebooks and dataflows",
+  "back": "Monitor hub (Job runs), filtered by Failed status. Chỉ hiện item bạn có quyền xem.",
+  "ref": {
+   "label": "Monitor job runs in the Monitor hub",
+   "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-jobs"
+  }
+ },
+ {
+  "id": "mon-c02",
+  "front": "Query 30 days of item logs with KQL and build dashboards",
+  "back": "Workspace monitoring: logs go to the monitoring eventhouse, 30-day default retention. Collection mặc định tắt và không backfill.",
+  "ref": {
+   "label": "Workspace monitoring overview",
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+  }
+ },
+ {
+  "id": "mon-c03",
+  "front": "Which item consumed the most CU at 09:10?",
+  "back": "Capacity Metrics app, Timepoint page (30-second timepoint). App không có alert; dùng capacity events để alert.",
+  "ref": {
+   "label": "What is the Microsoft Fabric Capacity Metrics app",
+   "url": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app"
+  }
+ },
+ {
+  "id": "mon-c04",
+  "front": "Spark error HTTP 430 TooManyRequestsForCapacity",
+  "back": "All Spark cores in use. Pipeline and scheduled jobs queue up to 24 hours; interactive notebooks do not. Capacity đang throttled thì job mới bị reject.",
+  "ref": {
+   "label": "Concurrency limits and queueing in Apache Spark for Fabric",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-job-concurrency-and-queueing"
+  }
+ },
+ {
+  "id": "mon-c05",
+  "front": "Free email when a scheduled job fails",
+  "back": "Schedule failure emails in the Monitor hub or job scheduler. Không áp dụng cho manual run và chưa hỗ trợ semantic model.",
+  "ref": {
+   "label": "Set up job alerts in the Monitor hub",
+   "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
+  }
+ },
+ {
+  "id": "mon-c06",
+  "front": "Alert on Started or Succeeded job events, or run a notebook as the action",
+  "back": "Activator rule on job events. Activator tính CU khi rule đang chạy.",
+  "ref": {
+   "label": "Set up job alerts in the Monitor hub",
+   "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
+  }
+ },
+ {
+  "id": "mon-c07",
+  "front": "One alert rule for all failed pipelines in a workspace",
+  "back": "Workspace monitoring + KQL Queryset on ItemJobEventLogs + Activator. Activator phải poll dày hơn cửa sổ query.",
+  "ref": {
+   "label": "Create alerts for pipeline runs",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs"
+  }
+ },
+ {
+  "id": "mon-c08",
+  "front": "Refresh an Import semantic model right after the load",
+  "back": "Semantic model refresh activity after the load in the same pipeline; pick tables or partitions. Mặc định full refresh và Wait on completion bật.",
+  "ref": {
+   "label": "Semantic model refresh activity",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-factory/semantic-model-refresh-activity"
+  }
+ },
+ {
+  "id": "mon-c09",
+  "front": "Direct Lake model does not show new Delta rows",
+  "back": "Refresh (framing) the model or enable automatic updates. Framing chỉ cập nhật metadata trong vài giây.",
+  "ref": {
+   "label": "Direct Lake overview",
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview"
+  }
+ },
+ {
+  "id": "mon-c10",
+  "front": "Dataflow Gen2 refresh failed, need Mashup engine logs",
+  "back": "Recent runs > Download detailed logs (kept 28 days). Qua gateway thì bật Admin consent for gateway diagnostics.",
+  "ref": {
+   "label": "View refresh history and monitor your dataflows",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-monitor"
+  }
+ },
+ {
+  "id": "mon-c11",
+  "front": "Pipeline activity fails on transient errors",
+  "back": "Enable retries on the activity; retry interval default 30 seconds. Timeout mặc định 12 giờ, tối đa 7 ngày.",
+  "ref": {
+   "label": "Activity overview",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview"
+  }
+ },
+ {
+  "id": "mon-c12",
+  "front": "Warehouse error 24556 update conflict",
+  "back": "Snapshot isolation detects write-write conflicts at table level; retry the failed transaction. MERGE chỉ insert vẫn có thể conflict.",
+  "ref": {
+   "label": "Transactions in Warehouse tables",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/transactions"
+  }
+ },
+ {
+  "id": "mon-c13",
+  "front": "Update policy failed, find the error",
+  "back": ".show ingestion failures | where OriginatesFromUpdatePolicy == true. Lỗi hay gặp là schema output không khớp target.",
+  "ref": {
+   "label": "Update policy overview",
+   "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+  }
+ },
+ {
+  "id": "mon-c14",
+  "front": "Update policy must not leave source and target inconsistent",
+  "back": "Set IsTransactional to true (default false). Policy lỗi thì cả source và target không nhận data.",
+  "ref": {
+   "label": "Update policy overview",
+   "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+  }
+ },
+ {
+  "id": "mon-c15",
+  "front": "Eventstream Backlogged input events and Watermark delay rising",
+  "back": "Raise the Event throughput level (Low < 10, Medium 10 to 100, High > 100 MB/s). Event Hubs dưới 4 partition bị giới hạn bởi partition.",
+  "ref": {
+   "label": "Configure settings for a Fabric eventstream",
+   "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings"
+  }
+ },
+ {
+  "id": "mon-c16",
+  "front": "Did the warehouse query read from OneLake (cold start)?",
+  "back": "queryinsights.exec_requests_history, data_scanned_remote_storage_mb > 0. Đừng đo hiệu năng bằng lần chạy đầu.",
+  "ref": {
+   "label": "Performance guidelines in Fabric Data Warehouse",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+  }
+ },
+ {
+  "id": "mon-c17",
+  "front": "Spark V-Order default in a new workspace",
+  "back": "Off: new workspaces use the writeHeavy profile (spark.sql.parquet.vorder.default=false). Warehouse thì V-Order bật mặc định.",
+  "ref": {
+   "label": "Configure resource profile configurations",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+  }
+ },
+ {
+  "id": "mon-c18",
+  "front": "OPTIMIZE dbo.t ZORDER BY (a, b) VORDER runs in which order?",
+  "back": "Bin compaction, then Z-Order, then V-Order. VORDER ép V-Order bất kể session hay table setting.",
+  "ref": {
+   "label": "Table compaction",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+  }
+ },
+ {
+  "id": "mon-c19",
+  "front": "Filter columns change, high cardinality, no partition rewrite",
+  "back": "Liquid clustering: ALTER TABLE ... CLUSTER BY, applied on OPTIMIZE. Đổi key thì OPTIMIZE FULL (Runtime 2.0).",
+  "ref": {
+   "label": "Liquid clustering",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"
+  }
+ },
+ {
+  "id": "mon-c20",
+  "front": "VACUUM default retention",
+  "back": "7 days (168 hours); shorter fails unless spark.databricks.delta.retentionDurationCheck.enabled=false. DRY RUN để xem trước file sẽ xóa.",
+  "ref": {
+   "label": "VACUUM",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+  }
+ },
+ {
+  "id": "mon-c21",
+  "front": "Fabric equivalent of Databricks Photon",
+  "back": "Native execution engine (Velox + Apache Gluten), Runtime 1.3 and 2.0; enable on the environment Acceleration tab or spark.native.enabled. Không tự bật.",
+  "ref": {
+   "label": "Native execution engine for Fabric Data Engineering",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+  }
+ },
+ {
+  "id": "mon-c22",
+  "front": "Warehouse cache for repeated identical SELECTs",
+  "back": "Result set caching, on by default; result_cache_hit = 2 means hit. Không cache CTAS, cross-database, GETDATE().",
+  "ref": {
+   "label": "Result set caching",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+  }
+ },
+ {
+  "id": "mon-c23",
+  "front": "Keep 2 years, fast queries on last 14 days in an eventhouse",
+  "back": "Retention softdelete = 730d, caching hot = 14d. Caching phải nhỏ hơn hoặc bằng retention.",
+  "ref": {
+   "label": "Caching policy (hot and cold cache)",
+   "url": "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric"
+  }
+ }
+]

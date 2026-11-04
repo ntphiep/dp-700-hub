@@ -1,0 +1,1075 @@
+[
+ {
+  "id": "ws-01",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A data engineering team runs short interactive notebooks in a Fabric workspace on an F64 capacity. Six months ago the workspace admin created a custom Spark pool with Medium nodes and made it the default pool. Users now complain that every new notebook session takes about three minutes to start. The team does not need special node sizes or libraries. You need to minimize session start time with the least administrative effort.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Increase the maximum number of nodes in the custom Spark pool and enable autoscale."
+   },
+   {
+    "k": "B",
+    "t": "Set the default pool for the workspace to Starter Pool."
+   },
+   {
+    "k": "C",
+    "t": "Create an environment that uses Full mode for library publishing and attach it to every notebook."
+   },
+   {
+    "k": "D",
+    "t": "Enable autotune by setting spark.ms.autotune.enabled to true for the workspace."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: session start khoảng 3 phút, không cần node size hay library đặc biệt, LEAST administrative effort.\n- Starter pool là pre-warmed pool, session thường start trong vài giây.\n- Docs ghi rõ đổi default pool từ Starter Pool sang custom pool làm session start khoảng 3 phút.",
+  "wrong": {
+   "A": "Thêm node không làm cluster được hydrate sẵn; custom pool vẫn mất khoảng 3 phút để start.",
+   "C": "Full mode thêm 1 tới 3 phút deploy library lúc start nếu không có custom live pool.",
+   "D": "Autotune tune shuffle partitions và broadcast threshold của query, không ảnh hưởng session start."
+  },
+  "refs": [
+   {
+    "label": "Workspace administration settings",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-admin-settings"
+   },
+   {
+    "label": "Configure starter pools",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-starter-pools"
+   }
+  ]
+ },
+ {
+  "id": "ws-02",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 1,
+  "stem": "You are the admin of a Fabric workspace. A Spark job needs memory-optimized Large nodes, so you plan to create a custom Spark pool. In Workspace settings, under Data Engineering/Science > Spark settings, you cannot create a new pool; only the starter pool is available. Other workspaces on different capacities can create custom pools.\nWhat should be done so that you can create the custom pool?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A Fabric administrator enables the Users can create Fabric items tenant setting."
+   },
+   {
+    "k": "B",
+    "t": "You create an environment item and set the node size in its Spark compute section."
+   },
+   {
+    "k": "C",
+    "t": "A capacity administrator enables Customized workspace pools in the Spark Compute settings of the capacity."
+   },
+   {
+    "k": "D",
+    "t": "You turn on Customize compute configurations for items in the workspace Spark settings and then add a new pool from the Environment tab."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: chỉ workspace trên capacity này không tạo được custom pool, workspace khác thì được.\n- Tạo custom Spark pool cần capacity admin bật Customized workspace pools ở Spark Compute settings của capacity.\n- Setting này mặc định bật, nên trường hợp này là capacity admin đã tắt nó.",
+  "wrong": {
+   "A": "Tenant setting tạo item không quyết định quyền tạo custom pool, và nó áp cho mọi capacity.",
+   "B": "Environment chỉ đặt driver, executor cores và memory trong giới hạn của pool, không tạo pool mới.",
+   "D": "Setting này cho phép item chỉnh compute qua environment; nó không mở khoá việc tạo pool."
+  },
+  "refs": [
+   {
+    "label": "Create custom Spark pools",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/create-custom-spark-pools"
+   },
+   {
+    "label": "Workspace administration settings",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-admin-settings"
+   }
+  ]
+ },
+ {
+  "id": "ws-03",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A Fabric pipeline uses a ForEach activity to run the same notebook for 40 source tables. All notebook runs use the same default lakehouse, the same environment, and run under the same user. Monitoring shows that each iteration starts a new Spark session, which makes the pipeline slow and consumes more capacity units. You need to reduce session start time and compute cost without rewriting the notebook logic.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Enable high concurrency for pipelines in the workspace settings and set a session tag on the Notebook activity."
+   },
+   {
+    "k": "B",
+    "t": "Enable autotune in the environment used by the notebook."
+   },
+   {
+    "k": "C",
+    "t": "Increase the maximum nodes of the starter pool to the SKU limit."
+   },
+   {
+    "k": "D",
+    "t": "Change the Notebook activity to run a wrapper notebook that calls the table notebook by using the %run magic command."
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: cùng user, cùng default lakehouse, cùng environment, mỗi lần lặp start session mới.\n- High concurrency cho pipeline gom notebook vào session có sẵn; session tag là tiêu chí gom.\n- Chỉ activity khởi tạo session bị tính Spark compute.",
+  "wrong": {
+   "B": "Autotune tune config của query, không cho notebook dùng chung session.",
+   "C": "Thêm node không giảm số lần start session.",
+   "D": "Wrapper notebook vẫn chạy bằng một Notebook activity cho mỗi lần lặp nên vẫn start session mới."
+  },
+  "refs": [
+   {
+    "label": "High concurrency for notebooks in pipelines",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-high-concurrency-session-notebooks-in-pipelines"
+   },
+   {
+    "label": "High concurrency mode overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/high-concurrency-overview"
+   }
+  ]
+ },
+ {
+  "id": "ws-04",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 2,
+  "stem": "A team runs repetitive Spark SQL queries that each take several minutes in a Fabric workspace. They want Fabric to automatically tune spark.sql.shuffle.partitions and related settings for these queries in every notebook that uses the workspace default compute. Today the workspace default environment uses the newest Fabric runtime, and the notebooks run in high concurrency sessions.\nWhich two changes are required for autotune to tune these queries? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Set spark.ms.autotune.enabled=true in an environment that uses Runtime 1.2, and select it as the workspace default environment."
+   },
+   {
+    "k": "B",
+    "t": "Upgrade the default environment to the newest runtime preview so that the autotune machine learning model is available to all notebooks."
+   },
+   {
+    "k": "C",
+    "t": "Run the notebooks in standard sessions instead of high concurrency sessions."
+   },
+   {
+    "k": "D",
+    "t": "Rewrite the queries by using the RDD API so that autotune can change partitioning."
+   },
+   {
+    "k": "E",
+    "t": "Reduce the queries so that each one finishes in less than 15 seconds."
+   }
+  ],
+  "answer": [
+   "A",
+   "C"
+  ],
+  "explain": "- Autotune đang preview, mặc định tắt, bật bằng `spark.ms.autotune.enabled=true` trong environment hoặc session.\n- Autotune chỉ tương thích Runtime 1.2, không bật được trên runtime mới hơn.\n- Autotune không chạy khi bật high concurrency hoặc private endpoint.",
+  "wrong": {
+   "B": "Docs nói không bật được autotune trên runtime mới hơn 1.2.",
+   "D": "Autotune chỉ áp dụng Spark SQL API, không áp dụng RDD API.",
+   "E": "Query dưới 15 giây bị bỏ qua với status QUERY_DURATION_TOO_SHORT."
+  },
+  "refs": [
+   {
+    "label": "Configure autotune for Apache Spark",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/autotune"
+   }
+  ]
+ },
+ {
+  "id": "ws-05",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 1,
+  "stem": "Your organization uses Fabric domains. A Fabric administrator created a Sales domain and assigned a domain admin. Mia is the Admin of the workspace Sales-Analytics and wants to associate it with the Sales domain from the workspace settings. Mia must not be able to change the domain description, manage other workspaces, or use the Domains tab in the admin portal.\nWhich role should the domain admin give Mia?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Domain admin of the Sales domain"
+   },
+   {
+    "k": "B",
+    "t": "Domain contributor of the Sales domain"
+   },
+   {
+    "k": "C",
+    "t": "Fabric administrator"
+   },
+   {
+    "k": "D",
+    "t": "Member role in every workspace already assigned to the Sales domain"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: chỉ gán workspace của mình, làm trong workspace settings, không vào tab Domains.\n- Domain contributor là workspace admin được phép gán workspace mình quản lý vào domain.\n- Contributor không có quyền vào tab Domains của admin portal.",
+  "wrong": {
+   "A": "Domain admin sửa được description, contributor và gán workspace khác; vượt quá yêu cầu.",
+   "C": "Fabric admin có toàn quyền trên mọi domain.",
+   "D": "Workspace role không liên quan tới quyền gán workspace vào domain."
+  },
+  "refs": [
+   {
+    "label": "Domains in Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/governance/domains"
+   }
+  ]
+ },
+ {
+  "id": "ws-06",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 2,
+  "stem": "The Finance department wants its own data experts to certify Finance items and wants a default sensitivity label applied to items in Finance workspaces. Other departments must keep the tenant-wide certification configuration. Finance data is stored in five workspaces. The domain-level default sensitivity label feature is enabled in the tenant.\nWhich two actions should you perform? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Change the tenant-level certification setting so that only the Finance experts can certify items, and add a tenant-wide default sensitivity label."
+   },
+   {
+    "k": "B",
+    "t": "Create a Finance domain and assign the five Finance workspaces to it."
+   },
+   {
+    "k": "C",
+    "t": "Create a Finance subdomain so that only Finance users can see Finance items."
+   },
+   {
+    "k": "D",
+    "t": "In the Finance domain's delegated settings, override the tenant certification settings and set a default sensitivity label."
+   },
+   {
+    "k": "E",
+    "t": "Give the Finance experts the Admin role in all workspaces in the tenant."
+   }
+  ],
+  "answer": [
+   "B",
+   "D"
+  ],
+  "explain": "- Tín hiệu: Finance có rule riêng, các phòng khác giữ cấu hình tenant.\n- Workspace gán vào domain thì mọi item trong đó thuộc domain.\n- Delegated settings của domain cho override certification và đặt default sensitivity label.",
+  "wrong": {
+   "A": "Đổi ở tenant level ảnh hưởng mọi phòng ban.",
+   "C": "Domain và subdomain không đổi ai thấy hay truy cập item; subdomain chỉ có general settings.",
+   "E": "Workspace role không cấu hình certifier; vi phạm least privilege."
+  },
+  "refs": [
+   {
+    "label": "Domains in Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/governance/domains"
+   }
+  ]
+ },
+ {
+  "id": "ws-07",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A lakehouse in a Fabric workspace contains OneLake shortcuts to an Amazon S3 bucket. Several Power BI reports and notebooks read the same S3 Parquet files many times each day, and cross-cloud egress charges are increasing. Most files are between 50 MB and 400 MB. You need to reduce egress cost without building new ingestion pipelines or duplicating the data into Delta tables.\nWhat should you configure?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Enable OneLake diagnostics in the workspace settings and store the access events in a lakehouse in the same capacity."
+   },
+   {
+    "k": "B",
+    "t": "Create a pipeline with a Copy activity that copies the S3 files into the lakehouse every hour."
+   },
+   {
+    "k": "C",
+    "t": "Enable shortcut caching on the OneLake tab of the workspace settings and set a retention period."
+   },
+   {
+    "k": "D",
+    "t": "Enable high concurrency for notebooks so that reads share one Spark session."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: S3 shortcut, đọc lặp lại, egress cost, không thêm pipeline.\n- Shortcut cache lưu file đọc qua shortcut S3, GCS, S3 compatible, gateway; retention 1 tới 28 ngày.\n- File trong đề nhỏ hơn 1 GB nên được cache.",
+  "wrong": {
+   "A": "OneLake diagnostics ghi log truy cập, không giảm egress.",
+   "B": "Thêm pipeline và nhân bản data, trái ràng buộc.",
+   "D": "High concurrency chia sẻ session, không cache file từ S3."
+  },
+  "refs": [
+   {
+    "label": "OneLake shortcuts, caching",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+   }
+  ]
+ },
+ {
+  "id": "ws-08",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "select": 1,
+  "stem": "Your team moved production DAGs to an Apache Airflow job in Fabric. The workspace uses the default Apache Airflow runtime settings. Scheduled DAGs sometimes wait several minutes because the environment shuts down after a period of inactivity, and during month-end the team needs more DAGs to run at the same time.\nWhat should you configure in the workspace settings?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Keep the starter pool and change its compute node size to Large."
+   },
+   {
+    "k": "B",
+    "t": "Create a custom Spark pool with autoscale in Data Engineering/Science > Spark settings and set it as the default pool for the workspace."
+   },
+   {
+    "k": "C",
+    "t": "Increase the Spark session timeout in the Jobs settings of the workspace."
+   },
+   {
+    "k": "D",
+    "t": "Create a custom pool in Apache Airflow runtime settings with autoscale and extra nodes, and set it as the default."
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Tín hiệu: production, môi trường tự tắt khi idle, cần chạy nhiều DAG song song.\n- Starter pool tự tắt sau 20 phút không hoạt động; custom pool chạy liên tục tới khi pause.\n- Mỗi extra node thêm 3 worker để chạy thêm DAG.",
+  "wrong": {
+   "A": "Starter pool đã là node Large và vẫn tự tắt sau 20 phút idle.",
+   "B": "Spark pool phục vụ notebook, Spark job definition, không phục vụ Airflow job.",
+   "C": "Spark session timeout áp cho session notebook interactive."
+  },
+  "refs": [
+   {
+    "label": "Apache Airflow job workspace settings",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-workspace-settings"
+   }
+  ]
+ },
+ {
+  "id": "ws-09",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 1,
+  "stem": "You are connecting a Fabric workspace to a private repository on github.com. Your security team requires a fine-grained personal access token scoped to that single repository with the minimum permissions needed for Fabric to commit and update items.\nWhich repository permission should the token have?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Actions: read and write"
+   },
+   {
+    "k": "B",
+    "t": "Administration: read and write"
+   },
+   {
+    "k": "C",
+    "t": "Pull requests: read only"
+   },
+   {
+    "k": "D",
+    "t": "Contents: read and write"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Docs khuyên dùng fine-grained token với quyền Contents read and write trên repository.\n- Classic token thì cần scope repo.",
+  "wrong": {
+   "A": "Actions dùng cho GitHub Actions workflow, không phải đọc ghi file trong repo.",
+   "B": "Administration vượt quá quyền cần thiết.",
+   "C": "Chỉ đọc pull request, không commit được."
+  },
+  "refs": [
+   {
+    "label": "Get started with Git integration",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+   }
+  ]
+ },
+ {
+  "id": "ws-10",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 1,
+  "stem": "A Fabric workspace is connected to the main branch of an Azure DevOps repository. A developer changes a notebook in the workspace and saves it. A teammate who reviews the repository in Azure DevOps cannot see the change, and the Source control icon in the workspace shows one change.\nWhat should the developer do so that the change appears in the repository?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Select Update all in the Source control panel."
+   },
+   {
+    "k": "B",
+    "t": "Select the notebook in the Changes list of the Source control panel and commit it."
+   },
+   {
+    "k": "C",
+    "t": "Deploy the notebook from the Development stage to the next stage of the deployment pipeline that is assigned to the workspace."
+   },
+   {
+    "k": "D",
+    "t": "Undo the change and save the notebook again."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: đã save, icon Source control báo 1 thay đổi.\n- Save chỉ lưu trong workspace; Commit mới đẩy thay đổi lên branch.",
+  "wrong": {
+   "A": "Update kéo commit từ branch về workspace, chiều ngược lại.",
+   "C": "Deployment pipeline copy giữa workspace, không ghi vào Git.",
+   "D": "Undo đưa notebook về trạng thái sync gần nhất, xoá thay đổi."
+  },
+  "refs": [
+   {
+    "label": "Get started with Git integration",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+   }
+  ]
+ },
+ {
+  "id": "ws-11",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 2,
+  "stem": "Five data engineers develop notebooks and pipelines in one shared Fabric workspace connected to the main branch. They frequently overwrite each other's work, and half-finished changes break scheduled runs. You need each engineer to work in isolation and to integrate changes through code review, while keeping the shared workspace in sync with main.\nWhich two actions should you recommend? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Each engineer uses Branch out to new workspace to work on a feature branch in a separate workspace."
+   },
+   {
+    "k": "B",
+    "t": "Connect the shared workspace to five branches, one per engineer."
+   },
+   {
+    "k": "C",
+    "t": "Give every engineer the Admin role so that each engineer can switch the shared workspace to a personal branch when needed."
+   },
+   {
+    "k": "D",
+    "t": "Engineers merge feature branches into main through pull requests, and the shared workspace runs Update from Git."
+   },
+   {
+    "k": "E",
+    "t": "Create deployment rules in the Development stage of a deployment pipeline so that each engineer gets a separate default lakehouse."
+   }
+  ],
+  "answer": [
+   "A",
+   "D"
+  ],
+  "explain": "- Tín hiệu: ghi đè lẫn nhau, cần isolation và code review.\n- Workspace là runtime chung, mỗi workspace nối được đúng 1 branch.\n- Branched workspace: mỗi người một workspace và branch, merge qua pull request, workspace chung Update để nhận commit.",
+  "wrong": {
+   "B": "Một workspace chỉ nối 1 branch và 1 folder tại một thời điểm.",
+   "C": "Switch branch trên workspace chung ảnh hưởng mọi user của workspace đó.",
+   "E": "Deployment rule không tạo được ở development stage và không giải quyết isolation."
+  },
+  "refs": [
+   {
+    "label": "Manage branches in Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches"
+   },
+   {
+    "label": "Get started with Git integration",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+   }
+  ]
+ },
+ {
+  "id": "ws-12",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 1,
+  "stem": "Your team maintains tables, views, and stored procedures in a Fabric warehouse. Database administrators require that every schema change is built and validated offline, and that the exact T-SQL change script is reviewed before it runs against the production warehouse. The team uses Visual Studio Code.\nWhat should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "An SDK-style SQL database project that builds a .dacpac, published with the Generate Script action."
+   },
+   {
+    "k": "B",
+    "t": "A deployment pipeline with a data source rule on the warehouse in the Production stage."
+   },
+   {
+    "k": "C",
+    "t": "A notebook that runs CREATE TABLE and CREATE VIEW statements against the SQL analytics endpoint after each change is merged."
+   },
+   {
+    "k": "D",
+    "t": "A Dataflow Gen2 that writes the schema to the production warehouse."
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: build và validate offline, review script T-SQL trước khi chạy, VS Code.\n- Database project build validate object và sinh `.dacpac`.\n- Publish có Generate Script để review script chênh lệch trước khi apply.",
+  "wrong": {
+   "B": "Deployment rule không hỗ trợ warehouse, và không có bước review script.",
+   "C": "SQL analytics endpoint là read-only cho table; không có build validation.",
+   "D": "Dataflow Gen2 load data, không quản lý schema object như view, procedure."
+  },
+  "refs": [
+   {
+    "label": "Develop warehouse projects in VS Code",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/develop-warehouse-project"
+   },
+   {
+    "label": "Create deployment rules",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/create-rules"
+   }
+  ]
+ },
+ {
+  "id": "ws-13",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 1,
+  "stem": "You use a Fabric deployment pipeline with Development, Test, and Production stages. A notebook in Development has LH_Dev as its default lakehouse. After deployment to Test, the notebook must use LH_Test automatically on every deployment, without changing the notebook code.\nWhat should you configure?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A data source rule for the notebook in the Test stage"
+   },
+   {
+    "k": "B",
+    "t": "A default lakehouse rule for the notebook in the Development stage"
+   },
+   {
+    "k": "C",
+    "t": "A default lakehouse rule for the notebook in the Test stage"
+   },
+   {
+    "k": "D",
+    "t": "A parameter rule for the notebook in the Test stage"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Notebook chỉ hỗ trợ default lakehouse rule.\n- Rule đặt ở stage đích; không tạo được rule ở development stage.",
+  "wrong": {
+   "A": "Notebook không hỗ trợ data source rule.",
+   "B": "Rule không tạo được ở development stage.",
+   "D": "Notebook không hỗ trợ parameter rule; loại này dành cho semantic model, dataflow Gen1."
+  },
+  "refs": [
+   {
+    "label": "Create deployment rules",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/create-rules"
+   }
+  ]
+ },
+ {
+  "id": "ws-14",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 2,
+  "stem": "You deploy a lakehouse, a notebook, and a semantic model from the Development stage to the Test stage of a deployment pipeline. Deployment succeeds. In Test, the lakehouse has no table data and the report built on the semantic model shows no values.\nWhich two statements explain the behavior or the required next step? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "The items were not paired, so deployment created empty duplicates."
+   },
+   {
+    "k": "B",
+    "t": "Lakehouse data is copied asynchronously after deployment and appears in the Test lakehouse within 24 hours."
+   },
+   {
+    "k": "C",
+    "t": "Deployment pipelines copy item metadata only, so data must be loaded in the Test stage."
+   },
+   {
+    "k": "D",
+    "t": "You must use backward deployment to copy data from Development to Test."
+   },
+   {
+    "k": "E",
+    "t": "The semantic model must be refreshed in Test after deployment."
+   }
+  ],
+  "answer": [
+   "C",
+   "E"
+  ],
+  "explain": "- Data không được copy giữa stage, chỉ metadata.\n- Docs yêu cầu refresh semantic model sau deploy vì data không đi theo.",
+  "wrong": {
+   "A": "Pairing quyết định ghi đè hay tạo bản mới; dù pair hay không, data vẫn không được copy.",
+   "B": "Không có cơ chế copy data bất đồng bộ.",
+   "D": "Backward deployment đẩy nội dung về stage trước và cũng không copy data."
+  },
+  "refs": [
+   {
+    "label": "Deployment pipelines process",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process"
+   }
+  ]
+ },
+ {
+  "id": "ws-15",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 1,
+  "stem": "A data engineer is an admin of a Fabric deployment pipeline. The engineer has the Contributor role on the Development workspace and the Viewer role on the Test workspace. The engineer cannot deploy content from Development to Test. You need to allow the deployment by following the principle of least privilege.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Assign the engineer the Admin role on the Test workspace."
+   },
+   {
+    "k": "B",
+    "t": "Make the engineer the owner of every item in the Development workspace."
+   },
+   {
+    "k": "C",
+    "t": "Assign the engineer the Member role on both workspaces."
+   },
+   {
+    "k": "D",
+    "t": "Assign the engineer the Contributor role on the Test workspace."
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Deploy cần pipeline admin và ít nhất Contributor ở cả workspace nguồn và đích.\n- Engineer đã là Contributor ở Development nên chỉ thiếu Contributor ở Test.",
+  "wrong": {
+   "A": "Admin dư quyền so với yêu cầu.",
+   "B": "Ownership item cần cho tạo rule, không thay workspace role ở stage đích.",
+   "C": "Member dư quyền; Contributor đã đủ."
+  },
+  "refs": [
+   {
+    "label": "Deployment pipelines process, permissions",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process"
+   }
+  ]
+ },
+ {
+  "id": "ws-16",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "select": 1,
+  "stem": "You promote pipelines through Development, Test, and Production workspaces by using a deployment pipeline. Each pipeline uses a different source connection and a different destination lakehouse in every stage. Today an engineer edits the pipelines manually after each deployment. You need stage-specific values to apply automatically with the least ongoing maintenance.\nWhat should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A parameter rule on each pipeline in the Test and Production stages."
+   },
+   {
+    "k": "B",
+    "t": "A variable library with a value set per stage, an active value set in each stage, and library variables in the pipelines."
+   },
+   {
+    "k": "C",
+    "t": "Pipeline parameters whose default values the engineer updates in each stage after every deployment, documented in a runbook."
+   },
+   {
+    "k": "D",
+    "t": "Three copies of each pipeline, one per stage, each with hard-coded connections and lakehouses, stored in the same workspace."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: pipeline, giá trị khác nhau theo stage, LEAST ongoing maintenance.\n- Pipeline không có deployment rule.\n- Variable library có value set theo stage; mỗi stage chọn active value set; pipeline đọc giá trị active lúc chạy.",
+  "wrong": {
+   "A": "Deployment rule chỉ có cho semantic model, dataflow Gen1, paginated report, mirrored database, notebook.",
+   "C": "Vẫn phải sửa tay sau mỗi lần deploy.",
+   "D": "Nhân bản pipeline làm tăng effort bảo trì và phá pairing."
+  },
+  "refs": [
+   {
+    "label": "Variable library overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/variable-library-overview"
+   },
+   {
+    "label": "Variable library with pipelines",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/variable-library-integration-with-data-pipelines"
+   }
+  ]
+ },
+ {
+  "id": "ws-17",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 1,
+  "stem": "Every night you must copy data from 30 on-premises and cloud sources into a bronze lakehouse, then run Spark transformations to build silver tables. Each step needs retries and failure email notifications, and the team prefers a low-code orchestration that operations staff can read visually.\nWhat should you use to orchestrate the process?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A single notebook that calls notebookutils.notebook.runMultiple and is scheduled nightly."
+   },
+   {
+    "k": "B",
+    "t": "A pipeline with Copy activities followed by Notebook activities, run by a schedule."
+   },
+   {
+    "k": "C",
+    "t": "An Apache Airflow job with Python DAGs that call each source API."
+   },
+   {
+    "k": "D",
+    "t": "A Dataflow Gen2 that performs both the copy and the Spark transformations."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: 30 source, retry từng bước, failure notification, low-code, nhìn trực quan.\n- Pipeline có canvas, Copy activity với nhiều connector, retry ở activity, schedule kèm email failure notification.\n- Notebook activity chạy phần Spark.",
+  "wrong": {
+   "A": "runMultiple không có copy connector và không phải low-code.",
+   "C": "Airflow job là code-first bằng Python DAG.",
+   "D": "Dataflow Gen2 dùng Power Query, không chạy Spark transformation."
+  },
+  "refs": [
+   {
+    "label": "Fabric decision guide",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+   },
+   {
+    "label": "Run, schedule, or use events to trigger a pipeline",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
+   }
+  ]
+ },
+ {
+  "id": "ws-18",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 1,
+  "stem": "Your company runs about 60 Python DAGs in the Workflow Orchestration Manager of Azure Data Factory. You are moving the analytics platform to Microsoft Fabric and want to run the same DAGs with the least rewriting, keeping Git sync for the DAG files.\nWhich Fabric item should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Pipelines that use Invoke pipeline activities to call each other"
+   },
+   {
+    "k": "B",
+    "t": "Notebooks orchestrated by notebookutils.notebook.runMultiple"
+   },
+   {
+    "k": "C",
+    "t": "Copy job"
+   },
+   {
+    "k": "D",
+    "t": "Apache Airflow job"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Apache Airflow job là thế hệ kế tiếp của Workflow Orchestration Manager trong ADF.\n- Chạy được cùng DAG Python, có Git sync.",
+  "wrong": {
+   "A": "Phải viết lại toàn bộ DAG thành pipeline.",
+   "B": "Phải viết lại DAG thành JSON DAG của runMultiple và chỉ gọi notebook.",
+   "C": "Copy job chỉ copy data, không orchestrate workflow."
+  },
+  "refs": [
+   {
+    "label": "What is an Apache Airflow job?",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-concepts"
+   }
+  ]
+ },
+ {
+  "id": "ws-19",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 1,
+  "stem": "Partners drop CSV files at irregular times into a folder of a Fabric lakehouse. A pipeline must start as soon as a file is created, and the Copy activity source must read only the new file. The pipeline must also be testable manually without failing on the file name expression.\nWhat should you implement?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A storage event trigger on OneLake file events, with the source file name set to @pipeline()?.TriggerEvent?.FileName."
+   },
+   {
+    "k": "B",
+    "t": "A schedule that runs every five minutes, with a Get Metadata activity that lists all files in the folder and a Filter activity on the last modified date."
+   },
+   {
+    "k": "C",
+    "t": "A job event trigger on ItemJobSucceeded of the lakehouse, with the file name set to @pipeline().TriggerName."
+   },
+   {
+    "k": "D",
+    "t": "A storage event trigger, with the source file name set to @pipeline().TriggerEvent.FileName."
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: chạy ngay khi file được tạo, chỉ đọc file mới, test thủ công được.\n- Storage event trigger cung cấp FileName, FolderName trong TriggerEvent.\n- Dấu `?` xử lý NULL khi chạy thủ công, lúc chưa có event.",
+  "wrong": {
+   "B": "Schedule có thể chậm tới 5 phút sau khi file tới và phải tự lọc file mới.",
+   "C": "Job event báo job chạy xong, không báo file mới; TriggerName là tên trigger, không phải tên file.",
+   "D": "Thiếu `?` nên expression lỗi khi chạy thủ công vì TriggerEvent là NULL."
+  },
+  "refs": [
+   {
+    "label": "Run, schedule, or use events to trigger a pipeline",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
+   }
+  ]
+ },
+ {
+  "id": "ws-20",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 1,
+  "stem": "Another team owns a pipeline named Load_Silver in their own workspace, and you cannot edit it. Your pipeline Build_Gold must start only after Load_Silver completes successfully. Load_Silver runs at different times each day. You need an event-driven solution that does not rely on fixed schedule offsets.\nWhat should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add an Invoke pipeline activity at the end of Load_Silver that calls Build_Gold in your workspace after all other activities succeed."
+   },
+   {
+    "k": "B",
+    "t": "Schedule Build_Gold two hours after the earliest start time of Load_Silver."
+   },
+   {
+    "k": "C",
+    "t": "Use a job event trigger in Activator on the ItemJobSucceeded event of Load_Silver that runs Build_Gold."
+   },
+   {
+    "k": "D",
+    "t": "Use a storage event trigger on the lakehouse folder that Load_Silver writes to."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: không sửa được pipeline upstream, chạy khi upstream thành công, event-driven.\n- Job events phát ItemJobSucceeded khi job hoàn tất thành công; Activator chạy pipeline khi nhận event.",
+  "wrong": {
+   "A": "Phải sửa Load_Silver, trái ràng buộc.",
+   "B": "Dựa vào schedule offset, thời gian chạy upstream thay đổi.",
+   "D": "File được ghi giữa chừng có thể kích hoạt trước khi upstream thành công."
+  },
+  "refs": [
+   {
+    "label": "Explore Job events in Real-Time hub",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-hub/explore-fabric-job-events"
+   },
+   {
+    "label": "Run, schedule, or use events to trigger a pipeline",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
+   }
+  ]
+ },
+ {
+  "id": "ws-21",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 2,
+  "stem": "A pipeline runs a notebook through a Notebook activity. The notebook's first code cell sets run_date = '2026-01-01' and region = 'EU'. The pipeline must pass run_date from a pipeline parameter and region from a Lookup activity, but every run still uses the hard-coded values.\nWhich two actions should you perform? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Pass region as a Python list object from the Lookup output so the notebook can iterate over all regions in a single run."
+   },
+   {
+    "k": "B",
+    "t": "Mark the first code cell as the parameter cell in the notebook."
+   },
+   {
+    "k": "C",
+    "t": "Replace the Notebook activity with a %run command in the pipeline."
+   },
+   {
+    "k": "D",
+    "t": "Add run_date and region as Spark properties of the environment that the notebook uses, then publish the environment."
+   },
+   {
+    "k": "E",
+    "t": "In the Notebook activity settings, add base parameters named run_date and region with dynamic content values."
+   }
+  ],
+  "answer": [
+   "B",
+   "E"
+  ],
+  "explain": "- Pipeline tìm parameter cell và chèn cell mới bên dưới để ghi đè giá trị mặc định.\n- Base parameters của Notebook activity nhận expression; tên phải khớp biến trong parameter cell.",
+  "wrong": {
+   "A": "Notebook parameter chỉ hỗ trợ int, float, bool, string; list phải serialize thành JSON string.",
+   "C": "%run là magic command trong notebook, không dùng trong pipeline.",
+   "D": "Spark properties là config Spark, không phải biến Python của notebook."
+  },
+  "refs": [
+   {
+    "label": "Develop, execute, and manage notebooks",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/author-execute-notebook"
+   },
+   {
+    "label": "Notebook activity",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/notebook-activity"
+   }
+  ]
+ },
+ {
+  "id": "ws-22",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 1,
+  "stem": "You orchestrate six notebooks with notebookutils.notebook.runMultiple in one Spark session, and independent activities run with a concurrency of 4. Notebook nb_gold must start only after the activity named Silver succeeds, and nb_gold must receive the string that nb_silver passes to notebookutils.notebook.exit().\nWhich activity definition for nb_gold should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "{'name': 'Gold', 'path': 'nb_gold', 'dependencies': ['Silver'], 'args': {'src': \"@activity('Silver').exitValue()\"}}"
+   },
+   {
+    "k": "B",
+    "t": "{'name': 'Gold', 'path': 'nb_gold', 'args': {'src': \"@activity('Silver').exitValue()\"}} with concurrency set to 1"
+   },
+   {
+    "k": "C",
+    "t": "{'name': 'Gold', 'path': 'nb_gold', 'dependencies': ['nb_silver'], 'args': {'src': \"@pipeline().parameters.Silver\"}}"
+   },
+   {
+    "k": "D",
+    "t": "{'name': 'Gold', 'path': 'nb_gold', 'dependencies': ['Silver'], 'timeoutInSeconds': 43200}"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- `dependencies` liệt kê activity name phải chạy xong trước.\n- `@activity('Silver').exitValue()` trong `args` truyền exit value giữa activity của DAG.",
+  "wrong": {
+   "B": "Concurrency 1 không khai báo dependency nên không đảm bảo Silver chạy trước.",
+   "C": "Dependency tham chiếu activity name, không phải notebook path; DAG không có pipeline parameter.",
+   "D": "Không truyền exit value; timeoutInSeconds là field ở cấp root của DAG."
+  },
+  "refs": [
+   {
+    "label": "NotebookUtils notebook run",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run"
+   }
+  ]
+ },
+ {
+  "id": "ws-23",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 1,
+  "stem": "A Copy activity in a Fabric pipeline must write each run's output to a folder such as sales/2026-11-04, based on the current UTC date when the pipeline runs. You set the folder path by using dynamic content.\nWhich expression should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "@concat('sales/', formatDateTime(utcNow(), 'yyyy-MM-dd'))"
+   },
+   {
+    "k": "B",
+    "t": "sales/@{utcNow()}"
+   },
+   {
+    "k": "C",
+    "t": "@'sales/' + formatDateTime(utcNow(), 'yyyy-MM-dd')"
+   },
+   {
+    "k": "D",
+    "t": "@@concat('sales/', formatDateTime(utcNow(), 'yyyy-MM-dd'))"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- `concat` ghép chuỗi; `formatDateTime` với format yyyy-MM-dd cho đúng dạng ngày.\n- `utcNow()` trả timestamp UTC hiện tại.",
+  "wrong": {
+   "B": "Interpolation hợp lệ nhưng trả timestamp ISO 8601 đầy đủ, không phải yyyy-MM-dd.",
+   "C": "Expression language dùng function như concat, không dùng toán tử +.",
+   "D": "`@@` escape ký tự @ nên trả về chuỗi literal, không tính expression."
+  },
+  "refs": [
+   {
+    "label": "Expressions and functions",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/expression-language"
+   },
+   {
+    "label": "Parameters in pipelines",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/parameters"
+   }
+  ]
+ },
+ {
+  "id": "ws-24",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "select": 1,
+  "stem": "A shared workspace contains a reusable pipeline that loads reference data. A parent pipeline in a different workspace must call it, wait for completion, and let operators monitor the child pipeline run. The connection must not depend on a personal user account.\nWhat should you use in the parent pipeline?",
+  "options": [
+   {
+    "k": "A",
+    "t": "The Invoke pipeline (Legacy) activity"
+   },
+   {
+    "k": "B",
+    "t": "The Invoke pipeline activity with a connection that uses workspace identity"
+   },
+   {
+    "k": "C",
+    "t": "A Notebook activity that calls notebookutils.notebook.run on the child pipeline"
+   },
+   {
+    "k": "D",
+    "t": "A deployment pipeline that copies the child pipeline into the parent workspace"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: workspace khác, monitor pipeline con, không dùng account cá nhân.\n- Invoke pipeline bản mới gọi được pipeline ở workspace khác và monitor pipeline con.\n- Connection hỗ trợ organizational account, service principal hoặc workspace identity.",
+  "wrong": {
+   "A": "Bản Legacy chỉ gọi pipeline cùng workspace và chỉ monitor pipeline cha.",
+   "C": "notebookutils.notebook.run chạy notebook, không chạy pipeline.",
+   "D": "Copy pipeline sang workspace khác tạo bản trùng, không phải gọi pipeline dùng chung."
+  },
+  "refs": [
+   {
+    "label": "Invoke pipeline activity",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/invoke-pipeline-activity"
+   }
+  ]
+ }
+]

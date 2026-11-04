@@ -1,0 +1,1014 @@
+[
+  {
+    "id": "str-01",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "A logistics company sends GPS events from Azure Event Hubs into Microsoft Fabric. The data team must drop events with missing coordinates, rename two fields, and send the result to both a KQL database and a lakehouse table. The team has no Spark or KQL developers, and the solution must require the LEAST amount of code.\nWhat should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Spark job definition that reads from Event Hubs with readStream and writes to both destinations by using foreachBatch."
+      },
+      {
+        "k": "B",
+        "t": "A KQL update policy on a raw table that parses the events, and a pipeline that copies the target table to the lakehouse."
+      },
+      {
+        "k": "C",
+        "t": "A pipeline with a Copy activity that runs every minute from Event Hubs to the lakehouse, followed by a Dataflow Gen2."
+      },
+      {
+        "k": "D",
+        "t": "An eventstream with an Event Hubs source, Filter and Manage fields operators, and eventhouse and lakehouse destinations."
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: LEAST amount of code, filter và đổi tên field, hai đích.\n- Eventstream có operator Filter, Manage fields kéo thả và gửi một stream tới nhiều destination cùng lúc.",
+    "wrong": {
+      "A": "Chạy được nhưng phải viết PySpark, trái ràng buộc ít code.",
+      "B": "Cần viết KQL và thêm pipeline batch; lakehouse không nhận data theo stream.",
+      "C": "Pipeline chạy theo lịch là batch, không xử lý stream liên tục."
+    },
+    "refs": [
+      {
+        "label": "Eventstreams overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview"
+      },
+      {
+        "label": "Process events with the event processing editor",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor"
+      }
+    ]
+  },
+  {
+    "id": "str-02",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "Your team already maintains a PySpark library that scores each IoT reading with a machine learning model and merges results into a Delta table by key. You must run this logic continuously on events from a Fabric eventstream. If the underlying infrastructure restarts, the job must resume automatically without operator action.\nWhat should you implement?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Spark job definition that runs Spark Structured Streaming from the eventstream Kafka endpoint, with a retry policy and a checkpoint location."
+      },
+      {
+        "k": "B",
+        "t": "A notebook that runs Spark Structured Streaming and is scheduled every 5 minutes by a pipeline."
+      },
+      {
+        "k": "C",
+        "t": "An eventstream SQL operator that calls the model and writes to the lakehouse destination."
+      },
+      {
+        "k": "D",
+        "t": "An eventhouse update policy that calls the PySpark library during ingestion."
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: thư viện PySpark có sẵn, MERGE vào Delta, chạy liên tục, tự resume.\n- Docs khuyên production streaming chạy bằng Spark job definition với retry policy; checkpoint cho phép chạy tiếp từ offset đã commit.",
+    "wrong": {
+      "B": "Notebook hợp để phát triển và test; lịch 5 phút không phải chạy liên tục và không có retry policy.",
+      "C": "SQL operator không chạy được thư viện Python hay UDF tuỳ ý.",
+      "D": "Update policy chạy query KQL, không gọi được thư viện PySpark."
+    },
+    "refs": [
+      {
+        "label": "Data streaming into a lakehouse with Spark",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-streaming-data"
+      },
+      {
+        "label": "Overview of Structured Streaming in Fabric",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-overview"
+      },
+      {
+        "label": "Eventstream for Event Hubs and Stream Analytics users",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/migrate-from-azure-event-hubs-stream-analytics"
+      }
+    ]
+  },
+  {
+    "id": "str-03",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "Telemetry lands in a KQL table named Readings in an eventhouse. A Real-Time Dashboard must show the average temperature per device per hour. Results must always include the latest ingested rows, and dashboard queries must cost less than aggregating the raw table each time.\nWhat should you create?",
+    "options": [
+      {
+        "k": "A",
+        "t": "An update policy on a new target table that runs summarize avg(Temp) by DeviceId, bin(Timestamp, 1h)."
+      },
+      {
+        "k": "B",
+        "t": "A stored function that runs the aggregation, called by every dashboard tile."
+      },
+      {
+        "k": "C",
+        "t": "A materialized view over Readings that runs summarize avg(Temp) by DeviceId, bin(Timestamp, 1h)."
+      },
+      {
+        "k": "D",
+        "t": "An eventstream Group by operator with a 1-hour tumbling window writing to a second table."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: aggregation, luôn có data mới nhất, query rẻ hơn.\n- Materialized view gộp phần đã materialize với delta chưa xử lý nên luôn mới, và query rẻ hơn aggregate trên source.",
+    "wrong": {
+      "A": "Update policy chạy theo từng ingestion batch nên chỉ aggregate trong batch đó, kết quả theo giờ bị sai.",
+      "B": "Function vẫn aggregate toàn bộ raw table mỗi lần query, không giảm cost.",
+      "D": "Tumbling window 1 giờ chỉ ra kết quả khi window đóng, giờ hiện tại không có data mới nhất."
+    },
+    "refs": [
+      {
+        "label": "Materialized views use cases",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-use-cases?view=microsoft-fabric"
+      },
+      {
+        "label": "Materialized views overview",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-overview?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-04",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventstream writes raw JSON payloads into a KQL table named RawEvents through direct ingestion. You must parse each payload into typed columns in a table named Events as soon as data arrives. If the parsing query fails, no data may be written to RawEvents or Events, so that the ingestion can be retried without gaps.\nWhat should you configure?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A materialized view over RawEvents that uses take_any(*) by EventId."
+      },
+      {
+        "k": "B",
+        "t": "An update policy on Events with Source set to RawEvents and IsTransactional set to true."
+      },
+      {
+        "k": "C",
+        "t": "An update policy on Events with Source set to RawEvents and IsTransactional left at its default value."
+      },
+      {
+        "k": "D",
+        "t": "A scheduled pipeline that runs a KQL .set-or-append command every minute."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Tín hiệu: parse khi ingest, lỗi thì không ghi vào cả hai table.\n- IsTransactional = true làm lần ingest vào source thất bại khi update policy lỗi, nên source và target nhất quán.",
+    "wrong": {
+      "A": "Materialized view dùng cho aggregation và dedup, không parse payload thành cột.",
+      "C": "IsTransactional mặc định là false: policy lỗi thì data vẫn vào source, target thiếu dòng.",
+      "D": "Chạy theo lịch, không xử lý ngay khi data đến, và không gắn với transaction của lần ingest."
+    },
+    "refs": [
+      {
+        "label": "Update policy overview",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-05",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 2,
+    "stem": "You are designing KQL update policies in a Fabric eventhouse. A raw table receives streaming events, and a target table stores enriched rows. A reviewer asks which statements about update policies are correct before the design is approved.\nWhich two statements are true? Each correct answer presents a complete solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "IsTransactional defaults to true, so a failed policy always blocks ingestion into the source table."
+      },
+      {
+        "k": "B",
+        "t": "The source table and the target table must be in the same database."
+      },
+      {
+        "k": "C",
+        "t": "An update policy can compute correct daily totals across all data, because it reads the full source table each time."
+      },
+      {
+        "k": "D",
+        "t": "The schema returned by the policy query must match the target table column types and order."
+      },
+      {
+        "k": "E",
+        "t": "The policy query can call external services through plugins to enrich each row."
+      }
+    ],
+    "answer": [
+      "B",
+      "D"
+    ],
+    "explain": "- Docs: source và target cùng database; schema output của hàm phải khớp kiểu và thứ tự cột của target.\n- Update policy chỉ thấy data của lần ingest hiện tại.",
+    "wrong": {
+      "A": "IsTransactional mặc định false.",
+      "C": "Policy chỉ chạy trên ingestion batch mới, nên aggregation toàn bộ data cần materialized view.",
+      "E": "Query của update policy không được callout bằng plugin."
+    },
+    "refs": [
+      {
+        "label": "Update policy overview",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+      },
+      {
+        "label": "Materialized views use cases",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-use-cases?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-06",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventstream receives order events. The operations team wants a value every minute that shows the number of orders received during the previous 5 minutes, so that short spikes are visible as soon as possible. Each order may be counted in more than one output row.\nWhich window type should you configure in the Group by operator?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Tumbling window with a size of 5 minutes"
+      },
+      {
+        "k": "B",
+        "t": "Session window with a timeout of 1 minute"
+      },
+      {
+        "k": "C",
+        "t": "Hopping window with a size of 5 minutes and a hop of 1 minute"
+      },
+      {
+        "k": "D",
+        "t": "Snapshot window"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: mỗi phút một giá trị, nhìn lại 5 phút, một event thuộc nhiều kết quả.\n- Hopping window có size và hop; size 5 phút, hop 1 phút cho rolling 5 phút ra mỗi phút.",
+    "wrong": {
+      "A": "Tumbling 5 phút chỉ ra kết quả mỗi 5 phút, không chồng nhau.",
+      "B": "Session gom event theo khoảng nghỉ, không theo lịch cố định.",
+      "D": "Snapshot chỉ gom event có timestamp giống hệt nhau."
+    },
+    "refs": [
+      {
+        "label": "Windowing (Fabric Eventstream)",
+        "url": "https://learn.microsoft.com/en-us/stream-analytics-query/windowing-azure-stream-analytics?context=/fabric/context/context-rti&pivots=fabric"
+      },
+      {
+        "label": "Stream Analytics windowing functions",
+        "url": "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-window-functions"
+      }
+    ]
+  },
+  {
+    "id": "str-07",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "A media company streams player click events into an eventstream. Analysts need the duration of each viewing session per user. A session starts with the first click and ends when the user produces no click for 20 seconds, but no session may exceed 1 hour.\nWhich windowing function meets the requirement?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Session window with a timeout of 20 seconds, a maximum duration of 1 hour, and a partition by user"
+      },
+      {
+        "k": "B",
+        "t": "Sliding window with a size of 20 seconds"
+      },
+      {
+        "k": "C",
+        "t": "Hopping window with a size of 1 hour and a hop of 20 seconds"
+      },
+      {
+        "k": "D",
+        "t": "Tumbling window with a size of 20 seconds, partitioned by user"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: bắt đầu ở event đầu, kết thúc khi nghỉ 20 giây, tối đa 1 giờ.\n- Session window có đúng 3 tham số: timeout, maximum duration, partition key.",
+    "wrong": {
+      "B": "Sliding ra kết quả khi event vào hoặc ra window, không xác định đầu cuối session.",
+      "C": "Hopping có biên cố định theo lịch, không phụ thuộc khoảng nghỉ của user.",
+      "D": "Tumbling cắt theo khung 20 giây cố định, một session bị chia nhỏ."
+    },
+    "refs": [
+      {
+        "label": "Learn module: Understand window functions",
+        "url": "https://learn.microsoft.com/en-us/training/modules/introduction-to-data-streaming/3b-understand-windows"
+      },
+      {
+        "label": "Windowing (Fabric Eventstream)",
+        "url": "https://learn.microsoft.com/en-us/stream-analytics-query/windowing-azure-stream-analytics?context=/fabric/context/context-rti&pivots=fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-08",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventstream ingests readings from many sensors. Some sensors batch readings and stamp several events with exactly the same timestamp. You must compute the maximum value for each set of events that share an identical timestamp, without defining a window length.\nWhich window type should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Tumbling window"
+      },
+      {
+        "k": "B",
+        "t": "Sliding window"
+      },
+      {
+        "k": "C",
+        "t": "Session window"
+      },
+      {
+        "k": "D",
+        "t": "Snapshot window"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: event có timestamp giống hệt nhau, không cần độ dài window.\n- Snapshot window gom event có cùng timestamp; trong query chỉ cần GROUP BY System.Timestamp().",
+    "wrong": {
+      "A": "Tumbling cần size và gom mọi event trong khung, không chỉ event trùng timestamp.",
+      "B": "Sliding cần size và gom event trong khoảng thời gian.",
+      "C": "Session cần timeout và gom event gần nhau, không cần trùng timestamp."
+    },
+    "refs": [
+      {
+        "label": "Learn module: Understand window functions",
+        "url": "https://learn.microsoft.com/en-us/training/modules/introduction-to-data-streaming/3b-understand-windows"
+      },
+      {
+        "label": "Windowing (Fabric Eventstream)",
+        "url": "https://learn.microsoft.com/en-us/stream-analytics-query/windowing-azure-stream-analytics?context=/fabric/context/context-rti&pivots=fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-09",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "A KQL table stores error events. A line chart must show the error count per device in 15-minute intervals for the last 24 hours. Intervals with no errors must appear as zero so that the chart does not skip time points.\nWhich KQL approach should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "summarize count() by DeviceId, bin(Timestamp, 15m)"
+      },
+      {
+        "k": "B",
+        "t": "make-series count() default = 0 on Timestamp from ago(1d) to now() step 15m by DeviceId"
+      },
+      {
+        "k": "C",
+        "t": "extend Session = row_window_session(Timestamp, 15m, 15m)"
+      },
+      {
+        "k": "D",
+        "t": "summarize count() by DeviceId, bin_at(Timestamp, 15m, now())"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Tín hiệu: interval trống phải hiện số 0.\n- make-series điền DefaultValue (mặc định 0) cho bin không có dòng; summarize by bin không sinh dòng cho bin trống.",
+    "wrong": {
+      "A": "Đúng khung 15 phút nhưng bin không có data thì không có dòng, chart bị hụt điểm.",
+      "C": "row_window_session tính điểm bắt đầu session, không đếm theo khung cố định.",
+      "D": "bin_at chỉ đổi điểm canh khung; bin trống vẫn không có dòng."
+    },
+    "refs": [
+      {
+        "label": "make-series operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/make-series-operator?view=microsoft-fabric"
+      },
+      {
+        "label": "bin() function",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/bin-function?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-10",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 2,
+    "stem": "You write a Spark Structured Streaming query in a Fabric notebook. The query counts events per device in 5-minute windows on the event_time column and writes the result to a lakehouse Delta table in append output mode. Late events can arrive up to 10 minutes after they occur.\nWhich two actions should you take? Each correct answer presents part of the solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "Call withWatermark(\"event_time\", \"10 minutes\") before the windowed aggregation."
+      },
+      {
+        "k": "B",
+        "t": "Use trigger(once=True) so that each run writes only finalized windows."
+      },
+      {
+        "k": "C",
+        "t": "Switch to complete output mode so that old window state is dropped automatically."
+      },
+      {
+        "k": "D",
+        "t": "Reuse the checkpoint folder of an existing ingestion query to save storage."
+      },
+      {
+        "k": "E",
+        "t": "Set a checkpointLocation that is used only by this query."
+      }
+    ],
+    "answer": [
+      "A",
+      "E"
+    ],
+    "explain": "- Append với aggregation chỉ hợp lệ khi có watermark trên cột event time; watermark 10 phút khớp mức event trễ cho phép.\n- Mỗi query cần checkpoint riêng để giữ offset và state.",
+    "wrong": {
+      "B": "trigger once đã deprecated và không thay được watermark.",
+      "C": "Complete mode giữ toàn bộ state, không dọn state cũ.",
+      "D": "Docs cấm dùng chung checkpoint giữa các streaming query."
+    },
+    "refs": [
+      {
+        "label": "Apache Spark: Structured Streaming guide",
+        "url": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html"
+      },
+      {
+        "label": "Stateful processing with Structured Streaming",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-stateful-processing"
+      }
+    ]
+  },
+  {
+    "id": "str-11",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "Files land in a lakehouse folder a few times per day. You want to reuse an existing Structured Streaming query, run it once per hour from a schedule, process every file that arrived since the last run in several micro-batches, and then stop so that no Spark compute runs between schedules.\nWhich trigger should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "No trigger, which uses the default micro-batch mode"
+      },
+      {
+        "k": "B",
+        "t": "trigger(processingTime=\"1 hour\")"
+      },
+      {
+        "k": "C",
+        "t": "trigger(continuous=\"1 hour\")"
+      },
+      {
+        "k": "D",
+        "t": "trigger(availableNow=True)"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: chạy theo lịch, xử lý hết data mới qua nhiều batch, rồi dừng.\n- Available-now xử lý mọi data có sẵn rồi tự dừng; checkpoint giữ tiến độ giữa các lần chạy.",
+    "wrong": {
+      "A": "Mặc định chạy liên tục, compute không dừng.",
+      "B": "Query vẫn chạy liên tục, chỉ đợi 1 giờ giữa các batch.",
+      "C": "Continuous là chế độ experimental, chạy liên tục và không tự dừng."
+    },
+    "refs": [
+      {
+        "label": "Overview of Structured Streaming in Fabric",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-overview"
+      },
+      {
+        "label": "Apache Spark: Structured Streaming guide",
+        "url": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html"
+      },
+      {
+        "label": "Databricks: trigger intervals",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/triggers"
+      }
+    ]
+  },
+  {
+    "id": "str-12",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventstream filters payment events with a Filter operator. A partner application outside Fabric must consume only the filtered events through a Kafka-compatible connection. You add a custom endpoint destination, but the editor does not allow you to connect it directly after the Filter operator.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Add a derived stream as the output of the Filter operator, and then add the custom endpoint destination to the derived stream."
+      },
+      {
+        "k": "B",
+        "t": "Connect the custom endpoint destination to the default stream and filter in the partner application."
+      },
+      {
+        "k": "C",
+        "t": "Replace the custom endpoint with an eventhouse destination that uses direct ingestion."
+      },
+      {
+        "k": "D",
+        "t": "Create a second eventstream that reads from the lakehouse table written by the first eventstream."
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: đích không nhận operator trực tiếp.\n- Docs: đích không hỗ trợ operator trước ingest thì thêm derived stream làm output của operator rồi gắn đích vào derived stream.",
+    "wrong": {
+      "B": "Gửi cả event chưa lọc ra ngoài, trái yêu cầu chỉ gửi event đã lọc.",
+      "C": "Eventhouse không phải endpoint Kafka cho app ngoài Fabric.",
+      "D": "Đi vòng qua lakehouse thêm latency và thêm item không cần."
+    },
+    "refs": [
+      {
+        "label": "Process events with the event processing editor",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor"
+      },
+      {
+        "label": "Create default and derived streams",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/create-default-derived-streams"
+      }
+    ]
+  },
+  {
+    "id": "str-13",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "You add an eventhouse destination to an eventstream. Before the data is written, you must apply a Group by operator that computes 1-minute averages per machine. Only the aggregated rows should be stored in the KQL table.\nWhich ingestion mode should you select for the eventhouse destination?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Direct ingestion"
+      },
+      {
+        "k": "B",
+        "t": "Queued ingestion from OneLake"
+      },
+      {
+        "k": "C",
+        "t": "Event processing before ingestion"
+      },
+      {
+        "k": "D",
+        "t": "Streaming ingestion through a custom endpoint"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: có operator trước đích eventhouse.\n- Event processing before ingestion cho operator như filter, aggregation chạy trước khi ghi; direct ingestion ghi event nguyên trạng.",
+    "wrong": {
+      "A": "Direct ingestion không qua operator.",
+      "B": "Không phải chế độ của eventhouse destination trong eventstream.",
+      "D": "Custom endpoint là source hoặc destination khác, không phải chế độ ingest của eventhouse."
+    },
+    "refs": [
+      {
+        "label": "Add an Eventhouse destination",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-kql-database"
+      }
+    ]
+  },
+  {
+    "id": "str-14",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "You publish a new eventstream with an Azure SQL Database CDC source and a lakehouse destination in one step. After publishing, the lakehouse table contains changes made after publishing but is missing the initial snapshot rows of the source tables.\nWhat should you do when you rebuild the eventstream?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Increase the Maximum duration setting of the lakehouse destination."
+      },
+      {
+        "k": "B",
+        "t": "Clear Activate ingestion after adding the data source, publish, and then activate ingestion manually with a Custom time earlier than the publish time."
+      },
+      {
+        "k": "C",
+        "t": "Replace the lakehouse destination with an eventhouse destination that uses direct ingestion."
+      },
+      {
+        "k": "D",
+        "t": "Add a Union operator between the source and the destination."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Tín hiệu: thiếu snapshot ban đầu của CDC sau khi publish.\n- Ingestion có thể bắt đầu trước routing nên event đầu không tới đích; docs hướng dẫn tắt Activate ingestion rồi activate với Custom time sớm hơn.",
+    "wrong": {
+      "A": "Maximum duration chỉ đổi kích thước file, không lấy lại event đã bỏ lỡ.",
+      "C": "Không xử lý được việc routing khởi động chậm hơn ingestion.",
+      "D": "Union gộp stream, không liên quan tới event bị lỡ lúc publish."
+    },
+    "refs": [
+      {
+        "label": "Add a lakehouse destination",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-lakehouse"
+      },
+      {
+        "label": "Add an Eventhouse destination",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-kql-database"
+      }
+    ]
+  },
+  {
+    "id": "str-15",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventstream writes low-volume sensor events to a lakehouse destination. Spark queries on the table are slow, and the table contains thousands of very small Parquet files. Data freshness of 15 minutes is acceptable.\nWhich change should you make FIRST in the eventstream?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Change the lakehouse destination to a custom endpoint destination."
+      },
+      {
+        "k": "B",
+        "t": "Add a Manage fields operator to remove unused columns."
+      },
+      {
+        "k": "C",
+        "t": "Enable OneLake availability on the lakehouse."
+      },
+      {
+        "k": "D",
+        "t": "Increase Minimum rows and Maximum duration on the lakehouse destination."
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: nhiều file nhỏ, chấp nhận trễ 15 phút.\n- Minimum rows (tới 2 triệu) và Maximum duration (tới 2 giờ) quyết định số dòng mỗi file; giá trị nhỏ sinh nhiều file.",
+    "wrong": {
+      "A": "Custom endpoint gửi data ra app ngoài, không ghi Delta table.",
+      "B": "Bớt cột giảm kích thước dòng nhưng không giảm số file.",
+      "C": "OneLake availability là tính năng của eventhouse, không phải của lakehouse."
+    },
+    "refs": [
+      {
+        "label": "Add a lakehouse destination",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-lakehouse"
+      }
+    ]
+  },
+  {
+    "id": "str-16",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "A KQL database in an eventhouse holds a large Telemetry table. Data scientists want to read the same data from Spark notebooks and build a Power BI report in Direct Lake mode. You must avoid building another ingestion pipeline and avoid extra storage cost.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Add a second lakehouse destination to the eventstream that feeds the table."
+      },
+      {
+        "k": "B",
+        "t": "Create a pipeline with a Copy activity from the KQL database to a lakehouse every 15 minutes."
+      },
+      {
+        "k": "C",
+        "t": "Turn on OneLake availability for the KQL database or table."
+      },
+      {
+        "k": "D",
+        "t": "Create a mirrored database for the eventhouse."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: Spark và Direct Lake đọc cùng data, không thêm pipeline, không tốn thêm storage.\n- OneLake availability tạo bản Delta logic của KQL table, không tính thêm storage; Spark, Warehouse, Direct Lake đọc được.",
+    "wrong": {
+      "A": "Ghi thêm một bản copy, thêm storage và thêm destination phải quản lý.",
+      "B": "Thêm pipeline batch và copy data.",
+      "D": "Mirroring replicate database bên ngoài vào Fabric; data trong eventhouse ra OneLake bằng OneLake availability."
+    },
+    "refs": [
+      {
+        "label": "Eventhouse OneLake availability",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability"
+      }
+    ]
+  },
+  {
+    "id": "str-17",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 2,
+    "stem": "You implement a medallion design entirely inside an eventhouse. Raw events land in a Bronze table. The Silver layer must contain parsed and deduplicated events, with data processed as it arrives and without a scheduler. You want to avoid storing the parsed but not yet deduplicated rows.\nWhich two actions should you take? Each correct answer presents part of the solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "Schedule a notebook every 5 minutes that runs a KQL query and appends results to Silver."
+      },
+      {
+        "k": "B",
+        "t": "Create a Copy job that copies Bronze to a lakehouse and deduplicates with Merge."
+      },
+      {
+        "k": "C",
+        "t": "Create an update policy that parses Bronze rows into an intermediate table whose retention is set to 0."
+      },
+      {
+        "k": "D",
+        "t": "Create a materialized view with take_any(*) by EventId over the intermediate table and use it as the Silver layer."
+      },
+      {
+        "k": "E",
+        "t": "Set the Bronze table soft-delete period to 0 with a non-transactional update policy."
+      }
+    ],
+    "answer": [
+      "C",
+      "D"
+    ],
+    "explain": "- Docs medallion RTI: update policy xử lý Bronze ngay khi ingest; table transform đặt retention 0, materialized view dedup vẫn nhận data.\n- Không cần scheduler vì cả hai chạy theo ingest.",
+    "wrong": {
+      "A": "Thêm scheduler và có trễ theo lịch, trái yêu cầu xử lý khi data đến.",
+      "B": "Đưa data ra khỏi eventhouse và chạy batch.",
+      "E": "Source có soft delete 0s thì update policy bắt buộc transactional."
+    },
+    "refs": [
+      {
+        "label": "Medallion architecture in Real-Time Intelligence",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/architecture-medallion"
+      },
+      {
+        "label": "Update policy overview",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+      },
+      {
+        "label": "Materialized views use cases",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-use-cases?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-18",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "Several teams in your organization publish eventstreams and KQL tables in different workspaces. A new data engineer must find every stream and KQL table they have permission to use, preview them, and connect new sources such as Azure IoT Hub, without anyone provisioning a new item.\nWhat should the engineer use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Real-Time hub"
+      },
+      {
+        "k": "B",
+        "t": "Monitoring hub"
+      },
+      {
+        "k": "C",
+        "t": "A new eventstream with a custom endpoint source"
+      },
+      {
+        "k": "D",
+        "t": "An eventhouse database shortcut"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: một nơi tenant-wide, xem mọi stream và KQL table có quyền, connect source, không cần tạo.\n- Real-Time hub có sẵn cho mọi tenant và liệt kê stream của eventstream lẫn KQL table.",
+    "wrong": {
+      "B": "Monitoring hub theo dõi lần chạy của item, không là catalog stream.",
+      "C": "Tạo item mới và chỉ nhận data từ app tự viết.",
+      "D": "Shortcut database trỏ tới một database, không liệt kê mọi stream."
+    },
+    "refs": [
+      {
+        "label": "Real-Time hub overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-hub/real-time-hub-overview"
+      }
+    ]
+  },
+  {
+    "id": "str-19",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "Freezer temperature readings flow through an eventstream. When a freezer's temperature rises above -10 C, the facilities team must receive one Microsoft Teams message for that freezer, not one message per reading while it stays above the threshold. The solution must not require code.\nWhat should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Power BI report page with automatic page refresh every 30 seconds"
+      },
+      {
+        "k": "B",
+        "t": "An Activator rule on the eventstream that groups events by freezer ID and sends a Teams message when the condition becomes true"
+      },
+      {
+        "k": "C",
+        "t": "A KQL materialized view that keeps the latest reading per freezer"
+      },
+      {
+        "k": "D",
+        "t": "A pipeline with an Until activity that polls the KQL database"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Tín hiệu: theo từng freezer, chỉ gửi khi vượt ngưỡng, Teams, no-code.\n- Activator gom event thành object theo ID, theo dõi chuyển state nên không gửi lặp, và có action Teams.",
+    "wrong": {
+      "A": "Automatic page refresh chỉ làm mới hiển thị, không gửi Teams.",
+      "C": "Materialized view lưu kết quả, không gửi thông báo.",
+      "D": "Polling bằng pipeline cần dựng logic và không theo dõi state từng freezer."
+    },
+    "refs": [
+      {
+        "label": "What is Fabric Activator?",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction"
+      }
+    ]
+  },
+  {
+    "id": "str-20",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "An update policy on a KQL table enriches events by joining them with a Devices dimension table. After deployment, ingestion into the source table fails whenever the policy runs. Streaming ingestion is still at its default setting on all tables in the eventhouse.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Set IsTransactional to false on the update policy."
+      },
+      {
+        "k": "B",
+        "t": "Replace the join with a materialized view over the Devices table."
+      },
+      {
+        "k": "C",
+        "t": "Move the Devices table to another KQL database."
+      },
+      {
+        "k": "D",
+        "t": "Disable the streaming ingestion policy on the source table of the update policy."
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: hàm update policy có join, streaming ingestion đang mặc định bật.\n- Docs: dùng join trong update policy thì phải tắt streaming ingestion policy trên source table.",
+    "wrong": {
+      "A": "Chỉ đổi cách xử lý lỗi; join vẫn không chạy được khi streaming ingestion bật.",
+      "B": "Không giải quyết yêu cầu tắt streaming ingestion.",
+      "C": "Tham chiếu database khác còn cần managed identity, và vẫn có join."
+    },
+    "refs": [
+      {
+        "label": "Update policy overview",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-21",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 2,
+    "stem": "A solution architect reviews Fabric eventstreams for a payment workload. The downstream system must handle duplicates correctly, and the team asks which behaviors of eventstreams they can rely on.\nWhich two statements are true? Each correct answer presents a complete solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "Eventstreams guarantee exactly-once delivery to every destination."
+      },
+      {
+        "k": "B",
+        "t": "Eventstreams deliver events at least once, so consumers should handle duplicates."
+      },
+      {
+        "k": "C",
+        "t": "The maximum message size is 10 MB."
+      },
+      {
+        "k": "D",
+        "t": "The Union operator keeps fields that exist in only one input and fills missing values with null."
+      },
+      {
+        "k": "E",
+        "t": "Event data can be retained in an eventstream for up to 90 days."
+      }
+    ],
+    "answer": [
+      "B",
+      "E"
+    ],
+    "explain": "- Giới hạn chính thức: at-least-once, retention tối đa 90 ngày, message tối đa 1 MB.\n- At-least-once nghĩa là consumer phải chịu được duplicate.",
+    "wrong": {
+      "A": "Docs ghi at-least-once, không phải exactly-once.",
+      "C": "Message tối đa 1 MB.",
+      "D": "Union bỏ field không cùng tên và kiểu."
+    },
+    "refs": [
+      {
+        "label": "Eventstreams overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview"
+      }
+    ]
+  },
+  {
+    "id": "str-22",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "Your company runs Azure Event Hubs and Azure Stream Analytics jobs that use tumbling and hopping windows. You plan to move the processing to Fabric with the LEAST rewrite effort while keeping SQL-style queries. Existing producers must keep sending events by changing only their connection string.\nWhat should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "An eventstream with a custom endpoint source and the SQL operator"
+      },
+      {
+        "k": "B",
+        "t": "A Spark notebook that reimplements the queries in PySpark"
+      },
+      {
+        "k": "C",
+        "t": "KQL update policies in an eventhouse that reimplement the windows"
+      },
+      {
+        "k": "D",
+        "t": "A Dataflow Gen2 with incremental refresh"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: query SQL của Stream Analytics, ít viết lại, producer chỉ đổi connection string.\n- Eventstream chạy trên Event Hubs và Stream Analytics; custom endpoint nhận Kafka, AMQP; SQL operator dùng cùng cách viết query và window.",
+    "wrong": {
+      "B": "Phải viết lại toàn bộ query bằng PySpark.",
+      "C": "Update policy chỉ thấy từng ingestion batch, không thay được window của Stream Analytics.",
+      "D": "Dataflow Gen2 là batch, không xử lý stream."
+    },
+    "refs": [
+      {
+        "label": "Eventstream for Event Hubs and Stream Analytics users",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/migrate-from-azure-event-hubs-stream-analytics"
+      },
+      {
+        "label": "Process events using a SQL operator",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-sql-code-editor"
+      }
+    ]
+  }
+]

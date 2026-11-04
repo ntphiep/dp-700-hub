@@ -1,0 +1,65 @@
+{
+  "code": "DP-700",
+  "title": "DP-700 Study Hub",
+  "brand": "DP-700 Hub",
+  "brandSub": "Fabric Data Engineer Associate",
+  "desc": "Microsoft DP-700 (Implementing Data Engineering Solutions Using Microsoft Fabric) study hub: chapters by skill area, glossary, quiz, mock exam, flashcards.",
+  "icon": "fab-fabric",
+  "navIcons": {"glossary": "book", "resources": "books", "quiz": "list-check", "cards": "copy"},
+  "hint": "shortcut, mirroring, eventstream, deployment pipeline, V-Order",
+  "suggest": ["shortcut", "mirroring", "deployment pipeline", "eventstream", "update policy", "V-Order", "OneLake security", "dynamic data masking", "Copy job", "notebookutils"],
+  "storeKey": "dp700Hub",
+  "syncKey": "dp700Sync",
+  "guide": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700",
+  "accent": {
+    "light": {"accent": "#0b7a6c", "ink": "#ffffff", "soft": "#e0f3ef"},
+    "dark": {"accent": "#4fd1bd", "ink": "#06201b", "soft": "#133029"}
+  },
+  "home": {
+    "h1": "DP-700 Study Hub",
+    "p": "Microsoft Certified: Fabric Data Engineer Associate. Đề hỏi chọn đúng item Fabric, cách load, cách bảo vệ và cách tối ưu: lakehouse, warehouse, eventhouse, pipeline, notebook, dataflow.",
+    "links": [
+      {"label": "Trang certification", "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/"},
+      {"label": "Study guide DP-700", "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700"},
+      {"label": "Practice Assessment", "url": "https://aka.ms/DP700-PA"}
+    ],
+    "tiles": [
+      {"k": "Thời gian", "v": "100 phút", "s": "proctored, có thể có câu tương tác"},
+      {"k": "Điểm đậu", "v": "700", "s": "thang 1 tới 1.000"},
+      {"k": "Trọng số", "v": "3 x 30-35%", "s": "3 skill area ngang nhau"},
+      {"k": "Gia hạn", "v": "Miễn phí", "s": "assessment online trên Microsoft Learn"}
+    ],
+    "domainTitle": "Skill area, trọng số và tiến độ quiz",
+    "domainSrc": [
+      {"label": "Study guide DP-700", "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700"},
+      {"label": "Fabric Data Engineer Associate", "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/"}
+    ],
+    "taskWord": "nhóm skill"
+  },
+  "topics": [
+    {"id": "workspace", "title": "Workspace, lifecycle & orchestration", "icon": "fab-group-workspace", "d": "D1"},
+    {"id": "security", "title": "Security & governance", "icon": "shield-lock", "d": "D1"},
+    {"id": "batch", "title": "Loading patterns & batch", "icon": "fab-data-factory", "d": "D2"},
+    {"id": "streaming", "title": "Streaming: eventstream, Spark, KQL", "icon": "fab-real-time-intelligence", "d": "D2"},
+    {"id": "monitor", "title": "Monitor, troubleshoot & optimize", "icon": "gauge", "d": "D3"}
+  ],
+  "domains": {
+    "D1": {"n": "Implement and manage an analytics solution", "w": 33, "wl": "30-35%"},
+    "D2": {"n": "Ingest and transform data", "w": 34, "wl": "30-35%"},
+    "D3": {"n": "Monitor and optimize an analytics solution", "w": 33, "wl": "30-35%"}
+  },
+  "tasks": {
+    "1.1": "Configure Microsoft Fabric workspace settings",
+    "1.2": "Implement lifecycle management in Fabric",
+    "1.3": "Configure security and governance",
+    "1.4": "Orchestrate processes",
+    "2.1": "Design and implement loading patterns",
+    "2.2": "Ingest and transform batch data",
+    "2.3": "Ingest and transform streaming data",
+    "3.1": "Monitor Fabric items",
+    "3.2": "Identify and resolve errors",
+    "3.3": "Optimize performance"
+  },
+  "mocks": [{"n": 20, "min": 40}, {"n": 50, "min": 100, "note": "thời gian như đề thật, số câu thật không công bố"}],
+  "glCats": ["OneLake & Storage", "Ingestion", "Transformation", "Real-Time Intelligence", "Security & Governance", "Lifecycle & Ops", "Performance"]
+}

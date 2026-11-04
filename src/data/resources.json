@@ -1,0 +1,64 @@
+[
+ {
+  "group": "Chính thức",
+  "md": "Study guide là nguồn quyết định phạm vi thi. Practice Assessment mới nằm trên AI Skills Navigator và cần đăng nhập.",
+  "items": [
+   {"label": "Study guide DP-700", "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700", "kind": "official", "note": "Skills measured đầy đủ, trọng số 3 skill area, ghi chú câu hỏi có thể về Preview feature phổ biến.", "date": "2026-10-30"},
+   {"label": "Microsoft Certified: Fabric Data Engineer Associate", "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/", "kind": "official", "note": "100 phút, proctored, có thể có câu tương tác; lịch thi Pearson VUE, retake sau 24 giờ, gia hạn miễn phí.", "date": "2026-11-02"},
+   {"label": "Practice Assessment trên AI Skills Navigator", "url": "https://aka.ms/DP700-PA", "kind": "practice", "note": "Bản mới, sát trải nghiệm thi hơn; Microsoft khuyên dùng bản này."},
+   {"label": "Practice Assessment bản cũ trên Microsoft Learn", "url": "https://aka.ms/DP700-LearnPA", "kind": "practice", "note": "Microsoft ghi rõ bản này không còn được cập nhật; dùng khi bản mới không mở được.", "date": "2025-04-11"},
+   {"label": "Exam sandbox", "url": "https://aka.ms/examdemo", "kind": "practice", "note": "Thử giao diện thi và các dạng câu hỏi trước ngày thi."},
+   {"label": "Preparing for the DP-700 Exam (Microsoft Learn, YouTube)", "url": "https://www.youtube.com/watch?v=X8ChDW58wzI&list=PLahhVEj9XNTevfHvnTVNF7U99Brd9NJXX", "kind": "video", "note": "Exam prep video chính thức, 3 phần theo 3 skill area; link từ trang certification.", "date": "2026-02-28"},
+   {"label": "Microsoft Fabric documentation", "url": "https://learn.microsoft.com/en-us/fabric/", "kind": "docs", "note": "Nguồn kiểm chứng mọi default, limit và hành vi của item."},
+   {"label": "What's new in Microsoft Fabric", "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new", "kind": "docs", "note": "Danh sách feature theo tháng kèm trạng thái GA hoặc Preview.", "date": "2026-10-27"},
+   {"label": "Fabric Updates Blog", "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/bg-p/fbc_fabricupdatesblogs", "kind": "official", "note": "Blog chính thức của team Fabric, nơi công bố feature GA và Preview."},
+   {"label": "Fabric September 2026 Feature Summary", "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-September-2026-Feature-Summary/ba-p/5325825", "kind": "official", "note": "Bản tóm tắt feature hằng tháng mới nhất, gồm giao diện OneLake security GA.", "date": "2026-10-13"},
+   {"label": "Microsoft Fabric Roadmap", "url": "https://roadmap.fabric.microsoft.com/", "kind": "official", "note": "Trang roadmap chính thức của Fabric."}
+  ]
+ },
+ {
+  "group": "Khoá học và đề luyện",
+  "md": "Course DP-700T00 gồm 5 learning path dưới đây, cùng nội dung với bản tự học trên Microsoft Learn.",
+  "items": [
+   {"label": "Course DP-700T00: Implement data engineering solutions using Microsoft Fabric", "url": "https://learn.microsoft.com/en-us/training/courses/dp-700t00", "kind": "course", "note": "Course 4 ngày có giảng viên; trang course liệt kê learning path tự học.", "date": "2026-06-17"},
+   {"label": "Ingest data with Microsoft Fabric", "url": "https://learn.microsoft.com/en-us/training/paths/ingest-data-with-microsoft-fabric/", "kind": "course", "note": "Learning path trong study guide của course DP-700T00.", "date": "2026-10-28"},
+   {"label": "Implement a Lakehouse with Microsoft Fabric", "url": "https://learn.microsoft.com/en-us/training/paths/implement-lakehouse-microsoft-fabric/", "kind": "course", "note": "Learning path trong study guide của course DP-700T00.", "date": "2026-10-28"},
+   {"label": "Implement Real-Time Intelligence with Microsoft Fabric", "url": "https://learn.microsoft.com/en-us/training/paths/explore-real-time-analytics-microsoft-fabric/", "kind": "course", "note": "Learning path trong study guide của course DP-700T00.", "date": "2026-10-28"},
+   {"label": "Implement a data warehouse with Microsoft Fabric", "url": "https://learn.microsoft.com/en-us/training/paths/work-with-data-warehouses-using-microsoft-fabric/", "kind": "course", "note": "Learning path trong study guide của course DP-700T00.", "date": "2026-10-28"},
+   {"label": "Manage a Microsoft Fabric environment", "url": "https://learn.microsoft.com/en-us/training/paths/manage-microsoft-fabric-environment/", "kind": "course", "note": "Learning path của DP-700T00 gồm CI/CD, monitoring, secure data access với workspace role, item permission, OneLake security.", "date": "2026-10-28"}
+  ]
+ },
+ {
+  "group": "Video",
+  "items": [
+   {"label": "DP-700 Exam Full Course (Aleksi Partanen)", "url": "https://www.youtube.com/watch?v=jTDSP7KBavI", "kind": "video", "note": "Khoá video được nhiều bài báo đậu 2026 trên r/MicrosoftFabric nhắc tới.", "date": "2025-08-04"},
+   {"label": "DP-700 Exam Full Course, 6 giờ (Learn Microsoft Fabric with Will)", "url": "https://www.youtube.com/watch?v=KiB4eAeFRsw", "kind": "video", "note": "Khoá tổng quan thay thế; quay từ 03/2025 nên đối chiếu với study guide hiện hành.", "date": "2025-03-27"},
+   {"label": "Microsoft Certification Exam Prep for DP-700 (Microsoft Learn)", "url": "https://www.youtube.com/watch?v=NVCCMMW9DfE", "kind": "video", "note": "Microsoft Technical Trainer đi qua trọng tâm đề và mẹo ôn.", "date": "2026-06-09"},
+   {"label": "Secure data in Microsoft Fabric, DP-700 Episode 18 (Microsoft Learn)", "url": "https://www.youtube.com/watch?v=RsyQUCOnix4", "kind": "video", "note": "Tập về security trong series DP-700 của Microsoft Learn; quay trước khi OneLake security GA.", "date": "2025-06-26"},
+   {"label": "OneLake Security RLS: Define Security Once, Enforce It Everywhere (RADACAD)", "url": "https://www.youtube.com/watch?v=d0BGZymdTxY", "kind": "video", "note": "Demo OneLake security sau GA: user's identity mode, Direct Lake on OneLake, RLS từ lakehouse tới report.", "date": "2026-07-28"},
+   {"label": "OneLake Data Security Controls in Microsoft Fabric (Microsoft Mechanics)", "url": "https://www.youtube.com/watch?v=AakV-3RtmuI", "kind": "video", "note": "Giới thiệu OneLake data security của Microsoft Mechanics; quay khi OneLake security còn preview.", "date": "2025-05-05"},
+   {"label": "Kênh YouTube Microsoft Fabric", "url": "https://www.youtube.com/@MicrosoftFabric", "kind": "video", "note": "Kênh YouTube chính thức của Microsoft Fabric."},
+   {"label": "Kênh YouTube Guy in a Cube", "url": "https://www.youtube.com/@GuyInACube", "kind": "video", "note": "Thí sinh 2026 dùng để ôn capacity, smoothing, throttling."}
+  ]
+ },
+ {
+  "group": "Blog và kinh nghiệm thi",
+  "md": "Bài của thí sinh dùng để biết dạng câu và trọng tâm; mọi khẳng định kỹ thuật cần đối chiếu doc.",
+  "items": [
+   {"label": "Passed DP-700 yesterday: prep journey, why it was tougher than expected", "url": "https://www.reddit.com/r/MicrosoftFabric/comments/1wtygi6/passed_dp700_yesterday_my_prep_journey_why_it_was/", "kind": "community", "note": "Đề nặng scenario và trade-off; chọn một khoá chính, ôn kỹ Real-Time Intelligence, capacity, medallion; xin ESL accommodation +30 phút.", "date": "2026-09-30"},
+   {"label": "[Passed DP-700] Study roadmap", "url": "https://www.reddit.com/r/MicrosoftFabric/comments/1wlwn8m/passed_dp700_just_earned_the_fabric_data_engineer/", "kind": "community", "note": "Đọc learning path, lab medallion end-to-end, làm Practice Assessment nhiều lần; nhấn mạnh security model và ranh giới lakehouse, warehouse, eventhouse.", "date": "2026-09-20"},
+   {"label": "OneLake Security: Setting Up Row Level Security From Lakehouse to Report (RADACAD)", "url": "https://radacad.com/onelake-security-setting-up-row-level-security-from-lakehouse-to-report/", "kind": "blog", "note": "Bản viết của video RADACAD: điều kiện để RLS của OneLake áp tới report Power BI.", "date": "2026-09-15"},
+   {"label": "How to Pass the Microsoft Fabric Certification DP-700 Exam (LeapFrogBI)", "url": "https://www.leapfrogbi.com/?p=75676", "kind": "blog", "note": "Kinh nghiệm đậu 05/2025 và danh sách tài nguyên; bài cũ hơn outline hiện hành.", "date": "2025-06-06"},
+   {"label": "How I passed the DP-700 Exam (Koen Verbeeck, SQLServerCentral)", "url": "https://www.sqlservercentral.com/?p=4552195", "kind": "blog", "note": "Góc nhìn người đã làm data warehouse lâu năm; bài 03/2025, cũ hơn outline hiện hành.", "date": "2025-03-17"}
+  ]
+ },
+ {
+  "group": "Cộng đồng",
+  "items": [
+   {"label": "r/MicrosoftFabric", "url": "https://www.reddit.com/r/MicrosoftFabric/", "kind": "community", "note": "Subreddit về Fabric; tìm DP-700 để đọc bài báo đậu và trượt mới nhất."},
+   {"label": "DP-700 Prep: advice from people who cleared it recently (Reddit)", "url": "https://www.reddit.com/r/MicrosoftFabric/comments/1wva942/dp700_prep_looking_for_advice_from_people_who/", "kind": "community", "note": "Thread hỏi đáp lộ trình ôn cho người đã biết Spark và Databricks.", "date": "2026-10-01"},
+   {"label": "Failed DP-700, help / suggestions needed (Fabric Community)", "url": "https://community.fabric.microsoft.com/t5/Data-Engineering/Failed-DP-700-help-suggestions-needed/m-p/4906555", "kind": "community", "note": "Thí sinh trượt 659 kể đề nhiều code snippet dài và KQL performance, thời gian 100 phút sát.", "date": "2025-12-21"},
+   {"label": "ExamTopics DP-700", "url": "https://www.examtopics.com/exams/microsoft/dp-700/", "kind": "practice", "note": "Câu hỏi do cộng đồng đóng góp, đáp án không được Microsoft kiểm chứng; chỉ dùng để đọc thảo luận và kiểm lại bằng doc."}
+  ]
+ }
+]

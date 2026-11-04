@@ -1,0 +1,1147 @@
+[
+  {
+    "id": "bat-01",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "A retail company stores orders in an Azure SQL Database table. The table has a LastModifiedDate column that the application updates on every insert and update. The DBA team does not allow change data capture on the database. You must load new and changed orders every hour into an existing Fabric lakehouse table and update rows that already exist. The solution must require the LEAST development effort.\nWhat should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Copy job that uses incremental copy with LastModifiedDate as the incremental column and the Merge update method."
+      },
+      {
+        "k": "B",
+        "t": "Mirroring for Azure SQL Database, then read the mirrored tables from the lakehouse."
+      },
+      {
+        "k": "C",
+        "t": "A Copy job that uses full copy with the Overwrite update method on an hourly schedule."
+      },
+      {
+        "k": "D",
+        "t": "A pipeline with two Lookup activities, a Copy activity, and a Stored procedure activity that tracks the watermark."
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: có cột LastModifiedDate, không được bật CDC, cần update dòng đã có, LEAST development effort.\n- Copy job tự giữ watermark giữa các lần chạy và có write method Merge theo key, không cần dựng pipeline.",
+    "wrong": {
+      "B": "Mirroring ghi vào mirrored database read-only riêng, không ghi vào bảng lakehouse có sẵn.",
+      "C": "Full copy đọc lại toàn bộ bảng mỗi giờ, tốn tài nguyên và không phải incremental.",
+      "D": "Chạy được nhưng phải tự dựng và tự quản state watermark, nhiều effort hơn Copy job."
+    },
+    "refs": [
+      {
+        "label": "Incremental copy in Copy job",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+      },
+      {
+        "label": "Decision guide: data movement",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement"
+      }
+    ]
+  },
+  {
+    "id": "bat-02",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "You use a Copy job with watermark-based incremental copy to load the Customers table from Azure SQL Managed Instance into a Fabric Warehouse. The Merge update method is configured. Analysts report that customers deleted in the source still appear in the warehouse. Change data capture is already enabled on the source table. You need deleted customers to be removed from the warehouse on the next runs.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Change the incremental column to a ROWVERSION column."
+      },
+      {
+        "k": "B",
+        "t": "Enable audit columns and filter deleted rows in a view."
+      },
+      {
+        "k": "C",
+        "t": "Reset incremental copy for the table so that the next run performs a full copy."
+      },
+      {
+        "k": "D",
+        "t": "Use CDC-based incremental copy for the table with the Merge update method."
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: dòng bị xoá ở source vẫn còn, CDC đã bật.\n- Watermark chỉ bắt insert và update; CDC bắt cả delete và Merge xoá dòng tương ứng ở destination.",
+    "wrong": {
+      "A": "ROWVERSION vẫn là watermark, dòng đã xoá không còn để so sánh.",
+      "B": "Audit columns chỉ thêm metadata như run ID, không biết dòng nào bị xoá ở source.",
+      "C": "Reset không truncate destination; dòng đã xoá vẫn nằm lại."
+    },
+    "refs": [
+      {
+        "label": "Incremental copy in Copy job",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+      },
+      {
+        "label": "CDC in Copy job",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job"
+      }
+    ]
+  },
+  {
+    "id": "bat-03",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 2,
+    "stem": "Your team plans to use watermark-based incremental copy in Copy job for several Azure SQL Database tables. Some tables use a datetime column, one table uses a date-only column, and some rows in another table contain NULL in the planned incremental column. A developer asks you to confirm how Copy job behaves before the design is approved.\nWhich two statements are true? Each correct answer presents a complete solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "On subsequent incremental loads, rows with a NULL value in the incremental column are not copied."
+      },
+      {
+        "k": "B",
+        "t": "Resetting incremental copy truncates the destination table so that the next full copy starts from an empty table."
+      },
+      {
+        "k": "C",
+        "t": "For a date-only incremental column, Copy job re-reads the last day to avoid missing rows."
+      },
+      {
+        "k": "D",
+        "t": "Watermark-based incremental copy removes rows in the destination that were deleted in the source."
+      },
+      {
+        "k": "E",
+        "t": "When a run fails, Copy job advances the watermark so the failed rows are skipped next time."
+      }
+    ],
+    "answer": [
+      "A",
+      "C"
+    ],
+    "explain": "- NULL không so sánh được nên bị loại ở các lần incremental sau lần đầu.\n- Cột date không có giờ, nên Copy job tự đọc lùi 1 ngày để không mất dòng.",
+    "wrong": {
+      "B": "Reset chỉ xoá watermark hoặc checkpoint, không đụng data ở destination.",
+      "D": "Watermark không detect được delete; cần CDC.",
+      "E": "Lỗi không đổi state; Copy job resume từ lần chạy thành công cuối."
+    },
+    "refs": [
+      {
+        "label": "Incremental copy in Copy job",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+      }
+    ]
+  },
+  {
+    "id": "bat-04",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "A Customers table in Azure SQL Database has CDC enabled. The business wants a Fabric Warehouse table that keeps every historical version of a customer when the address changes, with validity dates and a current-row flag. The data engineering team must not write custom code and wants a single item to configure and schedule.\nWhat should you configure?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Copy job with watermark-based incremental copy and the Append update method."
+      },
+      {
+        "k": "B",
+        "t": "Mirroring for Azure SQL Database with the default retention setting."
+      },
+      {
+        "k": "C",
+        "t": "A Copy job with CDC-based incremental copy and the SCD Type 2 update method."
+      },
+      {
+        "k": "D",
+        "t": "A Copy job with CDC-based incremental copy and the Merge update method."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: giữ mọi version, validity date, current flag, không code.\n- Copy job với CDC có write method SCD Type 2, tự thêm Valid_From, Valid_To, Is_Current (đang Preview).",
+    "wrong": {
+      "A": "Append chỉ chồng thêm dòng, không có validity date hay current flag, và không bắt delete.",
+      "B": "Mirroring chỉ giữ trạng thái hiện tại của source; retention là để time travel, không phải SCD.",
+      "D": "Merge là SCD Type 1, ghi đè nên mất lịch sử."
+    },
+    "refs": [
+      {
+        "label": "CDC in Copy job",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job"
+      }
+    ]
+  },
+  {
+    "id": "bat-05",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 2,
+    "stem": "You maintain a DimCustomer table in a Fabric Warehouse. Sales reports must show revenue by the SalesRegion that a customer belonged to at the time of each sale. Corrections to PhoneNumber must simply replace the old value, and no history of phone numbers is required.\nWhich two actions should you implement in the dimension load? Each correct answer presents part of the solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "Apply SCD type 2 to SalesRegion by expiring the current row and inserting a new current row."
+      },
+      {
+        "k": "B",
+        "t": "Apply SCD type 1 to PhoneNumber by updating the attribute on the existing row."
+      },
+      {
+        "k": "C",
+        "t": "Apply SCD type 3 to PhoneNumber by adding a PreviousPhoneNumber column."
+      },
+      {
+        "k": "D",
+        "t": "Truncate DimCustomer and reload it from the source system every night so that all attributes stay current."
+      },
+      {
+        "k": "E",
+        "t": "Apply SCD type 1 to SalesRegion by updating the attribute on the existing row."
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "explain": "- SalesRegion cần đúng giá trị tại thời điểm bán: SCD type 2 giữ version theo validity period.\n- PhoneNumber chỉ cần giá trị mới: SCD type 1 update đè.",
+    "wrong": {
+      "C": "Type 3 giữ giá trị trước, trong khi yêu cầu nói không cần lịch sử số điện thoại.",
+      "D": "Truncate và reload sinh surrogate key mới, phá fact và mất version SCD type 2.",
+      "E": "Type 1 ghi đè region nên doanh thu cũ bị gán sang region mới."
+    },
+    "refs": [
+      {
+        "label": "Load tables in a dimensional model",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+      }
+    ]
+  },
+  {
+    "id": "bat-06",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "A hotel chain loads check-in facts into a Fabric Warehouse every hour. Guests receive a loyalty number at check-in, but their profile details often reach the CRM days later. Fact rows must load on time and must later be linked to the full guest profile without reprocessing the facts.\nHow should the fact load handle a loyalty number that does not exist in DimGuest?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Reject the fact rows and reload them after the guest profile arrives."
+      },
+      {
+        "k": "B",
+        "t": "Insert the fact rows with a NULL guest key because the warehouse does not enforce foreign keys."
+      },
+      {
+        "k": "C",
+        "t": "Insert an inferred member that has the natural key, Unknown attributes, and IsInferredMember set to TRUE."
+      },
+      {
+        "k": "D",
+        "t": "Insert an inferred member, and when the profile details arrive, create a new SCD type 2 version of the guest row."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: fact phải load đúng giờ, chi tiết dimension đến muộn (late-arriving dimension).\n- Inferred member có natural key, khi chi tiết đến thì update dòng đó và set IsInferredMember = FALSE.",
+    "wrong": {
+      "A": "Fact bị trễ, vi phạm yêu cầu load đúng giờ.",
+      "B": "Key NULL làm mất dòng khi join với dimension; docs yêu cầu luôn lưu một dimension key hợp lệ.",
+      "D": "Chi tiết đến muộn của inferred member là update, không phải thay đổi SCD; tạo version làm sai lịch sử."
+    },
+    "refs": [
+      {
+        "label": "Load tables in a dimensional model",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+      }
+    ]
+  },
+  {
+    "id": "bat-07",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "You are designing the nightly ETL process for a star schema in a Fabric Warehouse. The process loads staging tables, three dimension tables, and two fact tables, and a Power BI semantic model uses the star schema. One dimension, DimGeography, is referenced by DimCustomer.\nIn which order should the process run?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Stage data, process the fact tables, process DimCustomer, then DimGeography, then refresh the semantic model."
+      },
+      {
+        "k": "B",
+        "t": "Stage data, process DimGeography, then the other dimensions, then fact tables, then refresh the semantic model."
+      },
+      {
+        "k": "C",
+        "t": "Process the fact tables, stage data, process all dimension tables in parallel, then refresh the semantic model."
+      },
+      {
+        "k": "D",
+        "t": "Refresh the semantic model, stage data, process all dimensions, process fact tables."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Dimension phải xử lý trước fact để mọi member mới đã có surrogate key.\n- Dimension phụ thuộc nhau (outrigger như DimGeography) chạy theo thứ tự phụ thuộc; refresh semantic model ở cuối.",
+    "wrong": {
+      "A": "Fact chạy trước dimension thì lookup surrogate key thất bại với member mới.",
+      "C": "Fact trước staging và dimension là sai thứ tự; DimCustomer cần DimGeography trước.",
+      "D": "Refresh model trước khi load thì report hiển thị data cũ."
+    },
+    "refs": [
+      {
+        "label": "Load tables in a dimensional model",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+      }
+    ]
+  },
+  {
+    "id": "bat-08",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "A Fabric Warehouse has a DimProduct table with an IDENTITY surrogate key and SCD type 2 history. FactSales stores the surrogate key. To simplify the ETL, a developer proposes to truncate DimProduct and reload it from the source every night.\nWhat is the main problem with this proposal?",
+    "options": [
+      {
+        "k": "A",
+        "t": "IDENTITY columns are not supported in Fabric Warehouse, so the surrogate key values cannot be generated again."
+      },
+      {
+        "k": "B",
+        "t": "TRUNCATE TABLE is not supported in Fabric Warehouse."
+      },
+      {
+        "k": "C",
+        "t": "The reload regenerates surrogate keys, which breaks fact references and can lose historical versions."
+      },
+      {
+        "k": "D",
+        "t": "The reload disables V-Order optimization on the dimension table."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Docs: dimension có surrogate key tự sinh thì không bao giờ truncate và full reload.\n- Key mới làm fact trỏ sai, và version SCD type 2 có thể không dựng lại được từ source.",
+    "wrong": {
+      "A": "IDENTITY column được hỗ trợ trong Fabric Warehouse.",
+      "B": "TRUNCATE TABLE được hỗ trợ trong Warehouse.",
+      "D": "Mọi cách ingest vào Warehouse đều ghi Parquet có V-Order; reload không tắt V-Order."
+    },
+    "refs": [
+      {
+        "label": "Load tables in a dimensional model",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+      },
+      {
+        "label": "T-SQL surface area",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area"
+      }
+    ]
+  },
+  {
+    "id": "bat-09",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "FactSales in a Fabric Warehouse holds 2 billion rows. The source ERP assigns a sequential SalesOrderNumber to every new order, and orders are never modified after creation. The nightly load currently truncates and reloads the fact table and takes four hours. You need to reduce load time and source impact.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Store the highest SalesOrderNumber loaded and, on each run, load only orders with a higher number."
+      },
+      {
+        "k": "B",
+        "t": "Compare every source row to the fact table by SalesOrderNumber and line number, then insert the differences."
+      },
+      {
+        "k": "C",
+        "t": "Load the full source into a staging table and use EXCEPT to find new rows."
+      },
+      {
+        "k": "D",
+        "t": "Keep the truncate and reload, but run it in two parallel pipelines."
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: số đơn tăng dần, đơn không bị sửa: đúng điều kiện cho high watermark.\n- Docs gọi truncate và reload fact lớn là last resort; incremental load scale tốt hơn và giảm tải source.",
+    "wrong": {
+      "B": "So sánh từng dòng trên bảng 2 tỷ dòng rất tốn kém.",
+      "C": "Vẫn đọc toàn bộ source mỗi đêm, không giảm tải source.",
+      "D": "Vẫn đọc và ghi lại toàn bộ data, chỉ chia nhỏ việc."
+    },
+    "refs": [
+      {
+        "label": "Load tables in a dimensional model",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+      }
+    ]
+  },
+  {
+    "id": "bat-10",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A data engineering team is fluent in PySpark and Delta Lake. They ingest JSON clickstream files, product images, and CSV exports, then build machine learning features. A small group of analysts only needs to query the curated tables with T-SQL and does not modify data.\nWhich Fabric data store should you recommend?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Warehouse"
+      },
+      {
+        "k": "B",
+        "t": "Lakehouse"
+      },
+      {
+        "k": "C",
+        "t": "Eventhouse"
+      },
+      {
+        "k": "D",
+        "t": "SQL database in Fabric"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Tín hiệu: PySpark, file semi-structured và unstructured, machine learning.\n- Lakehouse có Files và Tables (Delta); analyst đọc bằng T-SQL qua SQL analytics endpoint.",
+    "wrong": {
+      "A": "Warehouse hợp team T-SQL viết DML; không chứa file ảnh hay JSON thô.",
+      "C": "Eventhouse cho event và time series query bằng KQL, không phải feature engineering bằng Spark.",
+      "D": "SQL database cho OLTP của ứng dụng."
+    },
+    "refs": [
+      {
+        "label": "Decision guide: data store",
+        "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+      }
+    ]
+  },
+  {
+    "id": "bat-11",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A team of SQL Server developers will build an enterprise star schema in Fabric. Their stored procedures run INSERT, UPDATE, and DELETE across several tables inside one transaction. A few Spark users in another team must be able to read the same tables.\nWhich data store should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A lakehouse queried through its SQL analytics endpoint"
+      },
+      {
+        "k": "B",
+        "t": "An eventhouse with a KQL database"
+      },
+      {
+        "k": "C",
+        "t": "Cosmos DB in Fabric"
+      },
+      {
+        "k": "D",
+        "t": "A Fabric Warehouse"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: T-SQL DML, transaction nhiều bảng, star schema.\n- Warehouse hỗ trợ đầy đủ DML và transaction; data ở OneLake dạng Delta nên Spark vẫn đọc được.",
+    "wrong": {
+      "A": "SQL analytics endpoint chỉ đọc, không chạy INSERT, UPDATE, DELETE.",
+      "B": "Eventhouse dành cho event data và KQL.",
+      "C": "Cosmos DB là NoSQL, không phải star schema bằng T-SQL."
+    },
+    "refs": [
+      {
+        "label": "Decision guide: data store",
+        "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+      },
+      {
+        "label": "SQL analytics endpoint",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint"
+      }
+    ]
+  },
+  {
+    "id": "bat-12",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A manufacturer collects machine telemetry as JSON events, several billion rows per month. Engineers need interactive queries over recent data with time series and anomaly functions, and Power BI dashboards that compare the current hour to previous periods.\nWhich data store should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Eventhouse"
+      },
+      {
+        "k": "B",
+        "t": "Lakehouse"
+      },
+      {
+        "k": "C",
+        "t": "Warehouse"
+      },
+      {
+        "k": "D",
+        "t": "SQL database in Fabric"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Tín hiệu: telemetry, high granularity theo thời gian, interactive analytics, time series.\n- Decision guide xếp streaming event data và activity data chi tiết vào eventhouse, query bằng KQL.",
+    "wrong": {
+      "B": "Lakehouse hợp big data và Spark, không tối ưu cho query time series tương tác.",
+      "C": "Warehouse hợp star schema và SQL BI.",
+      "D": "SQL database dành cho OLTP."
+    },
+    "refs": [
+      {
+        "label": "Decision guide: data store",
+        "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+      }
+    ]
+  },
+  {
+    "id": "bat-13",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 2,
+    "stem": "An analyst connects to the SQL analytics endpoint of a lakehouse named SalesLH and runs an UPDATE statement to fix a wrong product category in a Delta table. The statement fails. The analyst asks how to correct the data while keeping the data in SalesLH.\nWhich two statements are correct? Each correct answer presents part of the solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "The SQL analytics endpoint is read-only for Delta tables, so DML statements are not supported."
+      },
+      {
+        "k": "B",
+        "t": "The fix can be applied by using a Spark notebook attached to SalesLH."
+      },
+      {
+        "k": "C",
+        "t": "Granting the db_datawriter database role on the endpoint to the analyst allows the UPDATE to succeed."
+      },
+      {
+        "k": "D",
+        "t": "Enabling V-Order on the table allows updates through the endpoint."
+      },
+      {
+        "k": "E",
+        "t": "A workspace setting can switch the endpoint to read-write mode."
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "explain": "- SQL analytics endpoint chỉ đọc trên Delta table; muốn sửa data thì dùng Spark trên lakehouse.\n- Endpoint vẫn cho tạo view, function, stored procedure và quản lý permission.",
+    "wrong": {
+      "C": "Không role nào biến endpoint thành nơi ghi được.",
+      "D": "V-Order là tối ưu đọc, không liên quan quyền ghi.",
+      "E": "Không có setting chuyển endpoint sang read-write; cần warehouse nếu muốn DML bằng T-SQL."
+    },
+    "refs": [
+      {
+        "label": "SQL analytics endpoint",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint"
+      }
+    ]
+  },
+  {
+    "id": "bat-14",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "Business analysts in the finance team must combine data from 15 SaaS applications and Excel files, pivot and merge columns, and land the result in a lakehouse every morning. They are familiar with Power Query in Excel and do not write code.\nWhich tool should they use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Spark notebook"
+      },
+      {
+        "k": "B",
+        "t": "A T-SQL stored procedure in a warehouse"
+      },
+      {
+        "k": "C",
+        "t": "A pipeline Copy activity"
+      },
+      {
+        "k": "D",
+        "t": "A Dataflow Gen2"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: business analyst, Power Query, nhiều connector, không viết code, transform như pivot.\n- Dataflow Gen2 có 150+ connector và 300+ transformation function.",
+    "wrong": {
+      "A": "Notebook cần viết code PySpark.",
+      "B": "T-SQL cần viết code và data phải nằm sẵn trong workspace hoặc Azure storage.",
+      "C": "Copy activity chỉ transform nhẹ như mapping và đổi type, không pivot hay merge column phức tạp."
+    },
+    "refs": [
+      {
+        "label": "Decision guide: copy activity, dataflow, Spark",
+        "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+      }
+    ]
+  },
+  {
+    "id": "bat-15",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A data engineer must process 5 TB per day of deeply nested JSON from IoT gateways in a lakehouse. The logic flattens arrays, calls an open-source Python parsing library, and writes Delta tables partitioned by date. The team has strong Python skills.\nWhich transformation tool should you choose?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Dataflow Gen2 with Power Query transformations"
+      },
+      {
+        "k": "B",
+        "t": "A Copy job with column mapping"
+      },
+      {
+        "k": "C",
+        "t": "A Spark notebook using PySpark"
+      },
+      {
+        "k": "D",
+        "t": "A warehouse stored procedure using OPENROWSET"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: volume lớn, nested JSON, Python library, ghi Delta table.\n- Spark notebook xử lý volume lớn và dùng được library tuỳ ý.",
+    "wrong": {
+      "A": "Dataflow không dùng được Python library tuỳ ý và kém hiệu quả ở volume này.",
+      "B": "Copy job chỉ có transform nhẹ.",
+      "D": "T-SQL không gọi được Python library; OPENROWSET đọc file nhưng chậm hơn bảng."
+    },
+    "refs": [
+      {
+        "label": "Decision guide: copy activity, dataflow, Spark",
+        "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+      }
+    ]
+  },
+  {
+    "id": "bat-16",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "You configure incremental refresh on a Dataflow Gen2 query that loads sales data from an on-premises SQL Server into a Fabric Warehouse. You want each refresh to read only recent changes from the source.\nWhich requirement must the query meet?",
+    "options": [
+      {
+        "k": "A",
+        "t": "The source table must have change data capture enabled."
+      },
+      {
+        "k": "B",
+        "t": "The query must return a Date, DateTime, or DateTimeZone column to filter by."
+      },
+      {
+        "k": "C",
+        "t": "The query must define a primary key that matches a key on the destination table."
+      },
+      {
+        "k": "D",
+        "t": "The query must use the dataflow's default destination."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Incremental refresh chia data thành bucket theo cột Date, DateTime hoặc DateTimeZone.\n- Query nên fold về source; destination phải đặt rõ trong query.",
+    "wrong": {
+      "A": "Dataflow không dùng CDC; nó so max value của cột ngày trong từng bucket.",
+      "C": "Không cần primary key; bucket thay đổi được xoá rồi insert lại.",
+      "D": "Default destination không hỗ trợ incremental refresh."
+    },
+    "refs": [
+      {
+        "label": "Incremental refresh in Dataflow Gen2",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-incremental-refresh"
+      }
+    ]
+  },
+  {
+    "id": "bat-17",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "Your company keeps 40 TB of Parquet files in an Amazon S3 bucket that another team updates daily. Fabric notebooks must read the files without copying them into OneLake. The same files are read many times each week, and cross-cloud egress cost must be minimized.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Create a Copy job that copies the new and changed files to the lakehouse Files folder daily."
+      },
+      {
+        "k": "B",
+        "t": "Create an S3 shortcut in a Fabric Warehouse."
+      },
+      {
+        "k": "C",
+        "t": "Create a mirrored database that replicates the S3 bucket."
+      },
+      {
+        "k": "D",
+        "t": "Create an S3 shortcut in the lakehouse and enable shortcut caching for the workspace."
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Tín hiệu: không copy data, đọc lặp lại, giảm egress cost.\n- Shortcut trỏ tới S3 tại chỗ; shortcut caching (S3, GCS, S3 compatible) trả lời từ cache 1 tới 28 ngày.",
+    "wrong": {
+      "A": "Copy job tạo bản copy thứ hai, vi phạm yêu cầu không copy.",
+      "B": "Shortcut chỉ tạo trong lakehouse và KQL database, không trong warehouse.",
+      "C": "S3 không phải source của mirroring; mirroring dành cho database."
+    },
+    "refs": [
+      {
+        "label": "OneLake shortcuts",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+      }
+    ]
+  },
+  {
+    "id": "bat-18",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A lakehouse contains a shortcut named Files/Partner that points to a container in Azure Data Lake Storage Gen2. A user who has write permission on the storage account deletes the folder Files/Partner/2023 from the lakehouse explorer.\nWhat is the result?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Only the shortcut definition is removed, and the data in ADLS Gen2 is unchanged."
+      },
+      {
+        "k": "B",
+        "t": "The 2023 folder is deleted from the ADLS Gen2 container."
+      },
+      {
+        "k": "C",
+        "t": "The delete is blocked because shortcuts are always read-only."
+      },
+      {
+        "k": "D",
+        "t": "The folder is removed only from the shortcut cache."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Xoá file hoặc folder bên trong shortcut thì xoá ở target nếu user có quyền ghi ở target.\n- Chỉ khi xoá chính shortcut thì target không bị ảnh hưởng.",
+    "wrong": {
+      "A": "Đó là hành vi khi xoá chính shortcut Files/Partner, không phải folder bên trong.",
+      "C": "Shortcut ADLS Gen2 ghi được khi có quyền; Dataverse shortcut mới luôn read-only.",
+      "D": "Cache chỉ áp dụng cho S3, GCS, S3 compatible và gateway, và không phải cơ chế xoá."
+    },
+    "refs": [
+      {
+        "label": "OneLake shortcuts",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+      }
+    ]
+  },
+  {
+    "id": "bat-19",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "An insurance company runs claims processing on Azure SQL Database. Executives need Power BI reports on near real-time copies of all tables. The team does not want to build or schedule ETL, and the solution must be the MOST cost-effective. Read-only access in Fabric is acceptable.\nWhat should you implement?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Copy job with CDC-based incremental copy scheduled every 15 minutes"
+      },
+      {
+        "k": "B",
+        "t": "An ADLS Gen2 shortcut to the database files"
+      },
+      {
+        "k": "C",
+        "t": "Mirroring for Azure SQL Database"
+      },
+      {
+        "k": "D",
+        "t": "An eventstream with a database CDC source"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: near real-time, mọi bảng, không ETL, MOST cost-effective, read-only chấp nhận được.\n- Mirroring replicate liên tục, compute replicate miễn phí và có free mirroring storage theo capacity.",
+    "wrong": {
+      "A": "Chạy được nhưng phải chọn bảng, đặt lịch và tiêu tốn CU mỗi lần chạy.",
+      "B": "Shortcut không trỏ được vào Azure SQL Database.",
+      "D": "Eventstream thiết kế cho event streaming và phải tự cấu hình route tới destination; mirroring đơn giản hơn và replicate miễn phí."
+    },
+    "refs": [
+      {
+        "label": "Decision guide: data movement",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement"
+      },
+      {
+        "label": "Mirroring overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+      }
+    ]
+  },
+  {
+    "id": "bat-20",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 2,
+    "stem": "Your organization uses an F64 capacity and plans to mirror several Azure SQL databases into Fabric. The finance team asks how mirroring affects capacity consumption and storage cost before approving the project.\nWhich two statements are true? Each correct answer presents a complete solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "Background compute that replicates data into OneLake does not consume capacity units."
+      },
+      {
+        "k": "B",
+        "t": "The capacity includes 64 TB of free storage that is used only for mirroring."
+      },
+      {
+        "k": "C",
+        "t": "Queries on mirrored data through the SQL analytics endpoint are free because the data is a replica."
+      },
+      {
+        "k": "D",
+        "t": "Replication continues while the capacity is paused."
+      },
+      {
+        "k": "E",
+        "t": "The SQL analytics endpoint of a mirrored database supports UPDATE statements."
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "explain": "- Compute replicate miễn phí, không trừ CU.\n- Mỗi CU mua được 1 TB storage mirroring miễn phí, nên F64 có 64 TB.",
+    "wrong": {
+      "C": "Query bằng SQL, Spark hay Power BI vẫn tính phí bình thường.",
+      "D": "Capacity tạm dừng hoặc bị xoá thì mirroring ngừng replicate.",
+      "E": "Endpoint của mirrored database là read-only."
+    },
+    "refs": [
+      {
+        "label": "Mirroring overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+      }
+    ]
+  },
+  {
+    "id": "bat-21",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A software vendor wants its SaaS application to push change data into Fabric continuously. You create an open mirrored database and give the vendor the landing zone URL. Inserts, updates, and deletes from the application must be reflected correctly in the mirrored tables.\nWhat must the vendor provide in each table folder?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A _metadata.json file with keyColumns, and data files that end with a __rowMarker__ column"
+      },
+      {
+        "k": "B",
+        "t": "A Delta transaction log folder named _delta_log with commit files"
+      },
+      {
+        "k": "C",
+        "t": "A gateway connection to the vendor database with change data capture enabled on every source table"
+      },
+      {
+        "k": "D",
+        "t": "A CSV file per day that contains a full snapshot of the table"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- Open mirroring cần _metadata.json khai báo keyColumns; thiếu key thì không update hay delete được.\n- Cột cuối __rowMarker__ báo thao tác: 0 insert, 1 update, 2 delete, 4 upsert.",
+    "wrong": {
+      "B": "Vendor ghi Parquet hoặc delimited text; replication engine tự tạo Delta table.",
+      "C": "Open mirroring không kết nối vào database của vendor; ứng dụng tự ghi file.",
+      "D": "Snapshot đầy đủ không có row marker nên không áp được delete và update."
+    },
+    "refs": [
+      {
+        "label": "Open mirroring landing zone format",
+        "url": "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring-landing-zone-format"
+      }
+    ]
+  },
+  {
+    "id": "bat-22",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "You must ingest 200 tables from an Oracle database into a lakehouse. The list of tables and their filters are stored in a control table. After each load, the process must run a validation notebook and send a Teams notification on failure. You need full control over parameterization.\nWhat should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "A Copy job that has one source entry per table and a daily schedule"
+      },
+      {
+        "k": "B",
+        "t": "Mirroring for Oracle"
+      },
+      {
+        "k": "C",
+        "t": "A pipeline with Lookup, ForEach, and a parameterized Copy activity"
+      },
+      {
+        "k": "D",
+        "t": "A Dataflow Gen2 that has one query per table and writes to the lakehouse"
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- Tín hiệu: metadata-driven, control table, phụ thuộc với notebook và notification.\n- Decision guide: pipeline cho orchestration phức tạp, Copy activity hỗ trợ parameterize object và ingestion theo metadata.",
+    "wrong": {
+      "A": "Copy job dễ dùng nhưng không điều phối notebook và notification sau từng load.",
+      "B": "Mirroring không có filter theo control table và không chạy validation.",
+      "D": "200 query thủ công, không đọc được control table để sinh động."
+    },
+    "refs": [
+      {
+        "label": "Decision guide: data movement",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement"
+      },
+      {
+        "label": "Tutorial: incremental copy Warehouse to Lakehouse",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/tutorial-incremental-copy-data-warehouse-lakehouse"
+      }
+    ]
+  },
+  {
+    "id": "bat-23",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 2,
+    "stem": "A notebook merges a daily batch from bronze_orders into the Delta table silver_orders by order_id. The job fails with an error that multiple source rows matched the same target row. You also notice that late-arriving older versions of an order sometimes overwrite newer data.\nWhich two changes should you make? Each correct answer presents part of the solution.",
+    "options": [
+      {
+        "k": "A",
+        "t": "Deduplicate the source by order_id, keeping the latest modified_at, before the merge."
+      },
+      {
+        "k": "B",
+        "t": "Add the condition s.modified_at > t.modified_at to the whenMatchedUpdate clause."
+      },
+      {
+        "k": "C",
+        "t": "Replace the merge with an append write and deduplicate in the gold layer."
+      },
+      {
+        "k": "D",
+        "t": "Enable V-Order on silver_orders."
+      },
+      {
+        "k": "E",
+        "t": "Add a whenNotMatchedBySourceDelete clause so that orders missing from the batch are removed."
+      }
+    ],
+    "answer": [
+      "A",
+      "B"
+    ],
+    "explain": "- Delta coi MERGE là ambiguous khi nhiều dòng source khớp một dòng target, nên dedup source trước.\n- Điều kiện theo modified_at chặn bản cũ đến muộn ghi đè bản mới.",
+    "wrong": {
+      "C": "Append đẩy duplicate vào silver, trái mục đích của silver layer.",
+      "D": "V-Order là tối ưu đọc, không sửa lỗi MERGE.",
+      "E": "Xoá dòng target không có trong batch ngày sẽ xoá nhầm đơn cũ."
+    },
+    "refs": [
+      {
+        "label": "Delta Lake: table deletes, updates, and merges",
+        "url": "https://docs.delta.io/latest/delta-update.html"
+      }
+    ]
+  },
+  {
+    "id": "bat-24",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "Every hour, partners drop compressed Parquet files of at least 100 MB into an ADLS Gen2 container. You must load them into a staging table in a Fabric Warehouse by using T-SQL inside a stored procedure. The load must have the highest throughput.\nWhich statement should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "INSERT INTO with one VALUES row per record"
+      },
+      {
+        "k": "B",
+        "t": "A Dataflow Gen2 that uses the warehouse as its data destination"
+      },
+      {
+        "k": "C",
+        "t": "SELECT INTO from OPENROWSET for each file"
+      },
+      {
+        "k": "D",
+        "t": "COPY INTO"
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "explain": "- Docs: COPY (Transact-SQL) cho throughput ingest cao nhất và dùng được trong logic T-SQL.\n- COPY INTO đọc CSV, JSONL, Parquet từ ADLS Gen2, Blob và OneLake.",
+    "wrong": {
+      "A": "Singleton INSERT cho hiệu năng kém; docs khuyên tránh.",
+      "B": "Dataflow không phải T-SQL nên không chạy trong stored procedure theo yêu cầu.",
+      "C": "OPENROWSET đọc được nhưng chậm hơn, hợp truy vấn ad hoc hơn load định kỳ."
+    },
+    "refs": [
+      {
+        "label": "Ingest data into the warehouse",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data"
+      }
+    ]
+  },
+  {
+    "id": "bat-25",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventhouse table named DeviceReadings receives repeated readings for the same DeviceId because gateways retry. For a daily report, you need only the most recent row per DeviceId, including all columns.\nWhich KQL statement should you add after the table name?",
+    "options": [
+      {
+        "k": "A",
+        "t": "| summarize arg_max(Timestamp, *) by DeviceId"
+      },
+      {
+        "k": "B",
+        "t": "| distinct DeviceId"
+      },
+      {
+        "k": "C",
+        "t": "| take 1"
+      },
+      {
+        "k": "D",
+        "t": "| summarize count(), max(Timestamp) by DeviceId"
+      }
+    ],
+    "answer": [
+      "A"
+    ],
+    "explain": "- arg_max(Timestamp, *) trả về toàn bộ cột của dòng có Timestamp lớn nhất trong mỗi nhóm DeviceId.\n- Đây là cách dedup giữ bản mới nhất trong KQL.",
+    "wrong": {
+      "B": "distinct chỉ trả về cột DeviceId, mất các cột khác.",
+      "C": "take 1 trả về một dòng bất kỳ của cả bảng.",
+      "D": "count() và max() chỉ trả về số dòng và thời điểm lớn nhất, mất các cột khác."
+    },
+    "refs": [
+      {
+        "label": "summarize operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "bat-26",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A Fabric workspace contains a warehouse named SalesWH with a staging table stg.Sales and a lakehouse named ProductLH with a Delta table DimProduct. You must create a denormalized gold table in SalesWH with daily revenue by product category, by using only T-SQL.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Create a OneLake shortcut to ProductLH.DimProduct inside SalesWH, and then run INSERT...SELECT into a new table."
+      },
+      {
+        "k": "B",
+        "t": "Run COPY INTO from the DimProduct Delta table into SalesWH, then aggregate."
+      },
+      {
+        "k": "C",
+        "t": "Use CREATE TABLE AS SELECT that joins stg.Sales to ProductLH.dbo.DimProduct and groups by category and date."
+      },
+      {
+        "k": "D",
+        "t": "Run an INSERT statement through the SQL analytics endpoint of ProductLH."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "explain": "- CTAS tạo bảng mới từ SELECT, có JOIN để denormalize và GROUP BY để aggregate.\n- Three-part name đọc bảng lakehouse cùng workspace.",
+    "wrong": {
+      "A": "Warehouse không chứa shortcut; shortcut chỉ tạo trong lakehouse và KQL database.",
+      "B": "COPY INTO nạp file CSV, JSONL, Parquet, không phải Delta table qua tên bảng.",
+      "D": "SQL analytics endpoint chỉ đọc và bảng đích cần nằm trong SalesWH."
+    },
+    "refs": [
+      {
+        "label": "Ingest data using T-SQL",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-tsql"
+      },
+      {
+        "label": "OneLake shortcuts",
+        "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+      }
+    ]
+  }
+]

@@ -1,0 +1,390 @@
+[
+ {
+  "id": "monitor-hub",
+  "term": "Monitor hub",
+  "full": "",
+  "aliases": [
+   "Monitoring hub"
+  ],
+  "cat": "Lifecycle & Ops",
+  "what": "Trang trung tâm xem job run, alert, capacity của mọi item Fabric bạn có quyền xem.",
+  "means": [
+   "Bản mới đang preview; bản cũ gọi là legacy Monitoring hub.",
+   "Đề hỏi \"single place to view runs across items\" thì chọn Monitor hub."
+  ],
+  "related": [
+   "workspace-monitoring",
+   "capacity-metrics-app"
+  ],
+  "src": {
+   "label": "What is the Monitor hub",
+   "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub"
+  }
+ },
+ {
+  "id": "workspace-monitoring",
+  "term": "Workspace monitoring",
+  "full": "",
+  "aliases": [
+   "monitoring eventhouse",
+   "monitoring item",
+   "ItemJobEventLogs"
+  ],
+  "cat": "Lifecycle & Ops",
+  "what": "Tính năng gom log và metric của item trong workspace vào eventhouse để query bằng KQL.",
+  "means": [
+   "Mặc định giữ 30 ngày, không backfill hoạt động trước khi bật.",
+   "Query cần ít nhất role Contributor.",
+   "Nền cho alert toàn workspace bằng KQL Queryset và Activator."
+  ],
+  "related": [
+   "monitor-hub",
+   "capacity-metrics-app"
+  ],
+  "src": {
+   "label": "Workspace monitoring overview",
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+  }
+ },
+ {
+  "id": "capacity-metrics-app",
+  "term": "Capacity Metrics app",
+  "full": "",
+  "aliases": [
+   "Microsoft Fabric Capacity Metrics app",
+   "Capacity Metrics"
+  ],
+  "cat": "Lifecycle & Ops",
+  "what": "App Power BI cho capacity admin xem CU tiêu thụ, throttling và storage theo item.",
+  "means": [
+   "Trang Timepoint drill vào điểm 30 giây.",
+   "Data trễ khoảng 10 tới 15 phút; app không có alert."
+  ],
+  "related": [
+   "throttling",
+   "monitor-hub"
+  ],
+  "src": {
+   "label": "What is the Microsoft Fabric Capacity Metrics app",
+   "url": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app"
+  }
+ },
+ {
+  "id": "throttling",
+  "term": "Throttling",
+  "full": "",
+  "aliases": [
+   "smoothing",
+   "overage protection",
+   "interactive rejection",
+   "background rejection"
+  ],
+  "cat": "Lifecycle & Ops",
+  "what": "Cơ chế Fabric làm trễ hoặc từ chối request khi capacity đã tiêu trước CU tương lai.",
+  "means": [
+   "4 nấc: overage protection, interactive delay, interactive rejection, background rejection.",
+   "Smoothing trải CU của background job trên 24 giờ."
+  ],
+  "related": [
+   "capacity-metrics-app"
+  ],
+  "src": {
+   "label": "Understand your Fabric capacity throttling",
+   "url": "https://learn.microsoft.com/en-us/fabric/enterprise/throttling"
+  }
+ },
+ {
+  "id": "spark-advisor",
+  "term": "Spark advisor",
+  "full": "",
+  "aliases": [
+   "Apache Spark advisor"
+  ],
+  "cat": "Performance",
+  "what": "Tính năng phân tích code Spark và hiện advice info, warning, error ngay trong output của notebook cell.",
+  "means": [
+   "Báo khi native execution engine fallback về JVM.",
+   "Hiện trong Diagnostics panel của Spark application detail."
+  ],
+  "related": [
+   "native-execution-engine"
+  ],
+  "src": {
+   "label": "Apache Spark advisor",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-advisor-introduction"
+  }
+ },
+ {
+  "id": "query-insights",
+  "term": "Query insights",
+  "full": "",
+  "aliases": [
+   "queryinsights",
+   "exec_requests_history"
+  ],
+  "cat": "Performance",
+  "what": "Bộ view hệ thống trong Warehouse và SQL analytics endpoint lưu lịch sử query 30 ngày.",
+  "means": [
+   "Tìm query chậm, tốn CPU, hit cache hay không.",
+   "Query hiện ra sau tối đa khoảng 15 phút."
+  ],
+  "related": [
+   "result-set-caching"
+  ],
+  "src": {
+   "label": "Query insights in Fabric Data Warehouse",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+  }
+ },
+ {
+  "id": "v-order",
+  "term": "V-Order",
+  "full": "",
+  "aliases": [
+   "V-order",
+   "VORDER",
+   "spark.sql.parquet.vorder.default"
+  ],
+  "cat": "Performance",
+  "what": "Tối ưu lúc write cho Parquet: sắp xếp, encoding, compression để mọi engine Fabric read nhanh hơn.",
+  "means": [
+   "Spark ở workspace mới tắt mặc định; Warehouse bật mặc định.",
+   "Write chậm hơn khoảng 15%, file vẫn là Parquet chuẩn."
+  ],
+  "related": [
+   "optimize",
+   "resource-profile"
+  ],
+  "src": {
+   "label": "Optimize Delta Lake tables with V-order",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+  }
+ },
+ {
+  "id": "optimize",
+  "term": "OPTIMIZE",
+  "full": "",
+  "aliases": [
+   "bin compaction"
+  ],
+  "cat": "Performance",
+  "what": "Lệnh Delta gom nhiều file nhỏ thành file lớn hơn, kèm tùy chọn ZORDER BY và VORDER.",
+  "means": [
+   "Mặc định target 1 GB mỗi file.",
+   "Lakehouse không tự compact như Warehouse; cần lên lịch hoặc bật auto compaction."
+  ],
+  "related": [
+   "v-order",
+   "z-order",
+   "liquid-clustering",
+   "vacuum"
+  ],
+  "src": {
+   "label": "Table compaction",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+  }
+ },
+ {
+  "id": "z-order",
+  "term": "Z-Order",
+  "full": "",
+  "aliases": [
+   "ZORDER BY"
+  ],
+  "cat": "Performance",
+  "what": "Kỹ thuật layout xếp các row có giá trị gần nhau vào cùng file để skip file khi filter nhiều cột.",
+  "means": [
+   "Phải ghi cột mỗi lần OPTIMIZE, không lưu trong metadata.",
+   "Runtime 2.0 khuyến nghị liquid clustering thay thế."
+  ],
+  "related": [
+   "optimize",
+   "liquid-clustering"
+  ],
+  "src": {
+   "label": "Z-Order",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-z-order"
+  }
+ },
+ {
+  "id": "liquid-clustering",
+  "term": "Liquid clustering",
+  "full": "",
+  "aliases": [
+   "CLUSTER BY",
+   "OPTIMIZE FULL"
+  ],
+  "cat": "Performance",
+  "what": "Layout Delta khai báo clustering key trong metadata, áp dụng khi chạy OPTIMIZE, đổi key không cần rewrite ngay.",
+  "means": [
+   "Hợp cột cardinality cao và cột filter thay đổi.",
+   "Write thường không cluster; phải chạy OPTIMIZE."
+  ],
+  "related": [
+   "z-order",
+   "optimize"
+  ],
+  "src": {
+   "label": "Liquid clustering",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"
+  }
+ },
+ {
+  "id": "vacuum",
+  "term": "VACUUM",
+  "full": "",
+  "aliases": [
+   "RETAIN",
+   "DRY RUN"
+  ],
+  "cat": "Performance",
+  "what": "Lệnh Delta xóa file không còn được tham chiếu và cũ hơn ngưỡng retention.",
+  "means": [
+   "Mặc định 7 ngày; ngắn hơn bị safety check chặn.",
+   "Mất khả năng time travel quá ngưỡng."
+  ],
+  "related": [
+   "optimize"
+  ],
+  "src": {
+   "label": "VACUUM",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+  }
+ },
+ {
+  "id": "optimize-write",
+  "term": "Optimize write",
+  "full": "",
+  "aliases": [
+   "optimizeWrite",
+   "optimize write"
+  ],
+  "cat": "Performance",
+  "what": "Bin packing data trước khi write để sinh ít file lớn thay vì nhiều file nhỏ.",
+  "means": [
+   "Hợp partitioned table, MERGE, insert nhỏ thường xuyên.",
+   "Auto compaction là bước khác: OPTIMIZE đồng bộ sau commit."
+  ],
+  "related": [
+   "optimize",
+   "resource-profile"
+  ],
+  "src": {
+   "label": "Tune file size",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/tune-file-size"
+  }
+ },
+ {
+  "id": "resource-profile",
+  "term": "Resource profile",
+  "full": "",
+  "aliases": [
+   "writeHeavy",
+   "readHeavyForSpark",
+   "readHeavyForPBI",
+   "spark.fabric.resourceProfile"
+  ],
+  "cat": "Performance",
+  "what": "Bộ Spark config đặt sẵn theo kiểu workload, chọn ở environment hoặc lúc runtime.",
+  "means": [
+   "Workspace mới mặc định writeHeavy, V-Order tắt.",
+   "readHeavyForPBI bật V-Order cho Direct Lake."
+  ],
+  "related": [
+   "v-order",
+   "optimize-write"
+  ],
+  "src": {
+   "label": "Configure resource profile configurations",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+  }
+ },
+ {
+  "id": "native-execution-engine",
+  "term": "Native execution engine",
+  "full": "",
+  "aliases": [
+   "NEE",
+   "spark.native.enabled"
+  ],
+  "cat": "Performance",
+  "what": "Engine C++ vectorized dựa trên Velox và Apache Gluten chạy Spark query, vai trò giống Photon của Databricks.",
+  "means": [
+   "Runtime 1.3 và 2.0, không tự bật.",
+   "Operator không hỗ trợ tự fallback về JVM."
+  ],
+  "related": [
+   "spark-advisor"
+  ],
+  "src": {
+   "label": "Native execution engine for Fabric Data Engineering",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+  }
+ },
+ {
+  "id": "result-set-caching",
+  "term": "Result set caching",
+  "full": "",
+  "aliases": [
+   "RESULT_SET_CACHING",
+   "result_cache_hit"
+  ],
+  "cat": "Performance",
+  "what": "Warehouse lưu kết quả cuối của SELECT đủ điều kiện để lần chạy sau trả về ngay.",
+  "means": [
+   "Bật mặc định; tắt theo item hoặc bằng hint cho một query.",
+   "Không áp dụng CTAS, cross-database, GETDATE()."
+  ],
+  "related": [
+   "query-insights"
+  ],
+  "src": {
+   "label": "Result set caching",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+  }
+ },
+ {
+  "id": "caching-policy",
+  "term": "Caching policy",
+  "full": "",
+  "aliases": [
+   "hot cache",
+   "hot_window"
+  ],
+  "cat": "Real-Time Intelligence",
+  "what": "Policy KQL quyết định khoảng data nào nằm trên SSD local để query nhanh.",
+  "means": [
+   "Phải nhỏ hơn hoặc bằng retention.",
+   "Thu hẹp hot cache để giảm cost cho data ít query."
+  ],
+  "related": [
+   "retention-policy"
+  ],
+  "src": {
+   "label": "Caching policy (hot and cold cache)",
+   "url": "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric"
+  }
+ },
+ {
+  "id": "retention-policy",
+  "term": "Retention policy",
+  "full": "",
+  "aliases": [
+   "softdelete",
+   "soft-delete period"
+  ],
+  "cat": "Real-Time Intelligence",
+  "what": "Policy KQL tự xóa data cũ hơn soft-delete period ở database, table hoặc materialized view.",
+  "means": [
+   "Trong UI mặc định 3,650 ngày.",
+   "Soft delete 0s giữ bảng landing rỗng sau update policy."
+  ],
+  "related": [
+   "caching-policy"
+  ],
+  "src": {
+   "label": "Retention policy",
+   "url": "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric"
+  }
+ }
+]

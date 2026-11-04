@@ -1,0 +1,991 @@
+[
+ {
+  "id": "sec-01",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "Your company has a Fabric workspace named Sales that contains lakehouses, notebooks, and pipelines. A new data engineer must create and edit notebooks and pipelines, run them on demand, and read all lakehouse data from Spark. The engineer must not be able to add people to the workspace or share items with other users. You need to assign a workspace role that follows the principle of least privilege.\nWhich role should you assign?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Contributor"
+   },
+   {
+    "k": "B",
+    "t": "Admin"
+   },
+   {
+    "k": "C",
+    "t": "Member"
+   },
+   {
+    "k": "D",
+    "t": "Viewer"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: tạo, sửa, chạy notebook và pipeline, đọc data bằng Spark, nhưng không add người và không share.\n- Contributor có Write, ReadAll, Execute; share chỉ được khi có Reshare, mặc định không có.",
+  "wrong": {
+   "B": "Admin update, delete workspace và add mọi người; thừa quyền.",
+   "C": "Member add user và share item; vi phạm yêu cầu không share.",
+   "D": "Viewer không tạo, sửa, chạy item và không có ReadAll cho Spark."
+  },
+  "refs": [
+   {
+    "label": "Roles in workspaces in Microsoft Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces"
+   }
+  ]
+ },
+ {
+  "id": "sec-02",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "An analyst from the Finance team needs to read the Delta tables and files in a lakehouse named LH_Sales from Spark notebooks in the Finance workspace, and to run T-SQL queries against the lakehouse SQL analytics endpoint. The analyst must not see any other item in the Sales workspace that contains LH_Sales.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add the analyst to the Viewer role of the Sales workspace."
+   },
+   {
+    "k": "B",
+    "t": "Share LH_Sales with the analyst and select Read all with SQL analytics endpoint only."
+   },
+   {
+    "k": "C",
+    "t": "Share LH_Sales with the analyst and select both Read all with SQL analytics endpoint and Read all with Apache Spark."
+   },
+   {
+    "k": "D",
+    "t": "Add the analyst to the Contributor role of the Sales workspace."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: chỉ một item, cần cả Spark và T-SQL.\n- Share item không cho thấy item khác trong workspace.\n- ReadData (SQL) và ReadAll (Spark) là 2 permission tách biệt; cần cả hai.",
+  "wrong": {
+   "A": "Viewer thấy mọi item trong workspace và không có ReadAll cho Spark.",
+   "B": "Chỉ ReadData thì đọc được qua SQL endpoint nhưng Spark và lakehouse URL không đọc được.",
+   "D": "Contributor thấy và sửa được mọi item; thừa quyền."
+  },
+  "refs": [
+   {
+    "label": "How lakehouse sharing works",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing"
+   },
+   {
+    "label": "Share items in Microsoft Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items"
+   }
+  ]
+ },
+ {
+  "id": "sec-03",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 2,
+  "stem": "A Fabric warehouse named WH_Finance stores 40 tables. Business analysts outside the workspace must run ad hoc T-SQL queries from SQL Server Management Studio against all tables. Data scientists outside the workspace must load the same warehouse data into Spark DataFrames in their own notebooks by using the OneLake path. Neither group should be able to modify data or see other items.\nWhich two permissions should you grant when you share WH_Finance? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Read all data using SQL (ReadData) to the business analysts"
+   },
+   {
+    "k": "B",
+    "t": "Monitor to the business analysts"
+   },
+   {
+    "k": "C",
+    "t": "Read all data using Apache Spark (ReadAll) to the data scientists"
+   },
+   {
+    "k": "D",
+    "t": "Reshare to the data scientists"
+   },
+   {
+    "k": "E",
+    "t": "The Contributor workspace role to the data scientists"
+   }
+  ],
+  "answer": [
+   "A",
+   "C"
+  ],
+  "explain": "- Tín hiệu: một nhóm dùng T-SQL qua SSMS, nhóm kia đọc OneLake path từ Spark, không ai được sửa data.\n- ReadData tương đương db_datareader cho T-SQL.\n- ReadAll cho Spark và OneLake API; hai permission không chồng nhau.",
+  "wrong": {
+   "B": "Monitor chỉ cho query DMV, không đọc table; và không cấp riêng được.",
+   "D": "Reshare cho phép share tiếp, không cho đọc data.",
+   "E": "Contributor có Write và thấy mọi item; vi phạm yêu cầu."
+  },
+  "refs": [
+   {
+    "label": "Share your warehouse and manage permissions",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+   }
+  ]
+ },
+ {
+  "id": "sec-04",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "You share a Fabric warehouse with a group of auditors. The auditors must query only the dbo.Invoices and dbo.Payments tables by using T-SQL. They must not read any other table in the warehouse, and they must not be added to any workspace role.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Share the warehouse and select Read all data using SQL."
+   },
+   {
+    "k": "B",
+    "t": "Add the auditors group to the Viewer role, and then run DENY SELECT on all other tables."
+   },
+   {
+    "k": "C",
+    "t": "Share the warehouse and select Read all data using Apache Spark."
+   },
+   {
+    "k": "D",
+    "t": "Share the warehouse without additional permissions, and then run GRANT SELECT on the two tables to the auditors group."
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Tín hiệu: chỉ 2 table, không workspace role.\n- Share không kèm permission cấp Read, tương đương CONNECT.\n- Sau đó object-level security bằng GRANT trên từng table.",
+  "wrong": {
+   "A": "ReadData đọc được mọi table và view của warehouse.",
+   "B": "Đề cấm workspace role; DENY từng table khó bảo trì và table mới sẽ lộ.",
+   "C": "ReadAll đọc file qua Spark, không giới hạn theo table và không phải T-SQL."
+  },
+  "refs": [
+   {
+    "label": "Share your warehouse and manage permissions",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+   },
+   {
+    "label": "SQL granular permissions",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions"
+   }
+  ]
+ },
+ {
+  "id": "sec-05",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 2,
+  "stem": "A workspace named Analytics uses the four default workspace roles. You are asked which capabilities a user in the Member role has that a user in the Contributor role does NOT have by default.\nWhich two capabilities should you identify? Each correct answer presents a complete solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Delete the workspace"
+   },
+   {
+    "k": "B",
+    "t": "Add other users to the Viewer or Contributor role"
+   },
+   {
+    "k": "C",
+    "t": "Run and cancel notebooks and pipelines"
+   },
+   {
+    "k": "D",
+    "t": "Share items and allow recipients to reshare them"
+   },
+   {
+    "k": "E",
+    "t": "Connect the workspace to a Git repository"
+   }
+  ],
+  "answer": [
+   "B",
+   "D"
+  ],
+  "explain": "- Member add được Member, Contributor, Viewer và share item, cho phép reshare.\n- Contributor chỉ share khi được cấp Reshare.",
+  "wrong": {
+   "A": "Chỉ Admin update và delete workspace.",
+   "C": "Contributor cũng chạy và cancel notebook, pipeline.",
+   "E": "Theo bảng role của Fabric, chỉ Admin connect workspace với Git."
+  },
+  "refs": [
+   {
+    "label": "Roles in workspaces in Microsoft Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces"
+   },
+   {
+    "label": "Roles in workspaces in Power BI",
+    "url": "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces"
+   }
+  ]
+ },
+ {
+  "id": "sec-06",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A Fabric warehouse contains a table named dbo.Customers with the columns CustomerID, FirstName, LastName, Email, and CreditCard. Members of the Support group are Viewers in the workspace. They must query all columns except CreditCard. Any query from a Support user that references CreditCard, including SELECT *, must fail instead of returning data.\nWhat should you implement?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A dynamic data masking rule that uses the default() function on CreditCard"
+   },
+   {
+    "k": "B",
+    "t": "GRANT SELECT on dbo.Customers with a column list that excludes CreditCard"
+   },
+   {
+    "k": "C",
+    "t": "A OneLake security role with column-level security on dbo.Customers"
+   },
+   {
+    "k": "D",
+    "t": "A view that excludes CreditCard, and GRANT SELECT on the view"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: query tham chiếu CreditCard phải fail.\n- Column-level security bằng GRANT kèm danh sách column; SELECT * báo lỗi Msg 230.",
+  "wrong": {
+   "A": "DDM vẫn trả về giá trị đã mask, query không fail.",
+   "C": "OneLake security role không hỗ trợ warehouse item; chỉ lakehouse và mirrored item.",
+   "D": "User vẫn có thể có quyền trên table gốc; doc khuyên CLS thay cho view chỉ để ẩn column."
+  },
+  "refs": [
+   {
+    "label": "Column-level security in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security"
+   },
+   {
+    "label": "Create and manage OneLake security roles",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles"
+   }
+  ]
+ },
+ {
+  "id": "sec-07",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A Fabric warehouse stores sales orders in sales.Orders. The SalesRep column contains the user principal name of the representative. Each representative must see only their own orders when querying from Power BI, SQL Server Management Studio, or any other client. The sales manager must see all orders. You need a solution that is enforced in the database tier.\nWhat should you implement?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Row-level security roles in the Power BI semantic model"
+   },
+   {
+    "k": "B",
+    "t": "Dynamic data masking on the SalesRep column"
+   },
+   {
+    "k": "C",
+    "t": "An inline table-valued function that compares SalesRep to USER_NAME(), used by a security policy with a filter predicate"
+   },
+   {
+    "k": "D",
+    "t": "One view per representative and GRANT SELECT on each view"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: mọi client, enforce ở database tier.\n- RLS của Warehouse: inline TVF làm predicate, CREATE SECURITY POLICY ADD FILTER PREDICATE.\n- Predicate có thêm điều kiện cho manager.",
+  "wrong": {
+   "A": "RLS trong semantic model không áp khi query bằng SSMS.",
+   "B": "DDM che giá trị, không lọc row.",
+   "D": "Một view mỗi người khó bảo trì và không chặn query trực tiếp vào table."
+  },
+  "refs": [
+   {
+    "label": "Row-level security in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-08",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "You are migrating row filters from Snowflake to a Fabric warehouse. You created the following function:\n`CREATE FUNCTION sec.fn_region(@Region AS varchar(20)) RETURNS TABLE WITH SCHEMABINDING AS RETURN SELECT 1 AS ok WHERE @Region = USER_NAME();`\nYou need to complete the statement:\n`CREATE ______ RegionFilter ADD FILTER PREDICATE sec.fn_region(Region) ON dbo.Sales WITH (STATE = ON);`\nWhich keyword should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "SECURITY POLICY"
+   },
+   {
+    "k": "B",
+    "t": "ROW ACCESS POLICY"
+   },
+   {
+    "k": "C",
+    "t": "MASKING POLICY"
+   },
+   {
+    "k": "D",
+    "t": "ROW FILTER"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Fabric Warehouse dùng cú pháp T-SQL của SQL Server: CREATE SECURITY POLICY ... ADD FILTER PREDICATE.",
+  "wrong": {
+   "B": "ROW ACCESS POLICY là cú pháp của Snowflake.",
+   "C": "MASKING POLICY là cú pháp masking của Snowflake; Fabric dùng MASKED WITH.",
+   "D": "ROW FILTER là cú pháp của Databricks Unity Catalog."
+  },
+  "refs": [
+   {
+    "label": "Row-level security in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-09",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A Fabric warehouse has a security policy named SalesFilter that uses the schema-bound function Security.tvf_securitypredicate as a filter predicate on sales.Orders. You need to change the logic of the function. When you run ALTER FUNCTION, the statement fails.\nWhat should you do first?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Run ALTER SECURITY POLICY SalesFilter WITH (STATE = OFF)."
+   },
+   {
+    "k": "B",
+    "t": "Grant ALTER ANY SECURITY POLICY to your user."
+   },
+   {
+    "k": "C",
+    "t": "Remove the WITH SCHEMABINDING clause in the ALTER FUNCTION statement."
+   },
+   {
+    "k": "D",
+    "t": "Run DROP SECURITY POLICY SalesFilter."
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Function đang được policy schema-bound dùng thì không sửa được.\n- Doc: DROP SECURITY POLICY, ALTER FUNCTION, rồi tạo lại policy.",
+  "wrong": {
+   "A": "Tắt policy không gỡ schema binding; ALTER FUNCTION vẫn lỗi.",
+   "B": "Lỗi do binding, không do thiếu permission.",
+   "C": "Function vẫn đang bị policy bind; ALTER vẫn lỗi trước khi xét clause mới."
+  },
+  "refs": [
+   {
+    "label": "Row-level security in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-10",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A security policy filters rows in a Fabric warehouse by comparing a column to USER_NAME(). Data engineers in the workspace Contributor role report that they also see only their own rows and cannot validate loads. Analysts in the Viewer role must remain filtered.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add the data engineers to the workspace Admin role."
+   },
+   {
+    "k": "B",
+    "t": "Update the predicate function so that it also returns rows for the data engineers' identities."
+   },
+   {
+    "k": "C",
+    "t": "Grant UNMASK to the data engineers."
+   },
+   {
+    "k": "D",
+    "t": "Set the security policy STATE to OFF during load windows."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Security policy áp cho mọi user, kể cả Admin, Member, Contributor và dbo.\n- Muốn nhóm nào thấy hết thì viết điều kiện đó vào predicate.",
+  "wrong": {
+   "A": "Admin vẫn bị policy lọc.",
+   "C": "UNMASK dành cho dynamic data masking, không liên quan RLS.",
+   "D": "Tắt policy làm lộ toàn bộ row cho Viewer trong thời gian đó."
+  },
+  "refs": [
+   {
+    "label": "Row-level security in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-11",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "Support staff in the Viewer role query a Fabric warehouse table that contains customer email addresses. They must see only the first letter of each email followed by a constant mask, in an email-like format. Applications must keep running the same queries without changes.\nWhich masking function should you apply to the Email column?",
+  "options": [
+   {
+    "k": "A",
+    "t": "default()"
+   },
+   {
+    "k": "B",
+    "t": "random(1, 100)"
+   },
+   {
+    "k": "C",
+    "t": "partial(0,\"XXXX\",0)"
+   },
+   {
+    "k": "D",
+    "t": "email()"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- email() trả về dạng aXXX@XXXX.com: ký tự đầu, phần còn lại là hằng.\n- DDM áp lên result set nên app không đổi query.",
+  "wrong": {
+   "A": "default() trả về XXXX, không giữ ký tự đầu.",
+   "B": "random() chỉ dùng cho kiểu số.",
+   "C": "partial(0,...) không giữ ký tự nào ở đầu."
+  },
+  "refs": [
+   {
+    "label": "Dynamic data masking in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+   }
+  ]
+ },
+ {
+  "id": "sec-12",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "You add a dynamic data masking rule to the Salary column of a Fabric warehouse table. When a colleague tests it, the colleague sees the real salary values. The colleague is in the Contributor role of the workspace and has never been granted UNMASK. The colleague must see masked values but still query the table.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Move the colleague to the Viewer role and grant SELECT on the table if needed."
+   },
+   {
+    "k": "B",
+    "t": "Run REVOKE UNMASK on the table for the colleague."
+   },
+   {
+    "k": "C",
+    "t": "Change the mask on Salary from default() to random()."
+   },
+   {
+    "k": "D",
+    "t": "Enable dynamic data masking in the workspace settings."
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Admin, Member, Contributor có CONTROL trên database, mà CONTROL bao gồm UNMASK.\n- Chỉ Viewer hoặc user được share item mới thấy giá trị mask.",
+  "wrong": {
+   "B": "Không có UNMASK cấp riêng để revoke; quyền đến từ CONTROL.",
+   "C": "Đổi function không ảnh hưởng người có CONTROL.",
+   "D": "Không có setting như vậy; DDM định nghĩa bằng T-SQL."
+  },
+  "refs": [
+   {
+    "label": "Dynamic data masking in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+   }
+  ]
+ },
+ {
+  "id": "sec-13",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 2,
+  "stem": "You manage masking for a Fabric warehouse. A security officer must add, change, and remove masks on columns in dbo.Employee but must not see unmasked data. HR managers, who are not in any workspace role, must see unmasked values in dbo.Employee. You must follow the principle of least privilege.\nWhich two actions should you perform? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Grant CONTROL on the database to the security officer."
+   },
+   {
+    "k": "B",
+    "t": "Add the HR managers to the Contributor role of the workspace."
+   },
+   {
+    "k": "C",
+    "t": "Grant ALTER ANY MASK and ALTER on dbo.Employee to the security officer."
+   },
+   {
+    "k": "D",
+    "t": "Grant SELECT only on dbo.Employee to the security officer."
+   },
+   {
+    "k": "E",
+    "t": "Grant UNMASK on dbo.Employee to the HR managers."
+   }
+  ],
+  "answer": [
+   "C",
+   "E"
+  ],
+  "explain": "- Thêm, sửa, bỏ mask cần ALTER ANY MASK và ALTER trên table.\n- UNMASK cho phép thấy giá trị thật.",
+  "wrong": {
+   "A": "CONTROL bao gồm UNMASK nên officer sẽ thấy data thật.",
+   "B": "Contributor thấy data thật nhưng thừa quyền trên mọi item.",
+   "D": "SELECT không cho quản lý mask."
+  },
+  "refs": [
+   {
+    "label": "Dynamic data masking in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+   }
+  ]
+ },
+ {
+  "id": "sec-14",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A lakehouse uses OneLake security. A group of Viewers must read only the Files/finance folder and its subfolders. After you create a role named FinanceReaders that grants Read on Files/finance and add the group, members still see every table and folder in the lakehouse.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add a Deny role on the other folders."
+   },
+   {
+    "k": "B",
+    "t": "Switch the SQL analytics endpoint to delegated identity mode."
+   },
+   {
+    "k": "C",
+    "t": "Remove the group from the DefaultReader role, or edit DefaultReader so that it no longer applies to them."
+   },
+   {
+    "k": "D",
+    "t": "Revoke the ReadData permission from the group."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- DefaultReader cho mọi user có ReadAll đọc toàn bộ lakehouse; role được hợp lại theo union.\n- Phải bỏ user khỏi DefaultReader hoặc sửa role đó.",
+  "wrong": {
+   "A": "OneLake security chỉ có Grant role, không có Deny role.",
+   "B": "Mode của SQL endpoint không ảnh hưởng Spark và OneLake API.",
+   "D": "ReadData chỉ cho T-SQL; access qua OneLake đến từ DefaultReader."
+  },
+  "refs": [
+   {
+    "label": "Create and manage OneLake security roles",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles"
+   },
+   {
+    "label": "How OneLake security controls data access",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
+   }
+  ]
+ },
+ {
+  "id": "sec-15",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 2,
+  "stem": "Your lakehouse stores customer data in a schema-enabled lakehouse. Regional analysts are Viewers in the workspace. They must see only rows for their region and must not see the TaxID column. The same rules must apply in Spark notebooks, the SQL analytics endpoint, and Direct Lake semantic models, and must be defined only once.\nWhich two actions should you perform? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Run CREATE SECURITY POLICY in the SQL analytics endpoint."
+   },
+   {
+    "k": "B",
+    "t": "Create a OneLake security role that applies row-level security and column-level security to the table."
+   },
+   {
+    "k": "C",
+    "t": "Run GRANT SELECT with a column list in the SQL analytics endpoint."
+   },
+   {
+    "k": "D",
+    "t": "Switch the SQL analytics endpoint to User's identity access mode."
+   },
+   {
+    "k": "E",
+    "t": "Add the analysts to the Contributor role."
+   }
+  ],
+  "answer": [
+   "B",
+   "D"
+  ],
+  "explain": "- Tín hiệu: define once, enforce trong Spark, SQL endpoint, semantic model.\n- OneLake security role chứa cả RLS và CLS.\n- SQL endpoint mặc định là delegated mode; phải đổi sang user's identity mode để áp OneLake security.",
+  "wrong": {
+   "A": "T-SQL RLS chỉ áp trong SQL endpoint, Spark không thấy.",
+   "C": "T-SQL CLS chỉ áp trong SQL endpoint; ở user's identity mode GRANT trên table bị bỏ qua.",
+   "E": "Contributor không bị OneLake security giới hạn."
+  },
+  "refs": [
+   {
+    "label": "OneLake security for SQL analytics endpoints",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+   },
+   {
+    "label": "Table, column, and row-level security in OneLake",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-16",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A lakehouse has a OneLake security role that restricts rows of the Orders table. A user who must be restricted by this role still sees every row when reading Orders from a Spark notebook. The user is a member of the role and is in the Contributor role of the workspace.\nWhat is the cause?",
+  "options": [
+   {
+    "k": "A",
+    "t": "OneLake security does not apply to Spark notebooks."
+   },
+   {
+    "k": "B",
+    "t": "Workspace Contributors have Write access and are not restricted by OneLake security roles."
+   },
+   {
+    "k": "C",
+    "t": "The role must also include column-level security to take effect."
+   },
+   {
+    "k": "D",
+    "t": "Role changes take up to 24 hours to apply."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- OneLake security là grant model; nó giới hạn Viewer và user có item permission Read.\n- Admin, Member, Contributor có Write nên đọc mọi data.",
+  "wrong": {
+   "A": "Spark là engine Fabric và tuân theo RLS, CLS của OneLake security.",
+   "C": "RLS hoạt động độc lập với CLS.",
+   "D": "Thay đổi role mất khoảng 5 phút, không phải 24 giờ."
+  },
+  "refs": [
+   {
+    "label": "Table, column, and row-level security in OneLake",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+   },
+   {
+    "label": "How OneLake security controls data access",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
+   }
+  ]
+ },
+ {
+  "id": "sec-17",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "In a lakehouse with OneLake security, a user belongs to role R1, which applies a row filter Region = 'EU' to the Customers table, and to role R2, which allows only the columns CustomerID and Name of the same table. Queries on Customers from this user now fail. Both rules must apply together.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add a Deny role for the remaining columns."
+   },
+   {
+    "k": "B",
+    "t": "Define the row filter and the column restriction in a single role and assign the user only to that role."
+   },
+   {
+    "k": "C",
+    "t": "Change R2 to grant ReadWrite permission."
+   },
+   {
+    "k": "D",
+    "t": "Switch the SQL analytics endpoint to delegated identity mode."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- OneLake security không hỗ trợ tổ hợp role trong đó một role có RLS và role khác có CLS trên cùng table.\n- RLS và CLS phải nằm chung một role.",
+  "wrong": {
+   "A": "Không có Deny role.",
+   "C": "Role ReadWrite không chứa được RLS hay CLS.",
+   "D": "Lỗi xảy ra ở mọi engine, không chỉ SQL endpoint."
+  },
+  "refs": [
+   {
+    "label": "Table, column, and row-level security in OneLake",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-18",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "Lakehouse LH_Hub has OneLake security roles with row-level security on the Sales table. Lakehouse LH_Spoke in another workspace has a OneLake shortcut to that table. Queries against the shortcut through the LH_Spoke SQL analytics endpoint are blocked, although users can query the table in LH_Hub. You must not copy data.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Grant ReadAll on LH_Hub to the owner of LH_Spoke."
+   },
+   {
+    "k": "B",
+    "t": "Create a T-SQL security policy on the shortcut table in LH_Spoke."
+   },
+   {
+    "k": "C",
+    "t": "Replace the shortcut with a pipeline Copy activity."
+   },
+   {
+    "k": "D",
+    "t": "Switch the LH_Spoke SQL analytics endpoint to User's identity access mode."
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Delegated mode đọc bằng identity của owner; shortcut tới table có OneLake RLS hoặc CLS bị chặn.\n- User's identity mode đánh giá identity của user theo rule ở nguồn.",
+  "wrong": {
+   "A": "Owner có access đầy đủ cũng không gỡ được chặn vì table nguồn có RLS.",
+   "B": "Rule của LH_Hub không được tôn trọng và query vẫn bị chặn.",
+   "C": "Đề cấm copy data."
+  },
+  "refs": [
+   {
+    "label": "OneLake security for SQL analytics endpoints",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-19",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A Fabric warehouse uses a T-SQL security policy to filter rows of dbo.Claims by region. Data scientists were given the ReadAll permission on the warehouse and read dbo.Claims through a OneLake shortcut in their own lakehouse. They see claims from every region. Data scientists must see only their region.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Remove ReadAll from the data scientists and have them query the warehouse by using T-SQL with ReadData."
+   },
+   {
+    "k": "B",
+    "t": "Enable the security policy with SCHEMABINDING = OFF."
+   },
+   {
+    "k": "C",
+    "t": "Grant the data scientists UNMASK on dbo.Claims."
+   },
+   {
+    "k": "D",
+    "t": "Add the data scientists to the Viewer role of the warehouse workspace."
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- T-SQL RLS chỉ áp trong TDS endpoint của warehouse.\n- Đọc qua shortcut hoặc OneLake thì rule SQL không được dịch sang OneLake security nên thấy toàn bộ data.",
+  "wrong": {
+   "B": "SCHEMABINDING chỉ đổi permission check, không đưa policy ra OneLake.",
+   "C": "UNMASK dành cho DDM và làm lộ thêm data.",
+   "D": "Viewer vẫn đọc qua shortcut nếu còn ReadAll; không giải quyết đường OneLake."
+  },
+  "refs": [
+   {
+    "label": "OneLake security for SQL analytics endpoints",
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+   },
+   {
+    "label": "Row-level security in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+   }
+  ]
+ },
+ {
+  "id": "sec-20",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A lakehouse named LH_Claims is labeled Confidential in Microsoft Purview Information Protection. Data engineers create notebooks and pipelines directly from LH_Claims. Compliance requires that these new items get the Confidential label automatically at the moment they are created, without extra steps.\nWhich capability meets the requirement?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Mandatory labeling"
+   },
+   {
+    "k": "B",
+    "t": "Inheritance from data sources"
+   },
+   {
+    "k": "C",
+    "t": "Inheritance upon creation"
+   },
+   {
+    "k": "D",
+    "t": "Default label policy"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Notebook, pipeline, shortcut tạo từ lakehouse nhận label của lakehouse: inheritance upon creation.",
+  "wrong": {
+   "A": "Mandatory chỉ bắt user chọn label; với lakehouse, pipeline chưa enforce.",
+   "B": "Inheritance from data sources hiện chỉ cho Power BI semantic model.",
+   "D": "Default label gán một label cố định, không lấy label của lakehouse."
+  },
+  "refs": [
+   {
+    "label": "Information protection in Microsoft Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/governance/information-protection"
+   }
+  ]
+ },
+ {
+  "id": "sec-21",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 1,
+  "stem": "Your organization uses sensitivity labels from Microsoft Purview in Fabric. Items labeled Highly Confidential, including lakehouses and notebooks, must be accessible only to members of the Finance-Core group, even if other users already have workspace roles or item permissions.\nWhat should you implement?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A OneLake security role for Finance-Core on each lakehouse"
+   },
+   {
+    "k": "B",
+    "t": "Mandatory labeling for all Fabric items"
+   },
+   {
+    "k": "C",
+    "t": "A Microsoft Purview protection policy associated with the Highly Confidential label"
+   },
+   {
+    "k": "D",
+    "t": "Certified endorsement on the Highly Confidential items"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Protection policy gắn với label có Control access: user trong policy giữ permission, mọi người khác bị chặn.\n- Áp cho mọi native Fabric item và semantic model.",
+  "wrong": {
+   "A": "OneLake security chỉ lọc data plane và không giới hạn Admin, Member, Contributor; notebook không có OneLake role.",
+   "B": "Mandatory labeling chỉ bắt gắn label, không chặn access.",
+   "D": "Endorsement chỉ là badge tin cậy, không phải access control."
+  },
+  "refs": [
+   {
+    "label": "Protection policies in Microsoft Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview"
+   },
+   {
+    "label": "Endorsement overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview"
+   }
+  ]
+ },
+ {
+  "id": "sec-22",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "select": 2,
+  "stem": "A data engineer wants to apply the Master data badge to a lakehouse that holds the official customer list. In the item settings, the Master data option is greyed out.\nWhich two conditions must be met for the engineer to apply the badge? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "The engineer has write permission on the lakehouse."
+   },
+   {
+    "k": "B",
+    "t": "The lakehouse has been promoted before it is labeled as master data."
+   },
+   {
+    "k": "C",
+    "t": "The engineer is an Admin of the workspace."
+   },
+   {
+    "k": "D",
+    "t": "A Fabric administrator has enabled master data endorsement and specified the engineer as an authorized user."
+   },
+   {
+    "k": "E",
+    "t": "The lakehouse has a sensitivity label applied."
+   }
+  ],
+  "answer": [
+   "A",
+   "D"
+  ],
+  "explain": "- Master data: chỉ user được Fabric admin chỉ định và có write permission trên item.\n- Nút bị xám khi user chưa được authorize.",
+  "wrong": {
+   "B": "Không cần promote trước.",
+   "C": "Workspace Admin không tự động được gắn Master data.",
+   "E": "Sensitivity label không liên quan endorsement."
+  },
+  "refs": [
+   {
+    "label": "Endorse Fabric and Power BI items",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/endorsement-promote-certify"
+   },
+   {
+    "label": "Endorsement overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview"
+   }
+  ]
+ }
+]

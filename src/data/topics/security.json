@@ -1,0 +1,1144 @@
+{
+  "id": "security",
+  "title": "Security & governance",
+  "domain": [
+    "D1"
+  ],
+  "icon": "shield-lock",
+  "summary": "Trả lời câu hỏi chọn workspace role hay item permission, đặt RLS, CLS, OLS ở Warehouse hay OneLake security, dùng dynamic data masking, gắn sensitivity label và endorse item.",
+  "sections": [
+    {
+      "id": "model",
+      "title": "Control plane và data plane: control nào áp ở tầng nào",
+      "icon": "sitemap",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "text",
+          "md": "- **Control plane**: workspace role và item permission quyết định user làm gì với item (tạo, sửa, share, chạy).\n- **Data plane**: OneLake security role và T-SQL permission quyết định user thấy data nào (folder, table, row, column).\n- Admin, Member, Contributor có Write nên đọc và ghi mọi data trong workspace; OneLake security chỉ giới hạn Viewer và user có item permission Read.\n- T-SQL security (GRANT, RLS, CLS, DDM) chỉ áp khi query qua TDS endpoint của Warehouse hoặc SQL analytics endpoint.",
+          "src": [
+            {
+              "label": "Data security in OneLake",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/get-started-security"
+            },
+            {
+              "label": "Secure your Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/security"
+            }
+          ]
+        },
+        {
+          "type": "diagram",
+          "title": "Control nào áp ở workspace, item, OneLake và SQL endpoint",
+          "caption": "Control plane cho vào item; data plane lọc data tuỳ engine đọc.",
+          "dir": "RIGHT",
+          "groups": [
+            {
+              "id": "cp",
+              "label": "Control plane",
+              "kind": "workspace"
+            },
+            {
+              "id": "eng",
+              "label": "Engine đọc data",
+              "kind": "service"
+            },
+            {
+              "id": "dp",
+              "label": "Data plane",
+              "kind": "cloud"
+            }
+          ],
+          "nodes": [
+            {
+              "id": "wsrole",
+              "icon": "fab-group-workspace",
+              "label": "Workspace role",
+              "sub": "Admin tới Viewer",
+              "group": "cp",
+              "info": "Áp cho mọi item trong workspace. Admin, Member, Contributor có Write và ReadAll nên không bị OneLake security giới hạn."
+            },
+            {
+              "id": "item",
+              "icon": "share",
+              "label": "Item permission",
+              "sub": "Read, ReadAll",
+              "group": "cp",
+              "info": "Share một item mà không cho vào workspace. Read luôn được cấp; thiếu Read thì không connect được SQL endpoint."
+            },
+            {
+              "id": "spark",
+              "icon": "logo-apache-spark",
+              "label": "Spark, Power BI",
+              "sub": "Direct Lake",
+              "group": "eng",
+              "info": "Spark notebook và Direct Lake on OneLake đọc bằng identity của user."
+            },
+            {
+              "id": "sqlep",
+              "icon": "sql",
+              "label": "SQL endpoint",
+              "sub": "của lakehouse",
+              "group": "eng",
+              "info": "User's identity mode dùng OneLake security. Delegated mode (mặc định) dùng T-SQL permission, đọc OneLake bằng identity của owner."
+            },
+            {
+              "id": "wh",
+              "icon": "fab-data-warehouse",
+              "label": "Warehouse",
+              "sub": "TDS endpoint",
+              "group": "eng",
+              "info": "Warehouse luôn dùng T-SQL security; rule không đi theo shortcut sang item khác."
+            },
+            {
+              "id": "olsec",
+              "icon": "fab-one-lake",
+              "label": "OneLake security",
+              "sub": "folder, RLS, CLS",
+              "group": "dp",
+              "info": "Role Read hoặc ReadWrite trên schema, table, folder. Chỉ giới hạn Viewer và user có item permission Read."
+            },
+            {
+              "id": "tsql",
+              "icon": "lock-access",
+              "label": "T-SQL security",
+              "sub": "GRANT, RLS, DDM",
+              "group": "dp",
+              "info": "GRANT, DENY, security policy, MASKED. Chỉ áp khi query qua TDS endpoint."
+            }
+          ],
+          "edges": [
+            {
+              "id": "e1",
+              "from": "wsrole",
+              "to": "spark",
+              "label": "ReadAll"
+            },
+            {
+              "id": "e2",
+              "from": "item",
+              "to": "sqlep",
+              "label": "ReadData"
+            },
+            {
+              "id": "e3",
+              "from": "item",
+              "to": "wh",
+              "label": "GRANT"
+            },
+            {
+              "id": "e4",
+              "from": "spark",
+              "to": "olsec"
+            },
+            {
+              "id": "e5",
+              "from": "sqlep",
+              "to": "olsec"
+            },
+            {
+              "id": "e6",
+              "from": "sqlep",
+              "to": "tsql",
+              "style": "dashed",
+              "tone": "backup"
+            },
+            {
+              "id": "e7",
+              "from": "wh",
+              "to": "tsql"
+            }
+          ],
+          "legend": [
+            {
+              "style": "solid",
+              "tone": "primary",
+              "label": "Đọc bằng identity của user"
+            },
+            {
+              "style": "dashed",
+              "tone": "backup",
+              "label": "Delegated mode: đọc bằng identity owner"
+            }
+          ],
+          "steps": [
+            {
+              "title": "1. Vào được item",
+              "md": "Workspace role hoặc item permission Read là điều kiện tối thiểu; ReadData mở T-SQL, ReadAll mở Spark.",
+              "hl": [
+                "e1",
+                "e2",
+                "e3",
+                "wsrole",
+                "item"
+              ]
+            },
+            {
+              "title": "2. Lọc trong OneLake",
+              "md": "Spark, Direct Lake on OneLake và SQL endpoint ở user's identity mode cùng tuân theo OneLake security role.",
+              "hl": [
+                "e4",
+                "e5",
+                "olsec"
+              ]
+            },
+            {
+              "title": "3. Lọc bằng T-SQL",
+              "md": "Warehouse và SQL endpoint ở delegated mode dùng GRANT, security policy, MASKED.",
+              "hl": [
+                "e6",
+                "e7",
+                "tsql"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "How OneLake security controls data access",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
+            },
+            {
+              "label": "OneLake security for SQL analytics endpoints",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "diagram",
+          "title": "OneLake theo tầng workspace và item",
+          "img": "figs/security-onelake-structure.png",
+          "alt": "Sơ đồ OneLake chứa Fabric workspace, trong đó có Lakehouse, Warehouse, Semantic model, mỗi item chứa Folders/files.",
+          "caption": "OneLake là một cây folder: workspace chứa item, item chứa folder và file. Workspace role áp ở tầng workspace, item permission ở tầng item, OneLake security role ở folder và table bên trong item.",
+          "credit": {
+            "label": "Microsoft Learn: Data security overview",
+            "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/get-started-security",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ws-roles",
+      "title": "Bốn workspace role: Admin, Member, Contributor, Viewer",
+      "icon": "users-group",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Mỗi workspace role làm được gì",
+          "columns": [
+            "Capability",
+            "Admin",
+            "Member",
+            "Contributor",
+            "Viewer"
+          ],
+          "rows": [
+            [
+              "Update và delete workspace, connect Git, tạo workspace identity",
+              "Có",
+              "Không",
+              "Không",
+              "Không"
+            ],
+            [
+              "Thêm hoặc xoá mọi người, kể cả Admin",
+              "Có",
+              "Không",
+              "Không",
+              "Không"
+            ],
+            [
+              "Thêm Member, Contributor, Viewer",
+              "Có",
+              "Có",
+              "Không",
+              "Không"
+            ],
+            [
+              "Share item, cho phép reshare",
+              "Có",
+              "Có",
+              "Chỉ khi có Reshare",
+              "Chỉ khi có Reshare"
+            ],
+            [
+              "Tạo, sửa, xoá item (lakehouse, warehouse, notebook, pipeline)",
+              "Có",
+              "Có",
+              "Có",
+              "Không"
+            ],
+            [
+              "Chạy hoặc cancel notebook, pipeline, Spark job",
+              "Có",
+              "Có",
+              "Có",
+              "Không"
+            ],
+            [
+              "Đọc data qua Spark, OneLake API, Lakehouse explorer (ReadAll)",
+              "Có",
+              "Có",
+              "Có",
+              "Không"
+            ],
+            [
+              "Connect SQL endpoint, đọc data bằng T-SQL (ReadData)",
+              "Có",
+              "Có",
+              "Có",
+              "Có"
+            ],
+            [
+              "Xem execution output của pipeline, notebook",
+              "Có",
+              "Có",
+              "Có",
+              "Có"
+            ],
+            [
+              "Bị OneLake security role giới hạn",
+              "Không",
+              "Không",
+              "Không",
+              "Có"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Roles in workspaces in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces"
+            },
+            {
+              "label": "Roles in workspaces in Power BI",
+              "url": "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces"
+            },
+            {
+              "label": "Data security in OneLake",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/get-started-security"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Gán workspace role trong Manage access",
+          "img": "figs/security-workspace-add-people.png",
+          "alt": "Panel Add people của workspace với dropdown role gồm Admin, Member, Contributor, Viewer.",
+          "caption": "Panel Add people chỉ có 4 role: Admin, Member, Contributor, Viewer. Ghi chú trên panel nhắc Viewer chỉ có view access, 3 role còn lại có cả edit và view.",
+          "credit": {
+            "label": "Microsoft Learn: Give Users Access to Workspaces",
+            "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/give-access-workspaces",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Chi tiết hay bị đánh tráo",
+          "md": "- **Member** thêm user với role bằng hoặc thấp hơn Member, nhưng không xoá user và không đổi role của user đã có\n- **Viewer** đọc được table bằng T-SQL qua SQL endpoint, nhưng không đọc qua Spark vì thiếu ReadAll\n- Gán role cho security group; user trong nhiều group nhận role cao nhất\n- Thêm hoặc xoá user khỏi workspace có hiệu lực ở lần đăng nhập Fabric kế tiếp",
+          "src": [
+            {
+              "label": "Roles in workspaces in Power BI",
+              "url": "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces"
+            },
+            {
+              "label": "Give users access to workspaces",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/give-access-workspaces"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Least privilege trong đề",
+          "md": "- Chỉ người đang phát triển solution nhận Admin, Member, Contributor\n- User chỉ đọc vài object: Viewer hoặc item permission Read, rồi GRANT trên object cụ thể\n- Đề nói \"without access to other items in the workspace\" thì share item, không gán workspace role",
+          "src": [
+            {
+              "label": "Secure your Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/security"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "item-perms",
+      "title": "Item permission và sharing",
+      "icon": "share",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Permission cấp khi share lakehouse hoặc warehouse",
+          "columns": [
+            "Permission",
+            "Cho phép",
+            "Mặc định có ở role"
+          ],
+          "rows": [
+            [
+              "**Read**",
+              "Thấy item trong OneLake catalog, connect SQL endpoint (như CONNECT); chưa query được table",
+              "Admin, Member, Contributor, Viewer"
+            ],
+            [
+              "**ReadData** (Read all data using SQL)",
+              "Đọc mọi table và view qua T-SQL, tương đương db_datareader",
+              "Admin, Member, Contributor, Viewer"
+            ],
+            [
+              "**ReadAll** (Read all data using Apache Spark)",
+              "Đọc file qua Spark, OneLake API, Lakehouse explorer; kèm subscribe OneLake events",
+              "Admin, Member, Contributor"
+            ],
+            [
+              "**Write**",
+              "Sửa item và data",
+              "Admin, Member, Contributor"
+            ],
+            [
+              "**Reshare**",
+              "Share tiếp, tối đa bằng permission mình đang có",
+              "Admin, Member"
+            ],
+            [
+              "**Execute**, **Build**",
+              "Chạy item; build content mới trên semantic model",
+              "Theo loại item"
+            ],
+            [
+              "**Monitor**, **Audit** (warehouse)",
+              "Query DMV; bật và đọc SQL audit log",
+              "Monitor: Admin, Member, Contributor; Audit: Admin"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Share items in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items"
+            },
+            {
+              "label": "Share your warehouse and manage permissions",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+            },
+            {
+              "label": "How lakehouse sharing works",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Manage permissions của warehouse",
+          "img": "figs/security-warehouse-manage-permissions.png",
+          "alt": "Trang Manage permissions của WWI Warehouse, tab Direct access, liệt kê user với Role và Permissions như Read, Write, Reshare, ReadData, ReadAll.",
+          "caption": "Cột Permissions cho thấy permission đi kèm workspace role: Contributor có Read, Write, ReadData, ReadAll nhưng không có Reshare. Hai dòng cuối là user được share trực tiếp, không có role.",
+          "credit": {
+            "label": "Microsoft Learn: Share Your Warehouse and Manage Permissions",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "ReadData và ReadAll không chồng nhau",
+          "md": "- ReadData chỉ cho T-SQL qua SQL endpoint; ReadAll chỉ cho Spark và OneLake API\n- User có ReadData mở lakehouse URL không đọc được data, cần thêm ReadAll\n- Share không kèm permission nào: user chỉ connect được, sau đó GRANT trên từng object\n- Share không bao giờ cấp Write; cần ghi thì gán Contributor trở lên",
+          "src": [
+            {
+              "label": "Share your warehouse and manage permissions",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+            },
+            {
+              "label": "How lakehouse sharing works",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Thời gian có hiệu lực và giới hạn",
+          "md": "- Thu hồi permission qua Manage permissions có thể mất tới 2 giờ với user đang đăng nhập\n- Permission kế thừa từ workspace role không sửa được ở trang Manage permissions\n- Warehouse chưa share trực tiếp cho service principal; dùng workspace role",
+          "src": [
+            {
+              "label": "Share items in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items"
+            },
+            {
+              "label": "Share your warehouse and manage permissions",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tsql-ols-cls",
+      "title": "Object-level và column-level security bằng T-SQL",
+      "icon": "lock-access",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "code",
+          "title": "GRANT, DENY trên schema, table và column",
+          "lang": "sql",
+          "code": "-- Object-level: schema and table\nGRANT SELECT ON SCHEMA::sales TO [sg-sales-analysts];\nDENY SELECT ON OBJECT::sales.Payroll TO [sg-sales-analysts];\n\n-- Column-level: list allowed columns, CreditCard is excluded\nGRANT SELECT ON dbo.Customers (CustomerID, FirstName, LastName, Email)\n    TO [charlie@contoso.com];\n\n-- Run as charlie: fails with Msg 230 on column CreditCard\nSELECT * FROM dbo.Customers;\n\n-- Check effective permissions of the current user\nSELECT * FROM sys.fn_my_permissions('dbo.Customers', 'Object');",
+          "notes": [
+            {
+              "line": 2,
+              "md": "Gán cho Microsoft Entra group; Fabric tự tạo database user khi GRANT, không chạy CREATE USER được."
+            },
+            {
+              "line": 3,
+              "md": "DENY thắng GRANT; dùng để chặn một table trong schema đã cho SELECT."
+            },
+            {
+              "line": 6,
+              "md": "CLS là GRANT kèm danh sách column, thay cho việc tạo view chỉ để ẩn column."
+            },
+            {
+              "line": 10,
+              "md": "SELECT * báo lỗi chứ không tự bỏ column bị chặn."
+            }
+          ],
+          "src": [
+            {
+              "label": "SQL granular permissions",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions"
+            },
+            {
+              "label": "Column-level security in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "T-SQL permission chưa đủ để connect",
+          "md": "- User cần workspace role hoặc item permission Read; thiếu Read thì connection fail dù đã có GRANT\n- Có thể GRANT trước, cấp Read sau\n- CLS và RLS chỉ áp khi query qua Warehouse hoặc SQL endpoint; Direct Lake trên warehouse fallback sang DirectQuery\n- CLS chỉ hỗ trợ Microsoft Entra authentication",
+          "src": [
+            {
+              "label": "SQL granular permissions",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions"
+            },
+            {
+              "label": "Column-level security in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tsql-rls",
+      "title": "Row-level security bằng security policy",
+      "icon": "filter",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "code",
+          "title": "Predicate function và CREATE SECURITY POLICY",
+          "lang": "sql",
+          "code": "CREATE SCHEMA Security;\nGO\nCREATE FUNCTION Security.tvf_securitypredicate(@SalesRep AS nvarchar(50))\n    RETURNS TABLE\n    WITH SCHEMABINDING\nAS\n    RETURN SELECT 1 AS tvf_securitypredicate_result\n    WHERE @SalesRep = USER_NAME()\n       OR USER_NAME() = 'manager@contoso.com';\nGO\nCREATE SECURITY POLICY SalesFilter\n    ADD FILTER PREDICATE Security.tvf_securitypredicate(SalesRep)\n    ON sales.Orders\n    WITH (STATE = ON);\nGO\n-- To change the function: DROP SECURITY POLICY, ALTER FUNCTION, re-create policy",
+          "notes": [
+            {
+              "line": 3,
+              "md": "Predicate là inline table-valued function, trả về 1 dòng khi row được phép."
+            },
+            {
+              "line": 8,
+              "md": "USER_NAME() trả về UPN của user đang query; so với column chứa email."
+            },
+            {
+              "line": 9,
+              "md": "Admin, Member, Contributor cũng bị lọc; muốn họ thấy hết thì viết điều kiện vào predicate."
+            },
+            {
+              "line": 12,
+              "md": "Filter predicate lọc âm thầm SELECT, UPDATE, DELETE; INSERT vẫn được."
+            },
+            {
+              "line": 16,
+              "md": "Function đang được policy SCHEMABINDING dùng thì không ALTER được."
+            }
+          ],
+          "src": [
+            {
+              "label": "Row-level security in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "RLS trong Warehouse và quyền tạo policy",
+          "md": "- Security policy áp cho mọi user, kể cả dbo và db_owner\n- Mỗi table cần policy riêng; table không có policy trả về toàn bộ row\n- Tạo policy cần ALTER ANY SECURITY POLICY và ALTER trên schema\n- SQL endpoint của lakehouse không CREATE TABLE được nhưng CREATE FUNCTION và CREATE SECURITY POLICY được",
+          "src": [
+            {
+              "label": "Row-level security in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ddm",
+      "title": "Dynamic data masking",
+      "icon": "mask",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "4 masking function",
+          "columns": [
+            "Function",
+            "Kết quả",
+            "Cú pháp"
+          ],
+          "rows": [
+            [
+              "**default()**",
+              "String thành XXXX, số thành 0, date thành 1900-01-01",
+              "MASKED WITH (FUNCTION = 'default()')"
+            ],
+            [
+              "**email()**",
+              "aXXX@XXXX.com",
+              "MASKED WITH (FUNCTION = 'email()')"
+            ],
+            [
+              "**random(start, end)**",
+              "Số ngẫu nhiên trong khoảng, chỉ cho kiểu số",
+              "MASKED WITH (FUNCTION = 'random(1, 12)')"
+            ],
+            [
+              "**partial(prefix, padding, suffix)**",
+              "Giữ ký tự đầu, cuối, chèn chuỗi padding",
+              "MASKED WITH (FUNCTION = 'partial(1,\"XXXXXXX\",0)')"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Dynamic data masking in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "title": "Thêm mask và cấp UNMASK",
+          "lang": "sql",
+          "code": "ALTER TABLE dbo.EmployeeData\n    ALTER COLUMN Email ADD MASKED WITH (FUNCTION = 'email()');\n\nALTER TABLE dbo.EmployeeData\n    ALTER COLUMN Phone ADD MASKED WITH (FUNCTION = 'partial(3,\"XXX-XXXX\",0)');\n\nGRANT UNMASK ON dbo.EmployeeData TO [sg-hr-managers];\nREVOKE UNMASK ON dbo.EmployeeData TO [sg-hr-managers];\n\nALTER TABLE dbo.EmployeeData ALTER COLUMN Email DROP MASKED;",
+          "notes": [
+            {
+              "line": 2,
+              "md": "Thêm, đổi, bỏ mask cần ALTER ANY MASK và ALTER trên table."
+            },
+            {
+              "line": 7,
+              "md": "UNMASK cho phép thấy giá trị thật; CONTROL trên database đã bao gồm UNMASK."
+            },
+            {
+              "line": 10,
+              "md": "Data lưu trong table không đổi; mask áp lên result set."
+            }
+          ],
+          "src": [
+            {
+              "label": "How to implement dynamic data masking",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/howto-dynamic-data-masking"
+            },
+            {
+              "label": "Dynamic data masking in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Ai thấy data thật",
+          "md": "- Admin, Member, Contributor có CONTROL trên database nên luôn thấy data thật\n- Mask chỉ có tác dụng với Viewer hoặc user được share item\n- User có quyền query vẫn suy ra giá trị bằng WHERE theo khoảng; DDM chống lộ vô ý, không chống cố ý\n- OneLake security role không có DDM; DDM chỉ định nghĩa bằng T-SQL",
+          "src": [
+            {
+              "label": "Dynamic data masking in Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+            },
+            {
+              "label": "OneLake security for SQL analytics endpoints",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "onelake-sec",
+      "title": "OneLake security: folder, table, row và column",
+      "icon": "fab-one-lake",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Thành phần và cách OneLake security tính access",
+          "columns": [
+            "Khía cạnh",
+            "Hành vi"
+          ],
+          "rows": [
+            [
+              "Ai tạo role",
+              "Admin, Member (cần Write hoặc Reshare trên item)"
+            ],
+            [
+              "Ai bị giới hạn",
+              "Viewer và user có item permission Read; Admin, Member, Contributor không bị giới hạn"
+            ],
+            [
+              "Item hỗ trợ",
+              "Lakehouse (Read, ReadWrite); mirrored database, mirrored catalog, Azure Databricks mirrored catalog (Read)"
+            ],
+            [
+              "Phạm vi data",
+              "All data, hoặc chọn schema, table, folder trong Tables/ và Files/; folder kế thừa xuống subfolder"
+            ],
+            [
+              "RLS, CLS",
+              "Chỉ trong role Read; RLS là SQL filter một table, không dynamic, không multi-table"
+            ],
+            [
+              "Trong một role",
+              "Giao nhau: OLS ∩ RLS ∩ CLS"
+            ],
+            [
+              "Nhiều role",
+              "Hợp lại; RLS các role nối bằng OR; SQL endpoint lấy giao của CLS"
+            ],
+            [
+              "Default role",
+              "DefaultReader cho mọi user có ReadAll đọc toàn bộ lakehouse; xoá hoặc sửa để hạn chế"
+            ],
+            [
+              "Giới hạn",
+              "250 role mỗi item, 500 member mỗi role; đổi role mất khoảng 5 phút"
+            ]
+          ],
+          "src": [
+            {
+              "label": "How OneLake security controls data access",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
+            },
+            {
+              "label": "Create and manage OneLake security roles",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles"
+            },
+            {
+              "label": "Table, column, and row-level security in OneLake",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Data in role của một OneLake security role",
+          "img": "figs/security-onelake-role-data.png",
+          "alt": "Chi tiết role OneLakeSecurityRole với Permissions Read, Type Grant, tab Data in role liệt kê schema dbo, table publicholidays và hai folder trong Files.",
+          "caption": "Role có Permissions (Read) và Type (Grant). Tab Data in role chọn schema, table trong Tables và folder trong Files; tab Members in role chứa user và group nhận role.",
+          "credit": {
+            "label": "Microsoft Learn: OneLake security roles: create and manage",
+            "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "Trạng thái 2026",
+          "md": "- OneLake security GA ngày 06/05/2026 theo Fabric Updates Blog\n- 08/2026: cải tiến cho SQL endpoint (nested group, shortcut, CLS, service principal) GA\n- 09/2026: giao diện Members và Data của OneLake security GA\n- ReadWrite cho phép Viewer ghi vào folder hoặc table qua OneLake, không kèm RLS hay CLS",
+          "src": [
+            {
+              "label": "Fabric Updates Blog: OneLake security (Generally Available)",
+              "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/OneLake-security-Generally-Available/ba-p/5176756"
+            },
+            {
+              "label": "Fabric August 2026 Feature Summary",
+              "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-August-2026-Feature-Summary/ba-p/5325824"
+            },
+            {
+              "label": "What's new in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new"
+            },
+            {
+              "label": "RADACAD: OneLake Security RLS (YouTube)",
+              "url": "https://www.youtube.com/watch?v=d0BGZymdTxY"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Bẫy khi thêm role hạn chế",
+          "md": "- User còn trong DefaultReader vẫn thấy hết; phải xoá họ khỏi DefaultReader hoặc sửa role đó\n- RLS và CLS cho cùng table phải nằm trong một role; hai role tách RLS và CLS gây lỗi query\n- CLS với SELECT *: Spark trả về column được phép, SQL endpoint và semantic model báo lỗi\n- Trang lakehouse sharing còn ghi preview và read-only; doc OneLake security hiện hành có ReadWrite",
+          "src": [
+            {
+              "label": "Create and manage OneLake security roles",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles"
+            },
+            {
+              "label": "Table, column, and row-level security in OneLake",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+            },
+            {
+              "label": "How lakehouse sharing works",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sql-mode",
+      "title": "SQL analytics endpoint: chọn user's identity hay delegated mode",
+      "icon": "sql",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "compare",
+          "title": "2 data access mode của SQL analytics endpoint",
+          "items": [
+            {
+              "name": "User's identity access mode",
+              "icon": "user-shield",
+              "tag": "Define once trong OneLake",
+              "points": [
+                "Identity của user đi thẳng tới OneLake; OneLake security quyết định table, row, column",
+                "GRANT, REVOKE trên table bị bỏ qua; GRANT vẫn dùng cho view, procedure, function",
+                "OneLake security không có DDM; RLS, CLS không viết bằng T-SQL",
+                "Đọc được shortcut tới table có RLS, CLS ở lakehouse nguồn",
+                "Role đồng bộ sang SQL với prefix OLS_, trễ tới 5 phút"
+              ]
+            },
+            {
+              "name": "Delegated identity access mode",
+              "icon": "key",
+              "tag": "Mặc định khi tạo endpoint",
+              "points": [
+                "SQL endpoint đọc OneLake bằng identity của owner item",
+                "Mọi security bằng T-SQL: GRANT, security policy, column GRANT, MASKED",
+                "OneLake security role của user không áp khi query qua SQL",
+                "Shortcut tới table có OneLake RLS hoặc CLS bị chặn",
+                "Owner bị xoá khỏi workspace hoặc mất access thì query fail"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "OneLake security for SQL analytics endpoints",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+            },
+            {
+              "label": "RADACAD: OneLake Security, RLS from lakehouse to report",
+              "url": "https://radacad.com/onelake-security-setting-up-row-level-security-from-lakehouse-to-report/"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Data access mode của SQL analytics endpoint",
+          "img": "figs/security-sql-endpoint-access-mode.png",
+          "alt": "Settings của SQL analytics endpoint, trang Data access mode với lựa chọn User's identity access mode và Delegated identity access mode, bảng Object type và Set permissions with, warning và nút Apply.",
+          "caption": "User's identity access mode: table lấy permission từ OneLake security, còn view, stored procedure, function dùng SQL security. Warning màu đỏ: Apply xoá mọi SQL permission hiện có trên endpoint.",
+          "credit": {
+            "label": "Microsoft Learn: OneLake Security for SQL analytics endpoints",
+            "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Đổi mode có giá",
+          "md": "- Chỉ Admin hoặc Member đổi mode, ở tab Security của SQL endpoint\n- Đổi mode cancel mọi query đang chạy ở mọi SQL endpoint trong workspace\n- Sang user's identity mode thì SQL role cũ bị xoá vĩnh viễn\n- RLS và CLS viết bằng T-SQL trong Warehouse không đi theo shortcut; đọc qua shortcut có thể thấy toàn bộ data",
+          "src": [
+            {
+              "label": "OneLake security for SQL analytics endpoints",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "labels-endorse",
+      "title": "Sensitivity label và endorsement",
+      "icon": "fab-purview",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Sensitivity label từ Microsoft Purview trong Fabric",
+          "columns": [
+            "Capability",
+            "Hành vi trong Fabric"
+          ],
+          "rows": [
+            [
+              "Điều kiện gắn label",
+              "License Power BI Pro hoặc PPU, Edit permission trên item, label đã publish cho user trong Purview"
+            ],
+            [
+              "Manual labeling",
+              "Mọi Fabric item, từ flyout ở header hoặc item settings"
+            ],
+            [
+              "Default labeling",
+              "Item mới nhận default label nếu có create dialog rõ ràng"
+            ],
+            [
+              "Mandatory labeling",
+              "Đầy đủ cho Power BI item; lakehouse, pipeline, warehouse chưa enforce"
+            ],
+            [
+              "Downstream inheritance",
+              "Bật mặc định: Fabric sang Fabric, Fabric sang Power BI; không có chiều Power BI sang Fabric"
+            ],
+            [
+              "Inheritance upon creation",
+              "Notebook, pipeline, shortcut tạo từ lakehouse nhận label của lakehouse"
+            ],
+            [
+              "Programmatic labeling",
+              "Power BI admin REST API, mọi Fabric item"
+            ],
+            [
+              "Protection policy",
+              "Label có Control access: chỉ user và group trong policy giữ permission, còn lại bị chặn"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Information protection in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/governance/information-protection"
+            },
+            {
+              "label": "Apply sensitivity labels to Fabric items",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/apply-sensitivity-labels"
+            },
+            {
+              "label": "Protection policies in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview"
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "title": "3 endorsement badge",
+          "items": [
+            {
+              "name": "Promoted",
+              "icon": "award",
+              "tag": "Owner tự đánh dấu",
+              "points": [
+                "Item sẵn sàng để share và dùng lại",
+                "Ai có Write trên item đều promote được",
+                "Mọi item trừ Power BI dashboard"
+              ]
+            },
+            {
+              "name": "Certified",
+              "icon": "certificate",
+              "tag": "Reviewer được Fabric admin chỉ định",
+              "points": [
+                "Đạt chuẩn chất lượng của tổ chức",
+                "Ai cũng request được; chỉ reviewer certify",
+                "Fabric admin bật trong tenant settings, có thể delegate cho domain admin"
+              ]
+            },
+            {
+              "name": "Master data",
+              "icon": "database",
+              "tag": "Single source of truth",
+              "points": [
+                "Data cốt lõi như danh sách customer, product code",
+                "Chỉ item chứa data: lakehouse, semantic model",
+                "Chỉ user được Fabric admin chỉ định gắn badge"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Endorsement overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview"
+            },
+            {
+              "label": "Endorse Fabric and Power BI items",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/endorsement-promote-certify"
+            },
+            {
+              "label": "Enable item certification",
+              "url": "https://learn.microsoft.com/en-us/fabric/admin/endorsement-certification-enable"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Ba endorsement badge trong giao diện",
+          "img": "figs/security-endorsement-badges.png",
+          "alt": "Card item và danh sách item với badge Master data, Promoted, Certified ở cột Endorsement, cạnh cột Sensitivity; header item hiện badge Master data.",
+          "caption": "Badge Promoted, Certified, Master data hiện trên card, cột Endorsement và header của item. Cột Sensitivity bên cạnh là sensitivity label, một cơ chế riêng, không thay cho endorsement.",
+          "credit": {
+            "label": "Microsoft Learn: Endorsement overview",
+            "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Label và badge không phải access control",
+          "md": "- Sensitivity label phân loại; chỉ chặn access khi gắn với protection policy của Purview\n- Endorsement chỉ tăng độ tin cậy và thứ hạng khi tìm kiếm, không đổi ai đọc được item\n- Protection policy không áp cho deployment pipeline và Git integration",
+          "src": [
+            {
+              "label": "Protection policies in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview"
+            },
+            {
+              "label": "Endorsement overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decide",
+      "title": "Yêu cầu nào thì chọn control nào",
+      "icon": "route",
+      "task": "1.3",
+      "blocks": [
+        {
+          "type": "decision",
+          "title": "Đề nói gì thì chọn gì",
+          "rows": [
+            {
+              "says": "access to a single lakehouse without access to other items in the workspace",
+              "pick": "Share item, không gán workspace role",
+              "why": "Item permission chỉ áp cho item được share; workspace role áp cho mọi item.",
+              "src": {
+                "label": "How lakehouse sharing works",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing"
+              }
+            },
+            {
+              "says": "query the warehouse with T-SQL only, no Spark access",
+              "pick": "Share kèm ReadData (Read all data using SQL)",
+              "why": "ReadData tương đương db_datareader; ReadAll mới mở Spark và OneLake API.",
+              "src": {
+                "label": "Share your warehouse and manage permissions",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+              }
+            },
+            {
+              "says": "read lakehouse files from a notebook",
+              "pick": "ReadAll (Read all with Apache Spark) hoặc Contributor",
+              "why": "Spark đọc qua OneLake nên cần ReadAll; chạy notebook trong workspace cần Contributor trở lên.",
+              "src": {
+                "label": "Roles in workspaces in Microsoft Fabric",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces"
+              }
+            },
+            {
+              "says": "access only some tables in a warehouse",
+              "pick": "Share chỉ Read, rồi GRANT SELECT trên table",
+              "why": "Read chỉ cho connect; object-level security bằng GRANT, DENY.",
+              "src": {
+                "label": "Share your warehouse and manage permissions",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+              }
+            },
+            {
+              "says": "hide a column, query must fail if it references the column",
+              "pick": "CLS bằng GRANT SELECT kèm danh sách column",
+              "why": "Column không được GRANT gây lỗi Msg 230; DDM thì vẫn trả giá trị đã mask.",
+              "src": {
+                "label": "Column-level security in Fabric Data Warehouse",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security"
+              }
+            },
+            {
+              "says": "show only the first letter of email to support staff",
+              "pick": "DDM email() hoặc partial()",
+              "why": "Mask áp lên result set, không đổi data và không đổi query của app.",
+              "src": {
+                "label": "Dynamic data masking in Fabric Data Warehouse",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+              }
+            },
+            {
+              "says": "sales reps see only their own rows in the warehouse",
+              "pick": "Inline TVF dùng USER_NAME() và CREATE SECURITY POLICY",
+              "why": "Filter predicate lọc âm thầm mọi SELECT từ mọi client, kể cả Power BI.",
+              "src": {
+                "label": "Row-level security in Fabric Data Warehouse",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+              }
+            },
+            {
+              "says": "define row and column rules once, enforce in Spark, SQL endpoint and Power BI",
+              "pick": "OneLake security role, SQL endpoint ở user's identity mode",
+              "why": "Rule đặt trong OneLake được mọi engine Fabric tôn trọng; T-SQL security chỉ áp ở TDS endpoint.",
+              "src": {
+                "label": "OneLake security for SQL analytics endpoints",
+                "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+              }
+            },
+            {
+              "says": "restrict a group to one folder under Files",
+              "pick": "OneLake security role chọn folder đó",
+              "why": "Folder là scope của role; quyền kế thừa xuống subfolder, sibling không thấy.",
+              "src": {
+                "label": "How OneLake security controls data access",
+                "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
+              }
+            },
+            {
+              "says": "only specific users can open items labeled Confidential",
+              "pick": "Purview protection policy gắn với label",
+              "why": "Policy giữ permission cho user trong danh sách, chặn mọi người khác.",
+              "src": {
+                "label": "Protection policies in Microsoft Fabric",
+                "url": "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview"
+              }
+            },
+            {
+              "says": "mark a lakehouse as the authoritative source for customer data",
+              "pick": "Master data endorsement",
+              "why": "Master data dành cho item chứa data cốt lõi; Certified là chuẩn chất lượng chung.",
+              "src": {
+                "label": "Endorsement overview",
+                "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

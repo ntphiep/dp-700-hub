@@ -1,0 +1,1488 @@
+{
+  "id": "workspace",
+  "title": "Workspace, lifecycle & orchestration",
+  "domain": [
+    "D1"
+  ],
+  "icon": "fab-group-workspace",
+  "summary": "Trả lời câu hỏi cấu hình workspace settings cho Spark, domain, OneLake, Apache Airflow job. Chương cũng phủ Git, deployment pipeline và cách orchestrate bằng pipeline, notebook, trigger, parameter.",
+  "sections": [
+    {
+      "id": "spark-compute",
+      "title": "Spark pool và environment của workspace",
+      "icon": "fab-environment",
+      "task": "1.1",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Các nhóm trong Spark settings của workspace",
+          "columns": [
+            "Tab",
+            "Setting",
+            "Điểm đề hay hỏi"
+          ],
+          "rows": [
+            [
+              "**Pool**",
+              "Default pool: Starter Pool hoặc custom Spark pool",
+              "Đổi sang custom pool thì session start khoảng 3 phút thay vì vài giây"
+            ],
+            [
+              "**Pool**",
+              "Customize compute configurations for items",
+              "Tắt thì mọi notebook, Spark job definition dùng default pool và cấu hình của nó"
+            ],
+            [
+              "**Environment**",
+              "Set default environment",
+              "Bật thì Workspace default lấy runtime, compute, library từ environment đã chọn"
+            ],
+            [
+              "**Jobs**",
+              "Optimistic job admission (mặc định) hoặc Reserve maximum cores",
+              "Reserve maximum cores giữ đủ core tối đa cho job, đổi lại ít job chạy song song hơn"
+            ],
+            [
+              "**Jobs**",
+              "Spark session timeout",
+              "Mặc định 20 phút cho session interactive"
+            ],
+            [
+              "**Jobs**",
+              "Set maximum job lifetime",
+              "Huỷ job do user submit chạy quá thời hạn; job hệ thống như optimize, vacuum không bị ảnh hưởng"
+            ],
+            [
+              "**High concurrency**",
+              "For notebooks, For pipeline running multiple notebooks",
+              "Chia sẻ một Spark session giữa nhiều notebook của cùng user"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Workspace administration settings",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-admin-settings"
+            },
+            {
+              "label": "Learn Fabric with Will, DP-700 Video 2: Workspace Settings (YouTube)",
+              "url": "https://www.youtube.com/watch?v=-64AAqSavfo"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Tab Pool trong Spark settings của workspace",
+          "img": "figs/workspace-spark-settings-pool.png",
+          "alt": "Workspace settings, mục Data Engineering/Science, trang Spark settings với 4 tab Pool, Environment, Jobs, High concurrency; default pool là Starter Pool, node family Memory optimized, node size Medium, 1 tới 10 node.",
+          "caption": "Spark settings nằm trong Workspace settings, mục Data Engineering/Science, có 4 tab Pool, Environment, Jobs, High concurrency. Starter Pool mặc định dùng node Medium, 1 tới 10 node; toggle Customize compute configurations for items nằm ngay dưới.",
+          "credit": {
+            "label": "Microsoft Learn: Configure and manage starter pools in Fabric Spark",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-starter-pools",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "compare",
+          "title": "Starter pool và custom Spark pool",
+          "items": [
+            {
+              "name": "Starter pool",
+              "icon": "rocket",
+              "tag": "mặc định",
+              "points": [
+                "Tạo tự động cùng workspace, node size **Medium**",
+                "Pre-warmed, session start khoảng 5 tới 10 giây, best-effort",
+                "Autoscale và dynamic allocation bật sẵn; max node theo SKU, F64 mặc định 10, tối đa 16",
+                "Workspace admin chỉ chỉnh được số node và executor"
+              ]
+            },
+            {
+              "name": "Custom Spark pool",
+              "icon": "adjustments",
+              "tag": "tuỳ chỉnh",
+              "points": [
+                "Chọn node family và size từ Small (4 vCores, 32 GB) tới XX-Large (64 vCores, 512 GB)",
+                "Cần capacity admin bật **Customized workspace pools** (mặc định bật)",
+                "Session start khoảng 3 phút; autopause sau 2 phút idle",
+                "Tối đa 200 node; cho phép single node (min 1)"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Configure starter pools",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-starter-pools"
+            },
+            {
+              "label": "Create custom Spark pools",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/create-custom-spark-pools"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Environment: thành phần và cách publish",
+          "columns": [
+            "Thành phần",
+            "Hành vi",
+            "Cần Publish?"
+          ],
+          "rows": [
+            [
+              "**Spark compute**",
+              "Runtime version, driver và executor cores, memory",
+              "Có"
+            ],
+            [
+              "**Libraries**",
+              "Public library hoặc custom library; Quick mode publish khoảng 5 giây, cài lúc session start; Full mode publish 3 tới 6 phút, tạo snapshot ổn định",
+              "Có"
+            ],
+            [
+              "**Resources**",
+              "File nhỏ dùng chung cho notebook đã attach",
+              "Không, thay đổi có hiệu lực ngay"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Create, configure, and use an environment",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/create-and-use-environment"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Environment từ workspace khác",
+          "md": "- Attach environment của workspace khác thì compute configuration của environment đó bị bỏ qua\n- Pool và compute lấy theo workspace hiện tại\n- Hai workspace phải cùng capacity và network security settings, nếu không session không start"
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "Custom live pool và Full mode",
+          "md": "- Docs 2026 khuyên dùng custom live pool cho job cần start ổn định: cluster được giữ warm trong active window, start khoảng 5 giây\n- Kết hợp environment Full mode để library cài sẵn trên cluster\n- Set maximum job lifetime là setting mới trong tab Jobs"
+        }
+      ]
+    },
+    {
+      "id": "spark-concurrency",
+      "title": "High concurrency và autotune",
+      "icon": "logo-apache-spark",
+      "task": "1.1",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Khi nào notebook được chia sẻ session",
+          "columns": [
+            "Điều kiện",
+            "Chi tiết"
+          ],
+          "rows": [
+            [
+              "**Cùng user**",
+              "Session sharing luôn nằm trong single-user boundary"
+            ],
+            [
+              "**Cùng default lakehouse**",
+              "Notebook không có default lakehouse chỉ share với notebook cũng không có"
+            ],
+            [
+              "**Cùng Spark compute**",
+              "Khác compute settings thì Fabric start session riêng"
+            ],
+            [
+              "**Cùng library packages**",
+              "Inline install trong cell vẫn được phép"
+            ],
+            [
+              "**Session tag** (pipeline)",
+              "Notebook activity cùng tag được gom vào một session, mặc định tối đa 5 notebook"
+            ]
+          ],
+          "src": [
+            {
+              "label": "High concurrency mode overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/high-concurrency-overview"
+            },
+            {
+              "label": "High concurrency for notebooks in pipelines",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-high-concurrency-session-notebooks-in-pipelines"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "diagram",
+          "title": "Một Spark application dùng chung cho nhiều notebook",
+          "img": "figs/workspace-high-concurrency.png",
+          "alt": "Sơ đồ nhiều notebook cùng gắn vào một Spark Application in High Concurrency Mode, bao quanh bởi User Boundary.",
+          "caption": "Ở high concurrency mode, nhiều notebook của cùng một user gắn vào một Spark application. Ranh giới là User Boundary: notebook của user khác không share session này.",
+          "credit": {
+            "label": "Microsoft Learn: High concurrency mode in Apache Spark compute for Fabric",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/high-concurrency-overview",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "text",
+          "md": "- **Billing**: chỉ notebook hoặc activity khởi tạo session bị tính Spark compute; các notebook share sau không bị tính riêng\n- **Giới hạn**: mặc định 5 notebook mỗi session; tăng tới 50 bằng `spark.highConcurrency.max` trong Spark properties của environment\n- **Bật cho pipeline**: workspace admin bật For pipeline running multiple notebooks, rồi đặt session tag trên Notebook activity\n- Red-gate đo một pipeline gọi notebook trong ForEach: từ gần 13 phút xuống dưới 3 phút khi bật high concurrency",
+          "src": [
+            {
+              "label": "High concurrency mode overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/high-concurrency-overview"
+            },
+            {
+              "label": "Simple Talk, High Concurrency Data Pipelines in Fabric",
+              "url": "https://www.red-gate.com/simple-talk/data-analytics/microsoft-fabric/high-concurrency-data-pipelines-in-fabric/"
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "title": "Autotune: bật được ở đâu, không chạy khi nào",
+          "items": [
+            {
+              "name": "Cách bật",
+              "icon": "adjustments",
+              "tag": "preview, mặc định tắt",
+              "points": [
+                "`spark.ms.autotune.enabled=true` trong Spark properties của environment",
+                "Hoặc `spark.conf.set` cho một session trong notebook, Spark job definition",
+                "Tune 3 config: `spark.sql.shuffle.partitions`, `spark.sql.autoBroadcastJoinThreshold`, `spark.sql.files.maxPartitionBytes`"
+              ]
+            },
+            {
+              "name": "Giới hạn",
+              "icon": "alert-triangle",
+              "tag": "dễ bị bẫy",
+              "points": [
+                "Chỉ Runtime 1.2, không bật được trên runtime mới hơn",
+                "Không chạy khi bật high concurrency hoặc private endpoint",
+                "Bỏ qua query dưới 15 giây; cần khoảng 20 tới 25 lần chạy để hội tụ",
+                "Chỉ Spark SQL API, không áp dụng RDD"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Configure autotune for Apache Spark",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/autotune"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Tín hiệu trong đề",
+          "md": "- \"many notebooks, reduce session start time and compute cost\": high concurrency với session tag\n- \"automatically tune shuffle partitions based on history\": autotune, nhưng kiểm tra runtime trong stem\n- \"stop runaway Spark jobs\": Set maximum job lifetime"
+        }
+      ]
+    },
+    {
+      "id": "domain-onelake-airflow",
+      "title": "Domain, OneLake và Apache Airflow job settings",
+      "icon": "sitemap",
+      "task": "1.1",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Ba vai trò quanh domain",
+          "columns": [
+            "Vai trò",
+            "Làm được",
+            "Không làm được"
+          ],
+          "rows": [
+            [
+              "**Fabric admin**",
+              "Tạo, sửa, xoá domain; chỉ định domain admin; gán workspace",
+              "Không có giới hạn trong phạm vi domain"
+            ],
+            [
+              "**Domain admin**",
+              "Sửa description, chỉ định contributor, gán workspace, tạo subdomain, override delegated settings",
+              "Đổi tên domain, xoá domain, thêm domain admin khác"
+            ],
+            [
+              "**Domain contributor**",
+              "Gán workspace mình là Admin vào domain, ngay trong workspace settings",
+              "Mở tab Domains của admin portal"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Domains in Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/governance/domains"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Domain không phải access control",
+          "md": "- Gán workspace vào domain không đổi ai thấy hay truy cập được item\n- Access vẫn do workspace role và item permission quyết định\n- Domain giúp lọc trong OneLake catalog và cho delegated settings: default sensitivity label, certification"
+        },
+        {
+          "type": "table",
+          "title": "Các setting ở tab OneLake của workspace",
+          "columns": [
+            "Setting",
+            "Hành vi",
+            "Giới hạn"
+          ],
+          "rows": [
+            [
+              "**Shortcut cache**",
+              "Cache file đọc qua shortcut ngoài Azure để giảm egress cost; retention 1 tới 28 ngày, reset mỗi lần đọc",
+              "GCS, S3, S3 compatible, on-premises gateway; file trên 1 GB không cache; có nút Reset cache"
+            ],
+            [
+              "**OneLake diagnostics**",
+              "Stream data access event dạng JSON vào một lakehouse",
+              "Lakehouse cùng capacity; cần workspace Admin và Contributor trên lakehouse đích; event tới sau tối đa 1 giờ"
+            ]
+          ],
+          "src": [
+            {
+              "label": "OneLake shortcuts, caching",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+            },
+            {
+              "label": "OneLake diagnostics",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-diagnostics-overview"
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "title": "Apache Airflow job: starter pool và custom pool",
+          "items": [
+            {
+              "name": "Starter pool",
+              "icon": "player-play",
+              "tag": "dev",
+              "points": [
+                "Mặc định, compute node size Large",
+                "Start gần như tức thì",
+                "Tự tắt sau 20 phút không hoạt động"
+              ]
+            },
+            {
+              "name": "Custom pool",
+              "icon": "server",
+              "tag": "production",
+              "points": [
+                "Chọn node size Small hoặc Large, autoscale, extra nodes",
+                "Mỗi extra node thêm 3 worker để chạy nhiều DAG song song",
+                "Chạy liên tục tới khi pause thủ công"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Apache Airflow job workspace settings",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-workspace-settings"
+            },
+            {
+              "label": "What is an Apache Airflow job?",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-concepts"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Apache Airflow runtime settings của workspace",
+          "img": "figs/workspace-airflow-runtime-settings.png",
+          "alt": "Workspace settings, mục Data Factory, trang Apache Airflow runtime settings với Default pool for workspace là Starter Pool, Compute node size Large, Enable autoscale và Extra nodes bị khoá.",
+          "caption": "Setting của Apache Airflow job nằm ở mục Data Factory, tách khỏi Spark settings. Starter Pool dùng node Large; Enable autoscale và Extra nodes chỉ chỉnh được khi chọn custom pool.",
+          "credit": {
+            "label": "Microsoft Learn: Apache Airflow Job workspace settings",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-workspace-settings",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "git",
+      "title": "Version control với Git integration",
+      "icon": "brand-git",
+      "task": "1.2",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Git integration: các thao tác chính",
+          "columns": [
+            "Thao tác",
+            "Ai làm",
+            "Hành vi"
+          ],
+          "rows": [
+            [
+              "**Connect**",
+              "Workspace Admin",
+              "Một workspace nối với đúng 1 branch và 1 folder; lần đầu hỏi chiều sync nếu cả hai bên có nội dung"
+            ],
+            [
+              "**Commit**",
+              "User có quyền ghi",
+              "Đẩy thay đổi đã save trong workspace lên branch"
+            ],
+            [
+              "**Update**",
+              "User có quyền ghi",
+              "Kéo commit mới từ branch về, ghi đè item trong workspace"
+            ],
+            [
+              "**Undo**",
+              "User có quyền ghi",
+              "Đưa item về trạng thái sync gần nhất; undo item mới thêm là xoá hẳn"
+            ],
+            [
+              "**Switch branch, Branch out**",
+              "Admin; Contributor nếu bật Allow users with at least Contributor role to change Git branch",
+              "Branch out to new workspace tạo workspace riêng cho feature"
+            ],
+            [
+              "**Disconnect**",
+              "Workspace Admin",
+              "Chỉ Admin"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Get started with Git integration",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+            },
+            {
+              "label": "Manage branches in Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Source control panel của workspace",
+          "img": "figs/workspace-git-source-control.png",
+          "alt": "Source control panel với Current branch, tab Changes có 2 item mới, ô commit message, nút Commit và Undo, cạnh tab Updates.",
+          "caption": "Tab Changes liệt kê item đã sửa trong workspace để Commit hoặc Undo; tab Updates liệt kê commit mới trên branch để Update. Dòng Current branch cho biết workspace đang nối branch nào.",
+          "credit": {
+            "label": "Microsoft Learn: Git integration process",
+            "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-integration-process",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "compare",
+          "title": "Azure DevOps và GitHub",
+          "items": [
+            {
+              "name": "Azure DevOps",
+              "icon": "az-azure-devops",
+              "tag": "cloud only",
+              "points": [
+                "Auth bằng OAuth2 hoặc service principal",
+                "Account Azure DevOps có thể ở tenant khác tenant Fabric",
+                "URL dạng dev.azure.com/{org}/{project}/_git/{repo}"
+              ]
+            },
+            {
+              "name": "GitHub, GitHub Enterprise",
+              "icon": "brand-github",
+              "tag": "cloud only",
+              "points": [
+                "Auth bằng personal access token",
+                "Fine-grained token (khuyên dùng) cần Contents read and write; classic token cần scope repo",
+                "Tenant setting riêng: Users can synchronize workspace items with GitHub repositories"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Get started with Git integration",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+            },
+            {
+              "label": "Overview of Fabric Git integration",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "md": "- **Supported items** liên quan đề: Lakehouse, Notebook, Spark Job Definition, Environment, Pipeline, Copy job, Dataflow Gen2, Warehouse, SQL database, Eventhouse, Eventstream, Variable Library\n- Item không hỗ trợ vẫn nằm trong workspace nhưng bị bỏ qua khi commit, update\n- Git chỉ lưu definition; data trong lakehouse, warehouse không vào repo\n- Workflow branched workspace: mỗi developer có workspace và branch riêng, merge vào branch chung qua pull request",
+          "src": [
+            {
+              "label": "Overview of Fabric Git integration",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration"
+            },
+            {
+              "label": "Manage branches in Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches"
+            },
+            {
+              "label": "Learn Fabric with Will, DP-700 Video 3: CI/CD (YouTube)",
+              "url": "https://www.youtube.com/watch?v=JhTl_fDZsE0"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Save không phải commit",
+          "md": "- Sửa item trong workspace chỉ save vào workspace\n- Phải Commit thì thay đổi mới lên branch; branch có commit mới thì phải Update thì workspace mới đổi"
+        }
+      ]
+    },
+    {
+      "id": "db-projects",
+      "title": "Database project cho warehouse và SQL database",
+      "icon": "fab-data-warehouse",
+      "task": "1.2",
+      "blocks": [
+        {
+          "type": "steps",
+          "title": "Các bước làm warehouse project trong VS Code",
+          "items": [
+            {
+              "title": "Tạo project",
+              "md": "Extension SQL Database Projects, target platform Synapse Data Warehouse in Microsoft Fabric; chỉ SDK-style project được hỗ trợ."
+            },
+            {
+              "title": "Hoặc extract từ warehouse có sẵn",
+              "md": "Create Project From Database, dùng SQL connection string của warehouse, không dùng SQL analytics endpoint."
+            },
+            {
+              "title": "Build",
+              "md": "Build validate mọi object và sinh file `.dacpac` trong bin/debug."
+            },
+            {
+              "title": "Publish",
+              "md": "DacFx so sánh project với warehouse, sinh script chênh lệch rồi chạy; có thể Generate Script để review trước."
+            },
+            {
+              "title": "Publish profile",
+              "md": "Lưu publish profile riêng cho dev, test, prod để dùng lại."
+            }
+          ],
+          "src": [
+            {
+              "label": "Develop warehouse projects in VS Code",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/develop-warehouse-project"
+            },
+            {
+              "label": "Warehouse development and deployment overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/source-control"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Warehouse và SQL database khi dùng source control",
+          "columns": [
+            "Item",
+            "Git integration lưu gì",
+            "Lưu ý"
+          ],
+          "rows": [
+            [
+              "**Warehouse**",
+              "Schema dưới dạng database project",
+              "Warehouse project trong VS Code đang preview; có thể deploy bằng deployment pipeline hoặc CI/CD ngoài"
+            ],
+            [
+              "**SQL database**",
+              "Commit tự chuyển object thành SQL project trong repo; Update validate code rồi apply thay đổi chênh lệch",
+              "Không sửa tay file project; collation, compatibility level không đi theo source control; static data dùng post-deployment script"
+            ]
+          ],
+          "src": [
+            {
+              "label": "SQL database source control integration",
+              "url": "https://learn.microsoft.com/en-us/fabric/database/sql/source-control"
+            },
+            {
+              "label": "Warehouse development and deployment overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/source-control"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Tín hiệu trong đề",
+          "md": "- \"manage warehouse schema as code, compare and deploy schema changes\": database project, `.dacpac`, DacFx\n- \"track database object definitions in Azure DevOps\" cho SQL database: Git integration của workspace"
+        }
+      ]
+    },
+    {
+      "id": "deploy-pipelines",
+      "title": "Deployment pipeline và deployment rules",
+      "icon": "rocket",
+      "task": "1.2",
+      "blocks": [
+        {
+          "type": "diagram",
+          "title": "Git và deployment pipeline từ dev tới prod",
+          "caption": "Dev nối Git; deployment pipeline đẩy metadata qua Test, Prod; rule và variable library đổi cấu hình theo stage.",
+          "dir": "DOWN",
+          "groups": [],
+          "nodes": [
+            {
+              "id": "repo",
+              "icon": "brand-git",
+              "label": "Git repo",
+              "sub": "feature branch, PR",
+              "info": "Developer commit trên feature branch hoặc workspace branch out, merge vào main bằng pull request. Repo là Azure DevOps hoặc GitHub."
+            },
+            {
+              "id": "dev",
+              "icon": "fab-group-workspace",
+              "label": "Dev workspace",
+              "sub": "stage 1, nối Git",
+              "info": "Update from Git kéo commit mới vào workspace Dev. Trong option 3 của docs CI/CD, chỉ Dev nối Git."
+            },
+            {
+              "id": "test",
+              "icon": "fab-group-workspace",
+              "label": "Test workspace",
+              "sub": "stage 2",
+              "info": "Nhận metadata từ Dev. Data không được copy."
+            },
+            {
+              "id": "prod",
+              "icon": "fab-group-workspace",
+              "label": "Prod workspace",
+              "sub": "stage 3",
+              "info": "Rule đặt ở stage đích, ví dụ default lakehouse rule cho notebook."
+            },
+            {
+              "id": "vl",
+              "icon": "fab-variable-library",
+              "label": "Variable library",
+              "sub": "active value set",
+              "info": "Mỗi stage chọn active value set riêng; pipeline, notebook đọc giá trị lúc chạy."
+            },
+            {
+              "id": "rule",
+              "icon": "adjustments",
+              "label": "Deployment rules",
+              "sub": "data source, lakehouse",
+              "info": "Không tạo được ở stage đầu tiên. Người tạo phải là owner của item."
+            }
+          ],
+          "edges": [
+            {
+              "id": "e1",
+              "from": "dev",
+              "to": "repo",
+              "label": "commit, update",
+              "style": "double",
+              "tone": "primary"
+            },
+            {
+              "id": "e2",
+              "from": "dev",
+              "to": "test",
+              "label": "deploy"
+            },
+            {
+              "id": "e3",
+              "from": "test",
+              "to": "prod",
+              "label": "deploy"
+            },
+            {
+              "id": "e4",
+              "from": "vl",
+              "to": "test",
+              "label": "value set Test",
+              "style": "dashed",
+              "tone": "data"
+            },
+            {
+              "id": "e5",
+              "from": "vl",
+              "to": "prod",
+              "label": "value set Prod",
+              "style": "dashed",
+              "tone": "data"
+            },
+            {
+              "id": "e6",
+              "from": "rule",
+              "to": "prod",
+              "label": "áp khi deploy",
+              "style": "dashed",
+              "tone": "backup"
+            }
+          ],
+          "legend": [
+            {
+              "style": "double",
+              "tone": "primary",
+              "label": "Git sync hai chiều"
+            },
+            {
+              "style": "solid",
+              "tone": "primary",
+              "label": "Deploy definition giữa stage"
+            },
+            {
+              "style": "dashed",
+              "tone": "data",
+              "label": "Giá trị cấu hình theo stage"
+            },
+            {
+              "style": "dashed",
+              "tone": "backup",
+              "label": "Deployment rule ở stage đích"
+            }
+          ],
+          "steps": [
+            {
+              "title": "1. Develop",
+              "md": "Developer commit trên feature branch rồi merge vào main bằng pull request.",
+              "hl": [
+                "repo"
+              ]
+            },
+            {
+              "title": "2. Sync Dev",
+              "md": "Workspace Dev Update from Git để nhận commit mới.",
+              "hl": [
+                "e1",
+                "dev"
+              ]
+            },
+            {
+              "title": "3. Deploy",
+              "md": "Pipeline admin là Contributor ở cả hai workspace deploy Dev sang Test rồi Test sang Prod.",
+              "hl": [
+                "e2",
+                "e3",
+                "test",
+                "prod"
+              ]
+            },
+            {
+              "title": "4. Cấu hình theo stage",
+              "md": "Variable library và deployment rules đổi connection, lakehouse cho từng stage.",
+              "hl": [
+                "e4",
+                "e5",
+                "e6",
+                "vl",
+                "rule"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Overview of deployment pipelines",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines"
+            },
+            {
+              "label": "CI/CD workflow options in Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/manage-deployment"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Deployment pipeline với các stage",
+          "img": "figs/workspace-deployment-pipeline.gif",
+          "alt": "Deployment pipeline gồm các stage Dev, Test, UAT, mỗi stage gắn một workspace; bên dưới là danh sách item của stage Test với cột Status vs. Source và nút Deploy.",
+          "caption": "Mỗi stage gắn với một workspace; tên và số stage tuỳ chỉnh được, ví dụ thêm UAT. Chọn stage đích thì cột Status vs. Source so từng item với source stage trước khi Deploy.",
+          "credit": {
+            "label": "Microsoft Learn: Overview of Fabric deployment pipelines",
+            "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "table",
+          "title": "Loại deployment rule hỗ trợ cho từng item",
+          "columns": [
+            "Item",
+            "Data source rule",
+            "Parameter rule",
+            "Default lakehouse rule"
+          ],
+          "rows": [
+            [
+              "Semantic model",
+              "Có",
+              "Có",
+              "Không"
+            ],
+            [
+              "Dataflow Gen1",
+              "Có",
+              "Có",
+              "Không"
+            ],
+            [
+              "Paginated report",
+              "Có",
+              "Không",
+              "Không"
+            ],
+            [
+              "Mirrored database",
+              "Có",
+              "Không",
+              "Không"
+            ],
+            [
+              "**Notebook**",
+              "Không",
+              "Không",
+              "**Có**"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Create deployment rules",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/create-rules"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "md": "- **Stage**: 2 tới 10, mặc định 3 (Development, Test, Production)\n- **Pairing**: item cùng tên nhưng chưa pair thì deploy tạo bản mới thay vì ghi đè\n- **Data không được copy**, chỉ metadata; semantic model cần refresh sau deploy\n- **Quyền deploy**: pipeline admin và ít nhất Contributor ở workspace nguồn và đích\n- **Rule**: không tạo ở development stage; người tạo phải là owner item; unassign workspace thì mất rule\n- Pipeline không có deployment rule; dùng variable library cho connection, lakehouse theo stage",
+          "src": [
+            {
+              "label": "Deployment pipelines process",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process"
+            },
+            {
+              "label": "Create deployment rules",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/create-rules"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Deploy lakehouse không mang data",
+          "md": "- Deploy lakehouse sang Test tạo lakehouse đích với metadata, table data không đi theo\n- Đáp án nói deployment pipeline copy data giữa stage là sai"
+        }
+      ]
+    },
+    {
+      "id": "variable-library",
+      "title": "Variable library cho cấu hình theo stage",
+      "icon": "fab-variable-library",
+      "task": "1.2",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Item đọc variable library và cách đọc",
+          "columns": [
+            "Item",
+            "Cách dùng"
+          ],
+          "rows": [
+            [
+              "**Pipeline**",
+              "Library variables trong expression builder; giá trị lấy từ active value set"
+            ],
+            [
+              "**Notebook**",
+              "`notebookutils.variableLibrary.getLibrary()` hoặc `get(\"$(/**/lib/var)\")`; `%%configure` để đổi default lakehouse"
+            ],
+            [
+              "**Shortcut, Copy job, Dataflow Gen2, Eventstream, User data functions**",
+              "Tham chiếu variable thay cho giá trị cứng"
+            ],
+            [
+              "**Pipeline schedule**",
+              "Parameter của schedule lấy giá trị từ variable library"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Variable library overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/variable-library-overview"
+            },
+            {
+              "label": "Variable library with pipelines",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/variable-library-integration-with-data-pipelines"
+            },
+            {
+              "label": "NotebookUtils variable library",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-variable-library"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Default value set và alternative value set",
+          "img": "figs/workspace-variable-library-value-sets.png",
+          "alt": "Variable library WS Variables với 6 variable kiểu String, cột Default value set mang nhãn Active, và hai alternative value set Test VS, Prod VS.",
+          "caption": "Mỗi variable có một giá trị trong Default value set và một giá trị trong từng alternative value set (Test VS, Prod VS). Nhãn Active cho biết value set mà workspace này đang dùng.",
+          "credit": {
+            "label": "Microsoft Learn: Learn How to Use Variable Libraries",
+            "url": "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/tutorial-variable-library",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "code",
+          "title": "Đổi default lakehouse theo stage bằng %%configure",
+          "lang": "text",
+          "code": "%%configure\n{\n  \"defaultLakehouse\": {\n    \"name\": { \"variableName\": \"$(/**/myVL/LHname)\" },\n    \"id\": { \"variableName\": \"$(/**/myVL/LHid)\" },\n    \"workspaceId\": { \"variableName\": \"$(/**/myVL/WorkspaceId)\" }\n  }\n}",
+          "notes": [
+            {
+              "line": 1,
+              "md": "Đặt ở cell đầu; trong pipeline, `%%configure` không ở cell đầu làm run fail."
+            },
+            {
+              "line": 4,
+              "md": "Prefix `/**/` bắt buộc; variable khai báo kiểu String kể cả GUID."
+            },
+            {
+              "line": 6,
+              "md": "`workspaceId` cần khi lakehouse ở workspace khác."
+            }
+          ],
+          "src": [
+            {
+              "label": "Develop, execute, and manage notebooks",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/author-execute-notebook"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "Value set dùng thay cho deployment rule",
+          "md": "- Mỗi variable có default value và các alternative value set\n- Mỗi workspace có đúng 1 active value set; mỗi stage của deployment pipeline chọn active value set riêng\n- Number type không dùng được trong pipeline"
+        }
+      ]
+    },
+    {
+      "id": "choose-orchestrator",
+      "title": "Chọn pipeline, notebook, dataflow hay Airflow job",
+      "icon": "route",
+      "task": "1.4",
+      "blocks": [
+        {
+          "type": "decision",
+          "title": "Đề nói gì thì chọn gì",
+          "rows": [
+            {
+              "says": "orchestrate copy, notebook and dataflow steps with LEAST code, retries and a schedule",
+              "pick": "Pipeline",
+              "why": "Canvas no-code, control flow như If, ForEach, Invoke pipeline, có schedule và event trigger.",
+              "src": {
+                "label": "Fabric decision guide",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+              }
+            },
+            {
+              "says": "complex transformation on large data with Python libraries",
+              "pick": "Notebook (Spark)",
+              "why": "Code PySpark, Scala, SQL, R; transformation từ thấp tới cao, dùng hàng trăm Spark library.",
+              "src": {
+                "label": "Fabric decision guide",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+              }
+            },
+            {
+              "says": "run many notebooks with dependencies in ONE Spark session to cut startup cost",
+              "pick": "notebookutils.notebook.runMultiple",
+              "why": "Chạy DAG đa luồng trong một session, các notebook con dùng chung compute.",
+              "src": {
+                "label": "NotebookUtils notebook run",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run"
+              }
+            },
+            {
+              "says": "analysts with Power Query skills, low-code transformation",
+              "pick": "Dataflow Gen2",
+              "why": "Power Query với 300+ transformation, 150+ connector; hợp low tới medium volume.",
+              "src": {
+                "label": "Fabric decision guide",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+              }
+            },
+            {
+              "says": "reuse existing Python DAGs, code-first orchestration",
+              "pick": "Apache Airflow job",
+              "why": "Airflow managed trong Fabric, thế hệ kế tiếp của Workflow Orchestration Manager trong ADF.",
+              "src": {
+                "label": "What is an Apache Airflow job?",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-concepts"
+              }
+            },
+            {
+              "says": "call a pipeline in another workspace or in Azure Data Factory",
+              "pick": "Invoke pipeline activity (bản mới)",
+              "why": "Bản Legacy chỉ gọi pipeline cùng workspace và không monitor được pipeline con.",
+              "src": {
+                "label": "Invoke pipeline activity",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/invoke-pipeline-activity"
+              }
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Bốn công cụ orchestrate và transform",
+          "columns": [
+            "",
+            "Pipeline",
+            "Notebook",
+            "Dataflow Gen2",
+            "Apache Airflow job"
+          ],
+          "rows": [
+            [
+              "**Viết bằng**",
+              "Canvas, JSON expression",
+              "PySpark, Scala, Spark SQL, R",
+              "Power Query (M)",
+              "Python DAG"
+            ],
+            [
+              "**Mạnh nhất ở**",
+              "Control flow, copy, gọi item khác",
+              "Transform phức tạp, volume lớn",
+              "Wrangling low-code",
+              "Workflow code-first, hệ Airflow có sẵn"
+            ],
+            [
+              "**Kích hoạt**",
+              "Schedule, event trigger, Invoke pipeline",
+              "Schedule, Notebook activity, run, runMultiple",
+              "Schedule, Dataflow activity",
+              "Schedule trong DAG"
+            ],
+            [
+              "**Persona**",
+              "Data engineer, data integrator",
+              "Data engineer, data scientist",
+              "Business analyst, data engineer",
+              "Engineer quen Airflow"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Fabric decision guide",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+            },
+            {
+              "label": "Learn Fabric with Will, DP-700 Video 5: Orchestration (YouTube)",
+              "url": "https://www.youtube.com/watch?v=U7t9j95d1WA"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Notebook gọi notebook không thay được pipeline",
+          "md": "- runMultiple không có schedule, event trigger hay copy activity riêng\n- Stem cần copy từ nhiều source, retry từng bước và schedule thì chọn pipeline gọi notebook"
+        }
+      ]
+    },
+    {
+      "id": "triggers",
+      "title": "Schedule, event trigger và dynamic expression",
+      "icon": "calendar-time",
+      "task": "1.4",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Cách khởi chạy pipeline",
+          "columns": [
+            "Cách",
+            "Hành vi",
+            "Chi tiết dễ hỏi"
+          ],
+          "rows": [
+            [
+              "**On-demand**",
+              "Run hoặc Run now",
+              "Phải save trước khi chạy"
+            ],
+            [
+              "**Fixed schedule**",
+              "Chạy theo tần suất, time zone",
+              "Bắt buộc start và end date; tối đa 20 schedule mỗi pipeline; truyền parameter value hoặc variable library"
+            ],
+            [
+              "**Interval-based schedule** (preview)",
+              "Window cố định không chồng nhau",
+              "Có trigger parameter Window start time, Window end time; không sửa được, phải xoá rồi tạo lại"
+            ],
+            [
+              "**Storage event**",
+              "OneLake events, Azure Blob events qua Activator",
+              "Tạo eventstream và item Reflex; lọc theo Subject; dùng `@pipeline()?.TriggerEvent?.FileName`"
+            ],
+            [
+              "**Job event**",
+              "ItemJobSucceeded, ItemJobFailed của pipeline, notebook, Copy job, Dataflow Gen2...",
+              "Consumer phải cùng region với nguồn event"
+            ],
+            [
+              "**Run condition** (preview)",
+              "Chờ upstream run, data availability, window coverage",
+              "Bổ sung cho schedule và trigger, không thay thế"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Run, schedule, or use events to trigger a pipeline",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
+            },
+            {
+              "label": "Explore Job events in Real-Time hub",
+              "url": "https://learn.microsoft.com/en-us/fabric/real-time-hub/explore-fabric-job-events"
+            },
+            {
+              "label": "Run conditions in pipelines",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-run-conditions"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Schedule của pipeline",
+          "img": "figs/workspace-pipeline-schedule.png",
+          "alt": "Trang Schedule của một pipeline với Failure notifications và form Add schedule chọn Schedule type Interval-based, Interval between updates, Concurrent max updates, start, end date và Time zone.",
+          "caption": "Schedule type có Fixed và Interval-based; Interval-based đặt khoảng cách giữa các lần chạy và Concurrent max updates. Ô Failure notifications phía trên gửi email khi scheduled run lỗi.",
+          "credit": {
+            "label": "Microsoft Learn: Run, schedule, or use events to trigger a pipeline",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "table",
+          "title": "Parameter và expression hay gặp",
+          "columns": [
+            "Cú pháp",
+            "Trả về",
+            "Dùng khi"
+          ],
+          "rows": [
+            [
+              "`@pipeline().parameters.myNumber`",
+              "Kiểu gốc, ví dụ number",
+              "Truyền giá trị cố định trong suốt run"
+            ],
+            [
+              "`@{pipeline().parameters.myNumber}`",
+              "Luôn là string",
+              "Ghép vào chuỗi: `Answer is: @{...}`"
+            ],
+            [
+              "`@concat('a', string(x))`",
+              "String",
+              "Ghép chuỗi bằng function"
+            ],
+            [
+              "`@@`",
+              "Ký tự @",
+              "Escape chuỗi bắt đầu bằng @"
+            ],
+            [
+              "`@pipeline().RunId`, `@pipeline().TriggerTime`",
+              "System variable, thời gian theo UTC",
+              "Ghi log, đặt tên file theo run"
+            ],
+            [
+              "`@item()`",
+              "Phần tử hiện tại",
+              "Bên trong ForEach"
+            ],
+            [
+              "`@formatDateTime(ts, 'yyyy-MM-dd')`",
+              "String",
+              "Tạo folder path theo ngày"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Parameters in pipelines",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/parameters"
+            },
+            {
+              "label": "Expressions and functions",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/expression-language"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Dấu ? trong trigger parameter",
+          "md": "- Chạy thử thủ công thì FileName, FolderName là NULL\n- Viết `@pipeline()?.TriggerEvent?.FileName` để expression không lỗi khi chưa có event\n- Email failure notification chỉ gửi cho scheduled run, không gửi cho on-demand run"
+        }
+      ]
+    },
+    {
+      "id": "orchestration-patterns",
+      "title": "Orchestration pattern với pipeline và notebook",
+      "icon": "fab-pipeline",
+      "task": "1.4",
+      "blocks": [
+        {
+          "type": "diagram",
+          "title": "Pipeline điều phối notebook bằng parameter",
+          "caption": "Storage event chạy pipeline; pipeline truyền base parameters; notebook điều phối chạy DAG trong session của nó.",
+          "dir": "DOWN",
+          "groups": [
+            {
+              "id": "sess",
+              "label": "Một Spark session",
+              "kind": "zone"
+            }
+          ],
+          "nodes": [
+            {
+              "id": "pl",
+              "icon": "fab-pipeline",
+              "label": "Pipeline",
+              "sub": "storage event trigger",
+              "info": "Storage event qua Activator kích hoạt pipeline; tên file đọc bằng @pipeline()?.TriggerEvent?.FileName rồi truyền xuống activity."
+            },
+            {
+              "id": "nb",
+              "icon": "fab-notebook",
+              "label": "Notebook điều phối",
+              "sub": "Notebook activity",
+              "group": "sess",
+              "info": "Base parameters ghi đè parameter cell; chỉ int, float, bool, string. Notebook gọi runMultiple."
+            },
+            {
+              "id": "inv",
+              "icon": "fab-pipeline",
+              "label": "Invoke pipeline",
+              "sub": "workspace khác",
+              "info": "Bản mới gọi được pipeline ở workspace khác, ADF hoặc Synapse, và monitor được pipeline con."
+            },
+            {
+              "id": "c1",
+              "icon": "fab-notebook",
+              "label": "Silver notebook",
+              "sub": "args",
+              "group": "sess",
+              "info": "Chạy đa luồng trong session của notebook điều phối."
+            },
+            {
+              "id": "c2",
+              "icon": "fab-notebook",
+              "label": "Gold notebook",
+              "sub": "dependencies: Silver",
+              "group": "sess",
+              "info": "Nhận exit value của Silver qua @activity('Silver').exitValue()."
+            }
+          ],
+          "edges": [
+            {
+              "id": "e2",
+              "from": "pl",
+              "to": "nb",
+              "label": "base parameters"
+            },
+            {
+              "id": "e3",
+              "from": "pl",
+              "to": "inv",
+              "label": "child pipeline",
+              "style": "dashed",
+              "tone": "backup"
+            },
+            {
+              "id": "e4",
+              "from": "nb",
+              "to": "c1",
+              "label": "runMultiple"
+            },
+            {
+              "id": "e5",
+              "from": "nb",
+              "to": "c2",
+              "label": "runMultiple"
+            }
+          ],
+          "legend": [
+            {
+              "style": "solid",
+              "tone": "primary",
+              "label": "Luồng chính và parameter"
+            },
+            {
+              "style": "dashed",
+              "tone": "backup",
+              "label": "Gọi pipeline con"
+            }
+          ],
+          "steps": [
+            {
+              "title": "1. Trigger",
+              "md": "File mới vào OneLake kích hoạt pipeline; tên file đi vào parameter.",
+              "hl": [
+                "pl"
+              ]
+            },
+            {
+              "title": "2. Notebook activity",
+              "md": "Base parameters ghi đè giá trị trong parameter cell của notebook điều phối.",
+              "hl": [
+                "e2",
+                "nb"
+              ]
+            },
+            {
+              "title": "3. DAG trong notebook",
+              "md": "runMultiple chạy Silver rồi Gold theo dependencies, truyền kết quả bằng exitValue().",
+              "hl": [
+                "e4",
+                "e5",
+                "c1",
+                "c2"
+              ]
+            },
+            {
+              "title": "4. Pipeline con",
+              "md": "Invoke pipeline gọi pipeline tái sử dụng ở workspace khác.",
+              "hl": [
+                "e3",
+                "inv"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Notebook activity",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/notebook-activity"
+            },
+            {
+              "label": "NotebookUtils notebook run",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Truyền parameter qua Notebook activity",
+          "img": "figs/workspace-notebook-activity.png",
+          "alt": "Pipeline canvas có một Notebook activity; tab Settings với Connection, Workspace, Notebook, mục Base parameters và Advanced settings.",
+          "caption": "Tab Settings của Notebook activity chọn Workspace và Notebook, rồi truyền giá trị qua Base parameters vào parameter cell của notebook. Advanced settings chứa session tag cho high concurrency.",
+          "credit": {
+            "label": "Microsoft Learn: Notebook activity",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-factory/notebook-activity",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "code",
+          "title": "DAG cho notebookutils.notebook.runMultiple",
+          "lang": "text",
+          "code": "DAG = {\n  \"activities\": [\n    {\"name\": \"Silver\", \"path\": \"nb_silver\",\n     \"args\": {\"run_date\": \"2026-11-04\"}, \"timeoutPerCellInSeconds\": 600},\n    {\"name\": \"Gold\", \"path\": \"nb_gold\",\n     \"args\": {\"src\": \"@activity('Silver').exitValue()\"},\n     \"dependencies\": [\"Silver\"], \"retry\": 1, \"retryIntervalInSeconds\": 30}\n  ],\n  \"timeoutInSeconds\": 7200,\n  \"concurrency\": 4\n}\nresult = notebookutils.notebook.runMultiple(DAG)",
+          "notes": [
+            {
+              "line": 4,
+              "md": "`args` ghi đè parameter cell của notebook con."
+            },
+            {
+              "line": 6,
+              "md": "Truyền exit value của activity trước vào activity sau."
+            },
+            {
+              "line": 9,
+              "md": "Mặc định 43200 giây (12 giờ)."
+            },
+            {
+              "line": 10,
+              "md": "Mặc định gấp 3 số CPU core; 0 là không giới hạn."
+            },
+            {
+              "line": 12,
+              "md": "Kết quả là dict theo activity name, mỗi phần tử có exitVal và exception."
+            }
+          ],
+          "src": [
+            {
+              "label": "NotebookUtils notebook run",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Bốn cách gọi notebook khác",
+          "columns": [
+            "Cách",
+            "Session",
+            "Parameter",
+            "Giới hạn"
+          ],
+          "rows": [
+            [
+              "**`%run nb`**",
+              "Chạy trong context hiện tại, chia sẻ biến",
+              "int, float, bool, string",
+              "Chỉ cùng workspace; lồng tối đa 5 cấp"
+            ],
+            [
+              "**`notebookutils.notebook.run()`**",
+              "Chạy trên Spark pool của notebook gọi, trả exit value string",
+              "dict arguments",
+              "Timeout mặc định 90 giây; `%%configure` trong notebook con bị bỏ qua"
+            ],
+            [
+              "**`runMultiple()`**",
+              "Đa luồng trong một session",
+              "args mỗi activity",
+              "Song song bị giới hạn bởi compute của session"
+            ],
+            [
+              "**Notebook activity**",
+              "Session riêng, hoặc chung khi bật high concurrency và session tag",
+              "Base parameters",
+              "Complex type phải serialize thành JSON string"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Develop, execute, and manage notebooks",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/author-execute-notebook"
+            },
+            {
+              "label": "NotebookUtils notebook run",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Bẫy về exit value và tên cũ",
+          "md": "- Không gọi `notebookutils.notebook.exit()` trong try/except: exit không có hiệu lực\n- Exit value luôn là string; cần số thì ép kiểu ở phía gọi\n- `mssparkutils` đã đổi tên thành `notebookutils`, code cũ vẫn chạy nhưng namespace cũ sẽ bị retire"
+        }
+      ]
+    }
+  ]
+}

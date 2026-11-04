@@ -1,0 +1,1217 @@
+[
+ {
+  "id": "mon-01",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A data platform team owns pipelines, notebooks, and Dataflow Gen2 items in four Fabric workspaces. Every morning an on-call engineer must see which runs failed overnight across all items the engineer can access, open the failed run, and read the error. The team does not want to build or maintain any custom logging solution.\nWhat should the engineer use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "The Microsoft Fabric Capacity Metrics app, Compute page"
+   },
+   {
+    "k": "B",
+    "t": "The Monitor hub, filtered by Failed status"
+   },
+   {
+    "k": "C",
+    "t": "A KQL queryset over the workspace monitoring database"
+   },
+   {
+    "k": "D",
+    "t": "The Spark history server of each notebook"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: nhiều loại item, nhiều workspace, không muốn tự build logging.\n- Monitor hub gom job run của mọi item bạn có quyền xem, filter theo Status và mở được run detail để đọc error.",
+  "wrong": {
+   "A": "Capacity Metrics app cho biết CU tiêu thụ, không cho error của từng run.",
+   "C": "Workspace monitoring phải bật và viết query KQL, trái với yêu cầu không build gì thêm; mỗi workspace cũng cần cấu hình riêng.",
+   "D": "Spark history server chỉ có cho Spark application, không thấy pipeline hay dataflow."
+  },
+  "refs": [
+   {
+    "label": "Monitor job runs in the Monitor hub",
+    "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-jobs"
+   },
+   {
+    "label": "What is the Monitor hub",
+    "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub"
+   }
+  ]
+ },
+ {
+  "id": "mon-02",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "You manage a Fabric workspace that contains 40 pipelines, several Dataflow Gen2 items, and a warehouse. Auditors require that pipeline activity runs and Dataflow Gen2 logs remain queryable for 30 days. Engineers want to correlate failures across items with Kusto Query Language and build a Real-Time Dashboard on top of the data. You need a solution that uses built-in Fabric capabilities.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Export activity runs to CSV from the Monitoring hub every day and load them into a lakehouse"
+   },
+   {
+    "k": "B",
+    "t": "Install the Microsoft Fabric Capacity Metrics app and share it with the engineers"
+   },
+   {
+    "k": "C",
+    "t": "Enable workspace monitoring so that logs are collected into the monitoring eventhouse"
+   },
+   {
+    "k": "D",
+    "t": "Query queryinsights.exec_requests_history in the warehouse"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: query bằng KQL, 30 ngày, Real-Time Dashboard, built-in.\n- Workspace monitoring đổ log của pipeline, Dataflow Gen2, warehouse và nhiều item khác vào eventhouse; mặc định giữ 30 ngày.",
+  "wrong": {
+   "A": "Export CSV thủ công là custom solution và không có KQL.",
+   "B": "Capacity Metrics app là report Power BI về CU, không chứa activity run log.",
+   "D": "Query insights chỉ có query T-SQL của warehouse, không có pipeline hay dataflow."
+  },
+  "refs": [
+   {
+    "label": "Workspace monitoring overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+   }
+  ]
+ },
+ {
+  "id": "mon-03",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "Users report that Power BI reports on an F64 capacity become slow every weekday between 09:00 and 09:30. The capacity admin suspects that a background job overlaps with the report traffic. You need to identify which items and operations consumed the most capacity units at 09:10 on Tuesday.\nWhich tool and page should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "The Capacity Metrics app, Timepoint page"
+   },
+   {
+    "k": "B",
+    "t": "The Monitor hub, Job runs page sorted by Average duration"
+   },
+   {
+    "k": "C",
+    "t": "queryinsights.long_running_queries in each warehouse"
+   },
+   {
+    "k": "D",
+    "t": "The Query logs table in the workspace monitoring eventhouse, filtered to 09:10"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: item và operation nào tiêu CU tại một thời điểm cụ thể.\n- Trang Timepoint drill vào 1 điểm 30 giây và tách operation interactive, background theo CU.",
+  "wrong": {
+   "B": "Duration dài không có nghĩa tiêu nhiều CU; Monitor hub không đo CU.",
+   "C": "Query insights chỉ thấy query T-SQL của một warehouse, không thấy Spark hay dataflow.",
+   "D": "Query logs của eventhouse chỉ có query KQL, không phải toàn capacity."
+  },
+  "refs": [
+   {
+    "label": "What is the Microsoft Fabric Capacity Metrics app",
+    "url": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app"
+   }
+  ]
+ },
+ {
+  "id": "mon-04",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A Fabric capacity has been overloaded for several hours by a large backlog of jobs. Users now receive errors when they open reports or run queries in the SQL query editor. Scheduled pipelines and notebooks submitted as background jobs still start and run.\nWhich throttling stage is the capacity in?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Overage protection, up to 10 minutes of future capacity consumed"
+   },
+   {
+    "k": "B",
+    "t": "Interactive delay, between 10 and 60 minutes of future capacity consumed"
+   },
+   {
+    "k": "C",
+    "t": "Interactive rejection, 1 to 24 hours of future capacity consumed"
+   },
+   {
+    "k": "D",
+    "t": "Background rejection, more than 24 hours of future capacity consumed"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: interactive bị từ chối nhưng background vẫn chạy.\n- Đó là nấc Interactive rejection: đã tiêu hết CU của 60 phút tới 24 giờ tới.",
+  "wrong": {
+   "A": "Overage protection chưa throttle gì cả.",
+   "B": "Interactive delay chỉ trễ 20 giây, không từ chối request.",
+   "D": "Background rejection từ chối cả background job, trái với stem."
+  },
+  "refs": [
+   {
+    "label": "Understand your Fabric capacity throttling",
+    "url": "https://learn.microsoft.com/en-us/fabric/enterprise/throttling"
+   }
+  ]
+ },
+ {
+  "id": "mon-05",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A pipeline loads five fact tables into a Fabric warehouse every night. The load duration varies between 40 and 110 minutes. A Power BI semantic model in Import mode, created by your team, reads only two of those fact tables. The model must refresh as soon as the load finishes, and the refresh must take as little time as possible.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Schedule the semantic model refresh in the model settings for two hours after the pipeline start time"
+   },
+   {
+    "k": "B",
+    "t": "Switch the semantic model to Direct Lake and enable automatic updates"
+   },
+   {
+    "k": "C",
+    "t": "Create an Activator rule on an eventstream that listens to the warehouse"
+   },
+   {
+    "k": "D",
+    "t": "Add a Semantic model refresh activity after the loads, limited to the two tables"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Tín hiệu: refresh ngay khi load xong, thời gian load thay đổi, chỉ 2 table.\n- Semantic model refresh activity chạy theo dependency trong pipeline; có thể chọn table và partition để refresh nhanh hơn.",
+  "wrong": {
+   "A": "Lịch cố định có thể chạy trước khi load xong hoặc chờ thừa.",
+   "B": "Đổi storage mode là thay đổi thiết kế model, vượt quá yêu cầu.",
+   "C": "Eventstream không đọc thay đổi của warehouse; Activator không phải cách refresh model sau pipeline."
+  },
+  "refs": [
+   {
+    "label": "Semantic model refresh activity",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/semantic-model-refresh-activity"
+   }
+  ]
+ },
+ {
+  "id": "mon-06",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A semantic model uses Direct Lake on a lakehouse. Automatic updates are disabled because the team wants to control when reports see new data. A notebook appends rows to the Delta tables at 06:00. At 07:00 the reports still show yesterday's data. You need the reports to show the new rows with the least capacity consumption.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Run OPTIMIZE with VORDER on the Delta tables"
+   },
+   {
+    "k": "B",
+    "t": "Refresh the semantic model after the notebook finishes"
+   },
+   {
+    "k": "C",
+    "t": "Change the model to Import mode and schedule a full refresh"
+   },
+   {
+    "k": "D",
+    "t": "Switch the model to DirectQuery mode"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: Direct Lake, automatic updates tắt, cần ít capacity nhất.\n- Refresh của Direct Lake là framing: chỉ cập nhật metadata trỏ tới version Delta mới, vài giây, không copy data.",
+  "wrong": {
+   "A": "OPTIMIZE đổi layout file nhưng model vẫn trỏ tới version cũ.",
+   "C": "Import refresh copy toàn bộ data, tốn CU nhiều hơn framing.",
+   "D": "DirectQuery làm mọi query chậm hơn và không phải cách cập nhật frame."
+  },
+  "refs": [
+   {
+    "label": "Direct Lake overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview"
+   }
+  ]
+ },
+ {
+  "id": "mon-07",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "Your team schedules 12 pipelines in a Fabric workspace. The data engineering lead wants an email to the team's Microsoft Entra group whenever a scheduled run of any of these pipelines fails. The solution must not add capacity cost and must require the least configuration effort. Manual runs during development must not send email.\nWhat should you configure?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Schedule failure emails for each scheduled pipeline"
+   },
+   {
+    "k": "B",
+    "t": "An Activator rule on Fabric job events for each pipeline"
+   },
+   {
+    "k": "C",
+    "t": "An Office 365 Outlook activity on the failure path of every activity"
+   },
+   {
+    "k": "D",
+    "t": "Workspace monitoring with a KQL Queryset trigger in Activator"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: chỉ scheduled run, không tốn thêm capacity, ít cấu hình nhất.\n- Schedule failure emails miễn phí, chỉ áp dụng cho scheduled run, gửi được tới group trong Entra tenant.",
+  "wrong": {
+   "B": "Activator tính CU và cần tạo item thêm.",
+   "C": "Phải sửa từng activity, và manual run cũng gửi email.",
+   "D": "Workspace monitoring và Activator đều tiêu capacity, cấu hình nhiều hơn."
+  },
+  "refs": [
+   {
+    "label": "Set up job alerts in the Monitor hub",
+    "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
+   }
+  ]
+ },
+ {
+  "id": "mon-08",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 2,
+  "stem": "A workspace contains about 60 pipelines that different teams create and delete every week. Operations needs a single alert definition that notifies a Microsoft Teams channel whenever any pipeline in the workspace fails. Nobody wants to edit individual pipelines or maintain one rule per pipeline.\nWhich two actions should you perform? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add a Teams activity on the failure path of each pipeline and copy it into every new pipeline"
+   },
+   {
+    "k": "B",
+    "t": "Enable workspace monitoring for the workspace"
+   },
+   {
+    "k": "C",
+    "t": "Configure schedule failure emails for every pipeline"
+   },
+   {
+    "k": "D",
+    "t": "Create an Activator with a KQL Queryset trigger on failed jobs in ItemJobEventLogs"
+   },
+   {
+    "k": "E",
+    "t": "Install the Capacity Metrics app and configure an alert on throttling"
+   }
+  ],
+  "answer": [
+   "B",
+   "D"
+  ],
+  "explain": "- Tín hiệu: một alert cho mọi pipeline, kể cả pipeline mới, gửi Teams.\n- Workspace monitoring ghi ItemJobEventLogs vào eventhouse; một KQL Queryset lọc JobType Pipeline, JobStatus Failed làm trigger cho Activator.",
+  "wrong": {
+   "A": "Phải sửa từng pipeline, pipeline mới sẽ bị sót.",
+   "C": "Cấu hình theo từng item, chỉ gửi email, không gửi Teams channel.",
+   "E": "Capacity Metrics app không hỗ trợ alert và không biết pipeline fail."
+  },
+  "refs": [
+   {
+    "label": "Create alerts for pipeline runs",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs"
+   },
+   {
+    "label": "Workspace monitoring overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+   }
+  ]
+ },
+ {
+  "id": "mon-09",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "A pipeline copies data from an on-premises SQL Server through a gateway every hour. About once a day the Copy activity fails with a connection timeout, and a manual rerun a few minutes later always succeeds. You need to reduce manual intervention with the least development effort.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Increase the activity timeout from 12 hours to 7 days"
+   },
+   {
+    "k": "B",
+    "t": "Wrap the Copy activity in an Until activity that checks a status variable"
+   },
+   {
+    "k": "C",
+    "t": "Enable retries on the Copy activity and set a retry interval"
+   },
+   {
+    "k": "D",
+    "t": "Set the Degree of copy parallelism to 1"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: lỗi tạm thời, rerun thì thành công, ít công sức nhất.\n- Retry policy có sẵn trên activity: Retry mặc định 1, Retry interval mặc định 30 giây khi bật.",
+  "wrong": {
+   "A": "Lỗi là connection timeout của source, không phải activity chạy quá 12 giờ.",
+   "B": "Until loop làm được nhưng tốn công build và maintain hơn retry có sẵn.",
+   "D": "Parallelism không sửa lỗi kết nối tạm thời."
+  },
+  "refs": [
+   {
+    "label": "Activity overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview"
+   }
+  ]
+ },
+ {
+  "id": "mon-10",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "During a nightly batch window, several pipelines run notebooks on an F32 capacity. An analyst opens an interactive notebook at 01:00 and the first cell fails with \"[TooManyRequestsForCapacity] HTTP Response code 430\". The batch jobs must not be interrupted.\nWhat explains the error, and what should the analyst do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Autotune is disabled; enable spark.ms.autotune.enabled in the notebook"
+   },
+   {
+    "k": "B",
+    "t": "Spark cores are fully used and interactive notebooks are not queued; retry later"
+   },
+   {
+    "k": "C",
+    "t": "The session timeout is too short; increase the session timeout in workspace settings"
+   },
+   {
+    "k": "D",
+    "t": "High concurrency mode is off; enable it so the notebook can join a running pipeline session"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: HTTP 430 TooManyRequestsForCapacity khi batch đang chạy.\n- Capacity hết Spark core; job từ pipeline được queue nhưng notebook interactive thì không, nên phải chạy lại sau hoặc hủy job khác.",
+  "wrong": {
+   "A": "Autotune chỉnh config query, không thêm core.",
+   "C": "Session timeout không liên quan lỗi admission.",
+   "D": "High concurrency chỉ share session của cùng user, cùng điều kiện; không share với session pipeline của người khác."
+  },
+  "refs": [
+   {
+    "label": "Concurrency limits and queueing in Apache Spark for Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-job-concurrency-and-queueing"
+   }
+  ]
+ },
+ {
+  "id": "mon-11",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "Two pipelines run at the same time. Pipeline A runs an UPDATE on dbo.FactSales for region EU. Pipeline B runs a DELETE on dbo.FactSales for region US. The rows do not overlap. Pipeline B fails with error 24556: \"Snapshot isolation transaction aborted due to update conflict\".\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Set the transaction isolation level to READ COMMITTED in Pipeline B"
+   },
+   {
+    "k": "B",
+    "t": "Add a ROWLOCK table hint to the DELETE statement"
+   },
+   {
+    "k": "C",
+    "t": "Scale the capacity to a larger SKU"
+   },
+   {
+    "k": "D",
+    "t": "Retry the failed transaction, or run the two writes sequentially"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Tín hiệu: hai DML đồng thời trên cùng table, không trùng row vẫn lỗi 24556.\n- Fabric Warehouse luôn dùng snapshot isolation và ghi nhận conflict ở mức table; transaction commit sau bị rollback, cần retry hoặc chạy tuần tự.",
+  "wrong": {
+   "A": "Lệnh đổi isolation level bị bỏ qua; snapshot isolation luôn áp dụng.",
+   "B": "Warehouse khóa mức table; hint row lock không đổi cách ghi nhận conflict.",
+   "C": "Conflict không phải do thiếu tài nguyên."
+  },
+  "refs": [
+   {
+    "label": "Transactions in Warehouse tables",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/transactions"
+   },
+   {
+    "label": "Troubleshoot the Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-fabric-data-warehouse"
+   }
+  ]
+ },
+ {
+  "id": "mon-12",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "An eventhouse table named RawEvents receives data from an eventstream. An update policy on table Telemetry parses RawEvents. Since a schema change yesterday, RawEvents keeps growing but Telemetry receives no new rows. You need to find the error message produced by the update policy.\nWhat should you run?",
+  "options": [
+   {
+    "k": "A",
+    "t": "`.show ingestion failures | where OriginatesFromUpdatePolicy == true`"
+   },
+   {
+    "k": "B",
+    "t": "`.show table Telemetry policy caching`"
+   },
+   {
+    "k": "C",
+    "t": "A query on queryinsights.exec_requests_history filtered on the Telemetry table"
+   },
+   {
+    "k": "D",
+    "t": "The Runtime logs tab of the eventstream source node, filtered by severity Error"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: source có data, target không có, cần lỗi của update policy.\n- `.show ingestion failures` ghi lỗi update policy; cột OriginatesFromUpdatePolicy lọc đúng loại lỗi này. Lỗi hay gặp là schema output không khớp target.",
+  "wrong": {
+   "B": "Caching policy không chứa lỗi ingestion.",
+   "C": "Query insights thuộc warehouse, không thuộc eventhouse.",
+   "D": "Eventstream đã ghi thành công vào RawEvents; lỗi nằm ở bước update policy bên trong eventhouse."
+  },
+  "refs": [
+   {
+    "label": "Update policy overview",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+   },
+   {
+    "label": ".show ingestion failures command",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/ingestion-failures?view=microsoft-fabric"
+   }
+  ]
+ },
+ {
+  "id": "mon-13",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 2,
+  "stem": "An eventhouse lands raw JSON in table Landing and an update policy writes parsed rows to table Clean. Auditors found rows in Landing that never reached Clean after transient update policy failures. Landing is used only as a staging step and should not keep data. You need Landing and Clean to stay consistent and Landing to stay empty.\nWhich two actions should you perform? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Set IsTransactional to true in the update policy of Clean"
+   },
+   {
+    "k": "B",
+    "t": "Set PropagateIngestionProperties to true in the update policy"
+   },
+   {
+    "k": "C",
+    "t": "Set the retention policy of Landing to softdelete = 0s"
+   },
+   {
+    "k": "D",
+    "t": "Set the caching policy of Landing to hot = 0d"
+   },
+   {
+    "k": "E",
+    "t": "Add a hash partitioning policy on Landing"
+   }
+  ],
+  "answer": [
+   "A",
+   "C"
+  ],
+  "explain": "- Tín hiệu: phải nhất quán khi policy lỗi, và bảng landing không giữ data.\n- IsTransactional true: policy lỗi thì cả source và target không nhận data, ingestion fail để retry.\n- Soft delete 0s trên source xóa data sau khi update policy chạy; khi đó mọi update policy dùng source này phải transactional.",
+  "wrong": {
+   "B": "PropagateIngestionProperties chỉ chuyển extent tags, creation time sang target.",
+   "D": "Caching policy chỉ quyết định data nằm trên SSD, không xóa data.",
+   "E": "Partitioning policy tối ưu query, không liên quan nhất quán."
+  },
+  "refs": [
+   {
+    "label": "Update policy overview",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+   }
+  ]
+ },
+ {
+  "id": "mon-14",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "An eventstream reads from an Azure Event Hubs source and writes to an eventhouse. After a producer team released a new client library, the eventhouse stops receiving rows. In the eventstream editor, the Data insights tab of the source node shows Input events rising and Deserialization errors rising at the same rate.\nWhat is the most likely cause?",
+  "options": [
+   {
+    "k": "A",
+    "t": "The eventstream throughput level is set to Low"
+   },
+   {
+    "k": "B",
+    "t": "The eventstream retention period is one day"
+   },
+   {
+    "k": "C",
+    "t": "The events no longer match the data format configured for the source"
+   },
+   {
+    "k": "D",
+    "t": "The eventhouse caching policy is shorter than the retention policy of the table"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: Deserialization errors tăng đúng nhịp với input sau khi đổi client library.\n- Metric này đếm event không đọc được trong eventstream engine, tức format hoặc serialization của event không khớp; xem chi tiết ở Runtime logs.",
+  "wrong": {
+   "A": "Throughput thấp gây backlog, không gây lỗi deserialization.",
+   "B": "Retention chỉ quyết định event được giữ bao lâu.",
+   "D": "Caching policy không ảnh hưởng việc ingest."
+  },
+  "refs": [
+   {
+    "label": "Monitor the status and performance of an eventstream",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/monitor"
+   }
+  ]
+ },
+ {
+  "id": "mon-15",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "An eventstream ingests telemetry from an Azure Event Hubs namespace with 32 partitions. Traffic recently tripled to about 60 MB/s. The Data insights tab shows Backlogged input events and Watermark delay increasing steadily, with no runtime errors. The eventstream throughput setting has never been changed.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Raise the eventstream Event throughput level to Medium"
+   },
+   {
+    "k": "B",
+    "t": "Reduce the number of Event Hubs partitions to 4"
+   },
+   {
+    "k": "C",
+    "t": "Increase the eventstream retention period from one day to 90 days"
+   },
+   {
+    "k": "D",
+    "t": "Add an update policy on the destination table"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: backlog và watermark delay tăng, không có lỗi, throughput tăng lên 60 MB/s.\n- Mức Low dưới 10 MB/s; Medium 10 tới 100 MB/s. Event Hubs có đủ partition nên mức throughput mới là giới hạn.",
+  "wrong": {
+   "B": "Ít partition hơn còn hạ throughput; dưới 4 partition bị giới hạn bởi partition.",
+   "C": "Retention dài hơn không xử lý nhanh hơn.",
+   "D": "Update policy thêm việc ở eventhouse, không giảm backlog của eventstream."
+  },
+  "refs": [
+   {
+    "label": "Configure settings for a Fabric eventstream",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings"
+   },
+   {
+    "label": "Monitor the status and performance of an eventstream",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/monitor"
+   }
+  ]
+ },
+ {
+  "id": "mon-16",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "A Dataflow Gen2 reads from an on-premises Oracle database through an on-premises data gateway. Refreshes fail intermittently with a generic error. Microsoft support asks for the Power Query Mashup engine logs of the failed refresh.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Export the refresh history list of the dataflow to a CSV file and attach it"
+   },
+   {
+    "k": "B",
+    "t": "Query the Capacity throttling logs table in the workspace monitoring eventhouse"
+   },
+   {
+    "k": "C",
+    "t": "Open the Spark history server for the dataflow run"
+   },
+   {
+    "k": "D",
+    "t": "Turn on Admin consent for gateway diagnostics and download detailed logs"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Tín hiệu: cần log Mashup engine, dataflow chạy qua gateway.\n- Download detailed logs tải ZIP log Mashup engine, giữ 28 ngày; với gateway phải bật Admin consent for gateway diagnostics.",
+  "wrong": {
+   "A": "CSV chỉ có start time, status, duration, không có log engine.",
+   "B": "Capacity throttling logs thuộc eventhouse, không phải Dataflow Gen2.",
+   "C": "Dataflow Gen2 không chạy trên Spark."
+  },
+  "refs": [
+   {
+    "label": "View refresh history and monitor your dataflows",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-monitor"
+   }
+  ]
+ },
+ {
+  "id": "mon-17",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "You enable the native execution engine in the environment used by a notebook. A query that filters a large Delta table runs no faster than before. Spark advisor shows a fallback alert for the filter, which is written as `WHERE order_ts = '2026-05-20'` where order_ts is a TIMESTAMP column.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Disable V-Order on the Delta table and rewrite it with OPTIMIZE"
+   },
+   {
+    "k": "B",
+    "t": "Cast order_ts to DATE so both sides of the comparison have the same type"
+   },
+   {
+    "k": "C",
+    "t": "Increase the number of executors in the Spark pool used by the environment"
+   },
+   {
+    "k": "D",
+    "t": "Switch the environment back to Runtime 1.2 to avoid native fallbacks"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: fallback alert ở filter so sánh cột thời gian với string.\n- Docs native execution engine yêu cầu hai vế so sánh ngày cùng kiểu, ví dụ `CAST(order_ts AS DATE) = '2026-05-20'`; CAST rõ ràng tránh fallback về JVM.",
+  "wrong": {
+   "A": "V-Order là layout file, không gây fallback.",
+   "C": "Thêm executor không đưa operator về native path.",
+   "D": "Native execution engine chỉ hỗ trợ Runtime 1.3 và 2.0."
+  },
+  "refs": [
+   {
+    "label": "Native execution engine for Fabric Data Engineering",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+   },
+   {
+    "label": "Apache Spark advisor",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-advisor-introduction"
+   }
+  ]
+ },
+ {
+  "id": "mon-18",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "An analyst runs a heavy aggregate query in a Fabric warehouse after a weekend of no activity. The first run takes 95 seconds; a second identical run takes 12 seconds. The analyst wants to confirm that the first run was slowed by reading data from OneLake rather than by a bad plan.\nWhat should the analyst check?",
+  "options": [
+   {
+    "k": "A",
+    "t": "data_scanned_remote_storage_mb of both runs in query insights"
+   },
+   {
+    "k": "B",
+    "t": "result_cache_hit for the second run in queryinsights.exec_requests_history"
+   },
+   {
+    "k": "C",
+    "t": "The histogram from DBCC SHOW_STATISTICS on the grouped column"
+   },
+   {
+    "k": "D",
+    "t": "Current locks in sys.dm_tran_locks"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: lần đầu chậm sau thời gian nghỉ, lần sau nhanh.\n- data_scanned_remote_storage_mb khác 0 nghĩa là query đọc từ OneLake, tức cold start; bằng 0 là data đã trong cache.",
+  "wrong": {
+   "B": "result_cache_hit chỉ nói lần chạy thứ hai có dùng result set cache, không chứng minh lần đầu đọc remote.",
+   "C": "Histogram cho biết phân bố data, không cho biết data đọc từ đâu.",
+   "D": "Lock chỉ giải thích blocking ở thời điểm hiện tại."
+  },
+  "refs": [
+   {
+    "label": "Performance guidelines in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+   },
+   {
+    "label": "Query insights in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+   }
+  ]
+ },
+ {
+  "id": "mon-19",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A workspace created in 2026 uses default Spark settings. Notebooks rebuild gold Delta tables nightly, and the tables are read only by Direct Lake semantic models. Report users complain about slow visuals. You need all future writes from notebooks that use the workspace environment to be optimized for Power BI reads, with the least code changes.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Run OPTIMIZE ZORDER BY on the filter columns of every gold table after each load"
+   },
+   {
+    "k": "B",
+    "t": "Set spark.ms.autotune.enabled to true in the environment"
+   },
+   {
+    "k": "C",
+    "t": "Set spark.fabric.resourceProfile to readHeavyForPBI in the environment"
+   },
+   {
+    "k": "D",
+    "t": "Run VACUUM with RETAIN 0 HOURS after each load"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: workspace mới mặc định writeHeavy nên V-Order tắt; cần tối ưu cho Power BI, ít sửa code.\n- readHeavyForPBI bật V-Order và optimize write với binSize 1g cho mọi job dùng environment.",
+  "wrong": {
+   "A": "Z-Order giúp file skipping trên cột filter nhưng không bật V-Order và phải thêm code sau mỗi load.",
+   "B": "Autotune chỉnh shuffle partitions, chỉ chạy Runtime 1.2, không đổi layout file.",
+   "D": "VACUUM xóa file cũ, không tăng tốc read; retention 0 giờ còn bị chặn mặc định."
+  },
+  "refs": [
+   {
+    "label": "Configure resource profile configurations",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations"
+   },
+   {
+    "label": "Optimize Delta Lake tables with V-order",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order"
+   }
+  ]
+ },
+ {
+  "id": "mon-20",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 2,
+  "stem": "A streaming job appends micro-batches to a lakehouse Delta table every minute. After six months, the table contains about 400,000 small Parquet files, SQL analytics endpoint queries are slow, and OneLake storage keeps growing because of files removed from the table by earlier operations. Time travel is needed only for the last 7 days.\nWhich two actions should you perform? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Set the table property delta.parquet.vorder.enabled to true"
+   },
+   {
+    "k": "B",
+    "t": "Run OPTIMIZE on the table"
+   },
+   {
+    "k": "C",
+    "t": "Increase spark.sql.shuffle.partitions in the streaming job"
+   },
+   {
+    "k": "D",
+    "t": "Disable optimize write for the session"
+   },
+   {
+    "k": "E",
+    "t": "Run VACUUM on the table with the default retention"
+   }
+  ],
+  "answer": [
+   "B",
+   "E"
+  ],
+  "explain": "- Tín hiệu: quá nhiều file nhỏ, storage phình vì file không còn được tham chiếu, chỉ cần time travel 7 ngày.\n- OPTIMIZE compact file nhỏ thành file lớn.\n- VACUUM xóa file không còn tham chiếu và cũ hơn 7 ngày, đúng retention mặc định.",
+  "wrong": {
+   "A": "Table property chỉ ảnh hưởng write sau này; file nhỏ hiện có vẫn còn.",
+   "C": "Nhiều shuffle partition hơn còn sinh thêm file nhỏ.",
+   "D": "Tắt optimize write làm write tạo nhiều file nhỏ hơn."
+  },
+  "refs": [
+   {
+    "label": "Table compaction",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+   },
+   {
+    "label": "VACUUM",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+   }
+  ]
+ },
+ {
+  "id": "mon-21",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A lakehouse table stores 3 billion orders. Analysts filter mostly by customer_id, which has 20 million distinct values. Next quarter they will filter by product_id instead. You need file skipping for the current filter, the ability to change the filter column later without rewriting the table layout definition, and no small-file problem.\nWhat should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Partition the table by customer_id"
+   },
+   {
+    "k": "B",
+    "t": "Run OPTIMIZE ZORDER BY (customer_id) once, right after the next monthly load"
+   },
+   {
+    "k": "C",
+    "t": "Enable V-Order on the table"
+   },
+   {
+    "k": "D",
+    "t": "Liquid clustering with CLUSTER BY (customer_id) and scheduled OPTIMIZE"
+   }
+  ],
+  "answer": [
+   "D"
+  ],
+  "explain": "- Tín hiệu: cardinality cao, cột filter sẽ đổi, không muốn file nhỏ.\n- Liquid clustering lưu clustering key trong metadata; ALTER TABLE CLUSTER BY đổi key, OPTIMIZE lần sau áp layout mới.",
+  "wrong": {
+   "A": "20 triệu giá trị tạo vô số partition và file nhỏ.",
+   "B": "Z-Order không lưu cột trong metadata và không incremental; chạy một lần thì data mới đến không được sắp xếp.",
+   "C": "V-Order tối ưu encoding và compression, không cluster theo cột filter."
+  },
+  "refs": [
+   {
+    "label": "Liquid clustering",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"
+   }
+  ]
+ },
+ {
+  "id": "mon-22",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 1,
+  "stem": "To control OneLake storage cost, you want to remove unreferenced files older than 24 hours from a staging Delta table that nobody time-travels on. Running `VACUUM staging.orders RETAIN 24 HOURS` from a notebook fails with a retention safety check error.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Disable the Delta retention duration check in the environment, then rerun VACUUM"
+   },
+   {
+    "k": "B",
+    "t": "Run OPTIMIZE FULL on the table before VACUUM"
+   },
+   {
+    "k": "C",
+    "t": "Set the delta.targetFileSize table property to 24h, then rerun the same VACUUM command"
+   },
+   {
+    "k": "D",
+    "t": "Run the notebook under a workspace Admin identity"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: retention dưới 7 ngày bị safety check chặn.\n- Retention mặc định 7 ngày; muốn ngắn hơn phải đặt false cho spark.databricks.delta.retentionDurationCheck.enabled, chấp nhận mất time travel và có thể ảnh hưởng reader đồng thời.",
+  "wrong": {
+   "B": "OPTIMIZE FULL recluster liquid clustered table, không liên quan safety check.",
+   "C": "delta.targetFileSize là kích thước file, không phải retention.",
+   "D": "Safety check là config Delta, không phụ thuộc role."
+  },
+  "refs": [
+   {
+    "label": "VACUUM",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum"
+   },
+   {
+    "label": "Lakehouse table maintenance",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance"
+   }
+  ]
+ },
+ {
+  "id": "mon-23",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 1,
+  "stem": "A pipeline uses one Copy activity to load 2 TB of Parquet files from Azure Data Lake Storage Gen2 into a Fabric lakehouse. Source and destination have spare IOPS and bandwidth, but the copy takes six hours. You need to reduce the duration without redesigning the pipeline.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Set the Degree of copy parallelism to 1"
+   },
+   {
+    "k": "B",
+    "t": "Set Intelligent throughput optimization to Maximum on the Copy activity"
+   },
+   {
+    "k": "C",
+    "t": "Enable staging on the Copy activity and use the built-in workspace staging storage"
+   },
+   {
+    "k": "D",
+    "t": "Replace the Copy activity with a Dataflow Gen2"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: source và destination còn dư tài nguyên, không thiết kế lại.\n- Intelligent throughput optimization Maximum cho Copy activity dùng compute tối đa, vai trò như DIU trong ADF.",
+  "wrong": {
+   "A": "Parallelism 1 giảm số thread, làm chậm hơn.",
+   "C": "Staging thêm một chặng; workspace staging còn timeout sau 60 phút.",
+   "D": "Đổi sang dataflow là thiết kế lại và không nhanh hơn cho copy thuần."
+  },
+  "refs": [
+   {
+    "label": "Copy activity performance and scalability guide",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-activity-performance-and-scalability-guide"
+   },
+   {
+    "label": "Copy activity",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-data-activity"
+   }
+  ]
+ },
+ {
+  "id": "mon-24",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 1,
+  "stem": "After a large monthly load into dbo.FactSales in a Fabric warehouse, a join on CustomerKey produces a plan with badly underestimated row counts, and the query spills to tempdb. You created a single-column statistics object named FactSales_CustomerKey earlier.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Create a multi-column statistics object on CustomerKey and OrderDate with FULLSCAN"
+   },
+   {
+    "k": "B",
+    "t": "Disable result set caching on the warehouse"
+   },
+   {
+    "k": "C",
+    "t": "Run `UPDATE STATISTICS dbo.FactSales (FactSales_CustomerKey) WITH FULLSCAN`"
+   },
+   {
+    "k": "D",
+    "t": "Run OPTIMIZE dbo.FactSales VORDER from a notebook"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: ước lượng row sai sau load lớn, có sẵn statistics thủ công.\n- Update statistics sau DML lớn giúp optimizer ước lượng đúng và giảm dùng tempdb.",
+  "wrong": {
+   "A": "Fabric Warehouse không hỗ trợ tạo multi-column statistics.",
+   "B": "Result set caching không ảnh hưởng ước lượng của plan.",
+   "D": "OPTIMIZE là lệnh Delta trong Spark; Warehouse tự compact và không nhận lệnh này."
+  },
+  "refs": [
+   {
+    "label": "Statistics in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics"
+   },
+   {
+    "label": "Troubleshoot the Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-fabric-data-warehouse"
+   }
+  ]
+ },
+ {
+  "id": "mon-25",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 2,
+  "stem": "A Power BI report sends the same aggregate SELECT queries to a Fabric warehouse many times per hour. You are evaluating result set caching for these queries.\nWhich two statements are true? Each correct answer presents a complete solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Result set caching is enabled by default for Fabric warehouses"
+   },
+   {
+    "k": "B",
+    "t": "Cross-database queries can reuse the cache of another warehouse"
+   },
+   {
+    "k": "C",
+    "t": "A query that calls GETDATE() is not eligible for result set caching"
+   },
+   {
+    "k": "D",
+    "t": "CREATE TABLE AS SELECT statements cache their result sets"
+   },
+   {
+    "k": "E",
+    "t": "You must add the hint USE HINT ('ENABLE_RESULT_SET_CACHE') to each query"
+   }
+  ],
+  "answer": [
+   "A",
+   "C"
+  ],
+  "explain": "- Result set caching bật mặc định cho warehouse và SQL analytics endpoint.\n- Query có runtime constant như GETDATE() không được cache.",
+  "wrong": {
+   "B": "Cross-database query không đủ điều kiện cache.",
+   "D": "Chỉ SELECT thuần mới được cache; CTAS và SELECT INTO bị loại.",
+   "E": "Không có hint bật cache; chỉ có hint DISABLE_RESULT_SET_CACHE để tắt cho một query."
+  },
+  "refs": [
+   {
+    "label": "Result set caching",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching"
+   }
+  ]
+ },
+ {
+  "id": "mon-26",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 2,
+  "stem": "A KQL database table named DeviceLogs must keep data for two years for compliance. Ninety percent of queries target the last 14 days and must be fast. Older data is queried a few times per month, and slower performance is acceptable for it. You need to minimize cost.\nWhich two commands should you run? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "`.alter table DeviceLogs policy caching hot = 730d`"
+   },
+   {
+    "k": "B",
+    "t": "`.alter table DeviceLogs policy caching hot = 14d`"
+   },
+   {
+    "k": "C",
+    "t": "`.alter-merge table DeviceLogs policy retention softdelete = 14d`"
+   },
+   {
+    "k": "D",
+    "t": "`.alter-merge table DeviceLogs policy retention softdelete = 730d`"
+   },
+   {
+    "k": "E",
+    "t": "`.alter table DeviceLogs policy partitioning` with a hash key on the device ID"
+   }
+  ],
+  "answer": [
+   "B",
+   "D"
+  ],
+  "explain": "- Tín hiệu: giữ 2 năm, query nhanh 14 ngày gần nhất, data cũ chấp nhận chậm, giảm cost.\n- Caching hot = 14d giữ phần hay query trên SSD; retention 730d giữ data cho compliance. Caching phải nhỏ hơn hoặc bằng retention.",
+  "wrong": {
+   "A": "Giữ 2 năm trên hot cache tốn kém, trái yêu cầu giảm cost.",
+   "C": "Retention 14 ngày xóa data, vi phạm yêu cầu giữ 2 năm.",
+   "E": "Partitioning chỉ nên dùng cho filter, join trên cột cardinality cao, không giải quyết cost theo tuổi data."
+  },
+  "refs": [
+   {
+    "label": "Caching policy (hot and cold cache)",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric"
+   },
+   {
+    "label": "Retention policy",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric"
+   },
+   {
+    "label": "Change data policies in a KQL database",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-policies"
+   }
+  ]
+ },
+ {
+  "id": "mon-27",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 1,
+  "stem": "Twenty notebooks in a workspace run heavy joins and aggregations on Delta tables with Runtime 2.0. All notebooks use the same environment. You want them to use the vectorized native execution engine with the least effort and without editing the notebooks.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Turn on the native execution engine in the shared environment's Acceleration tab"
+   },
+   {
+    "k": "B",
+    "t": "Add a %%configure cell with spark.native.enabled set to true at the top of every notebook"
+   },
+   {
+    "k": "C",
+    "t": "Set spark.sql.parquet.vorder.default to true in the environment"
+   },
+   {
+    "k": "D",
+    "t": "Set spark.fabric.resourceProfile to readHeavyForSpark in the environment"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: một environment chung, không sửa notebook.\n- Bật ở tab Acceleration của environment thì mọi notebook và job dùng environment đó kế thừa.",
+  "wrong": {
+   "B": "Làm được nhưng phải sửa 20 notebook.",
+   "C": "V-Order là layout file khi write, không bật native engine.",
+   "D": "Resource profile đặt config write, không bật native execution engine."
+  },
+  "refs": [
+   {
+    "label": "Native execution engine for Fabric Data Engineering",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
+   }
+  ]
+ }
+]

@@ -1,0 +1,369 @@
+[
+ {
+  "id": "workspace-role",
+  "term": "Workspace role",
+  "full": "",
+  "aliases": [
+   "workspace roles",
+   "Admin, Member, Contributor, Viewer"
+  ],
+  "cat": "Security & Governance",
+  "what": "Role Admin, Member, Contributor hoặc Viewer gán cho user hay group, áp cho mọi item trong workspace.",
+  "means": [
+   "Admin, Member, Contributor có Write nên đọc ghi mọi data.",
+   "Viewer chỉ có Read và ReadData; đề hỏi least privilege hay chọn giữa Contributor và Viewer."
+  ],
+  "related": [
+   "item-permission",
+   "onelake-security"
+  ],
+  "src": {
+   "label": "Roles in workspaces in Microsoft Fabric",
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces"
+  }
+ },
+ {
+  "id": "item-permission",
+  "term": "Item permission",
+  "full": "",
+  "aliases": [
+   "item permissions",
+   "Manage permissions",
+   "Reshare"
+  ],
+  "cat": "Security & Governance",
+  "what": "Permission cấp trên một item qua sharing: Read, ReadData, ReadAll, Write, Reshare, Execute, Build.",
+  "means": [
+   "Share item không cho thấy item khác trong workspace.",
+   "Read luôn được cấp khi share; Reshare cho phép share tiếp tối đa bằng quyền mình có."
+  ],
+  "related": [
+   "readdata",
+   "readall",
+   "workspace-role"
+  ],
+  "src": {
+   "label": "Share items in Microsoft Fabric",
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items"
+  }
+ },
+ {
+  "id": "readdata",
+  "term": "ReadData",
+  "full": "",
+  "aliases": [
+   "Read all data using SQL",
+   "Read all with SQL analytics endpoint",
+   "Read all SQL Endpoint data"
+  ],
+  "cat": "Security & Governance",
+  "what": "Item permission cho đọc mọi table và view qua T-SQL, tương đương db_datareader.",
+  "means": [
+   "Không mở Spark hay OneLake API.",
+   "Viewer có sẵn ReadData."
+  ],
+  "related": [
+   "readall",
+   "item-permission"
+  ],
+  "src": {
+   "label": "Share your warehouse and manage permissions",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+  }
+ },
+ {
+  "id": "readall",
+  "term": "ReadAll",
+  "full": "",
+  "aliases": [
+   "Read all data using Apache Spark",
+   "Read all with Apache Spark"
+  ],
+  "cat": "Security & Governance",
+  "what": "Item permission cho đọc file qua Spark, OneLake API và Lakehouse explorer.",
+  "means": [
+   "Kèm quyền subscribe OneLake events.",
+   "Với OneLake security, ReadAll cho access qua role DefaultReader."
+  ],
+  "related": [
+   "readdata",
+   "defaultreader"
+  ],
+  "src": {
+   "label": "Share your warehouse and manage permissions",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+  }
+ },
+ {
+  "id": "onelake-security",
+  "term": "OneLake security",
+  "full": "",
+  "aliases": [
+   "OneLake security role",
+   "OneLake security roles",
+   "data access roles"
+  ],
+  "cat": "Security & Governance",
+  "what": "Data plane security của OneLake: role Read hoặc ReadWrite trên schema, table, folder, kèm RLS và CLS.",
+  "means": [
+   "Enforce trong Spark, SQL endpoint ở user's identity mode, Direct Lake on OneLake.",
+   "Chỉ giới hạn Viewer và user có Read; GA từ 05/2026."
+  ],
+  "related": [
+   "defaultreader",
+   "user-identity-mode",
+   "workspace-role"
+  ],
+  "src": {
+   "label": "How OneLake security controls data access",
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
+  }
+ },
+ {
+  "id": "defaultreader",
+  "term": "DefaultReader",
+  "full": "",
+  "aliases": [
+   "DefaultReader role"
+  ],
+  "cat": "Security & Governance",
+  "what": "OneLake security role tạo sẵn, cho mọi user có ReadAll đọc toàn bộ lakehouse.",
+  "means": [
+   "Phải xoá user khỏi DefaultReader trước khi gán role hạn chế.",
+   "Xoá DefaultReader thì user chỉ có ReadAll mất access."
+  ],
+  "related": [
+   "onelake-security",
+   "readall"
+  ],
+  "src": {
+   "label": "Create and manage OneLake security roles",
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles"
+  }
+ },
+ {
+  "id": "user-identity-mode",
+  "term": "User's identity access mode",
+  "full": "",
+  "aliases": [
+   "user identity mode",
+   "User's identity mode"
+  ],
+  "cat": "Security & Governance",
+  "what": "Mode của SQL analytics endpoint truyền identity của user tới OneLake để OneLake security quyết định access.",
+  "means": [
+   "GRANT trên table bị bỏ qua; vẫn GRANT được view, procedure, function.",
+   "Không có DDM; cần mode này để đọc shortcut tới table có OneLake RLS."
+  ],
+  "related": [
+   "delegated-identity-mode",
+   "onelake-security"
+  ],
+  "src": {
+   "label": "OneLake security for SQL analytics endpoints",
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+  }
+ },
+ {
+  "id": "delegated-identity-mode",
+  "term": "Delegated identity access mode",
+  "full": "",
+  "aliases": [
+   "delegated mode",
+   "delegated identity mode"
+  ],
+  "cat": "Security & Governance",
+  "what": "Mode mặc định của SQL analytics endpoint: security bằng T-SQL, OneLake đọc bằng identity của owner item.",
+  "means": [
+   "Hỗ trợ GRANT, security policy, column GRANT, DDM.",
+   "Owner mất access thì query fail."
+  ],
+  "related": [
+   "user-identity-mode",
+   "row-level-security"
+  ],
+  "src": {
+   "label": "OneLake security for SQL analytics endpoints",
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+  }
+ },
+ {
+  "id": "row-level-security",
+  "term": "Row-level security",
+  "full": "RLS",
+  "aliases": [
+   "RLS",
+   "security policy",
+   "CREATE SECURITY POLICY"
+  ],
+  "cat": "Security & Governance",
+  "what": "Lọc row theo user: trong Warehouse bằng security policy với filter predicate, trong OneLake bằng rule SQL của role.",
+  "means": [
+   "Policy Warehouse áp cho mọi user kể cả dbo.",
+   "Direct Lake trên warehouse có RLS fallback sang DirectQuery."
+  ],
+  "related": [
+   "filter-predicate",
+   "column-level-security"
+  ],
+  "src": {
+   "label": "Row-level security in Fabric Data Warehouse",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+  }
+ },
+ {
+  "id": "filter-predicate",
+  "term": "Filter predicate",
+  "full": "",
+  "aliases": [
+   "inline table-valued function",
+   "predicate function"
+  ],
+  "cat": "Security & Governance",
+  "what": "Inline table-valued function trả về 1 khi row được phép, gắn vào table qua security policy.",
+  "means": [
+   "Lọc âm thầm SELECT, UPDATE, DELETE; INSERT vẫn được.",
+   "Function schema-bound không ALTER được khi policy còn tồn tại."
+  ],
+  "related": [
+   "row-level-security"
+  ],
+  "src": {
+   "label": "Row-level security in Fabric Data Warehouse",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security"
+  }
+ },
+ {
+  "id": "column-level-security",
+  "term": "Column-level security",
+  "full": "CLS",
+  "aliases": [
+   "CLS"
+  ],
+  "cat": "Security & Governance",
+  "what": "Giới hạn column user đọc được: GRANT SELECT kèm danh sách column trong Warehouse, hoặc CLS trong OneLake security role.",
+  "means": [
+   "SQL: query tham chiếu column bị chặn báo lỗi.",
+   "Spark với OneLake CLS trả về column được phép khi SELECT *."
+  ],
+  "related": [
+   "object-level-security",
+   "row-level-security"
+  ],
+  "src": {
+   "label": "Column-level security in Fabric Data Warehouse",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security"
+  }
+ },
+ {
+  "id": "object-level-security",
+  "term": "Object-level security",
+  "full": "OLS",
+  "aliases": [
+   "OLS"
+  ],
+  "cat": "Security & Governance",
+  "what": "Cấp hoặc chặn access tới schema, table, view, procedure bằng GRANT, REVOKE, DENY hoặc phạm vi data của OneLake role.",
+  "means": [
+   "Đề hỏi chỉ vài table thì share Read rồi GRANT.",
+   "Trong OneLake, OLS là table và folder chọn trong role."
+  ],
+  "related": [
+   "column-level-security"
+  ],
+  "src": {
+   "label": "SQL granular permissions",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions"
+  }
+ },
+ {
+  "id": "dynamic-data-masking",
+  "term": "Dynamic data masking",
+  "full": "DDM",
+  "aliases": [
+   "DDM",
+   "UNMASK",
+   "MASKED WITH"
+  ],
+  "cat": "Security & Governance",
+  "what": "Che giá trị column trong result set bằng default(), email(), random(), partial(); data lưu không đổi.",
+  "means": [
+   "Admin, Member, Contributor có CONTROL nên thấy data thật.",
+   "Chống lộ vô ý, không chống suy luận bằng WHERE."
+  ],
+  "related": [
+   "column-level-security"
+  ],
+  "src": {
+   "label": "Dynamic data masking in Fabric Data Warehouse",
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+  }
+ },
+ {
+  "id": "sensitivity-label",
+  "term": "Sensitivity label",
+  "full": "",
+  "aliases": [
+   "sensitivity labels",
+   "Microsoft Purview Information Protection"
+  ],
+  "cat": "Security & Governance",
+  "what": "Nhãn phân loại từ Microsoft Purview gắn lên Fabric item, đi theo downstream inheritance và export.",
+  "means": [
+   "Cần Pro hoặc PPU và Edit permission để gắn.",
+   "Chỉ chặn access khi gắn protection policy."
+  ],
+  "related": [
+   "protection-policy",
+   "endorsement"
+  ],
+  "src": {
+   "label": "Information protection in Microsoft Fabric",
+   "url": "https://learn.microsoft.com/en-us/fabric/governance/information-protection"
+  }
+ },
+ {
+  "id": "protection-policy",
+  "term": "Protection policy",
+  "full": "",
+  "aliases": [
+   "protection policies"
+  ],
+  "cat": "Security & Governance",
+  "what": "Policy Purview gắn với label có Control access: user trong policy giữ permission, mọi người khác bị chặn.",
+  "means": [
+   "Áp cho native Fabric item và semantic model.",
+   "Không áp cho deployment pipeline và Git integration."
+  ],
+  "related": [
+   "sensitivity-label"
+  ],
+  "src": {
+   "label": "Protection policies in Microsoft Fabric",
+   "url": "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview"
+  }
+ },
+ {
+  "id": "endorsement",
+  "term": "Endorsement",
+  "full": "",
+  "aliases": [
+   "Promoted",
+   "Certified",
+   "Master data"
+  ],
+  "cat": "Security & Governance",
+  "what": "Badge Promoted, Certified hoặc Master data giúp user tìm item đáng tin cậy.",
+  "means": [
+   "Promoted: ai có write; Certified và Master data: user do Fabric admin chỉ định.",
+   "Master data chỉ cho item chứa data."
+  ],
+  "related": [
+   "sensitivity-label"
+  ],
+  "src": {
+   "label": "Endorsement overview",
+   "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview"
+  }
+ }
+]

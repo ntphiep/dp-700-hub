@@ -1,0 +1,1190 @@
+{
+  "id": "batch",
+  "title": "Loading patterns & batch",
+  "domain": [
+    "D2"
+  ],
+  "icon": "fab-data-factory",
+  "summary": "Trả lời câu hỏi chọn full hay incremental load, watermark hay CDC, SCD type, data store, công cụ transform, shortcut hay mirroring hay Copy job.",
+  "sections": [
+    {
+      "id": "full-incr",
+      "title": "Full load và incremental load",
+      "icon": "refresh",
+      "task": "2.1",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Bốn cách load và tín hiệu trong đề",
+          "columns": [
+            "Cách load",
+            "Cơ chế",
+            "Bắt được delete?",
+            "Tín hiệu trong đề"
+          ],
+          "rows": [
+            [
+              "**Full load**",
+              "Mỗi lần chạy copy lại toàn bộ source, thường kèm truncate hoặc overwrite destination",
+              "Có, vì destination bằng snapshot mới",
+              "Bảng nhỏ, dimension ít đổi, source không có cột theo dõi thay đổi"
+            ],
+            [
+              "**Incremental theo watermark**",
+              "Lưu giá trị lớn nhất của cột tăng dần (datetime, ROWVERSION, integer), lần sau chỉ lấy dòng lớn hơn",
+              "Không",
+              "\"LastModified column\", \"only new or changed rows\""
+            ],
+            [
+              "**CDC**",
+              "Đọc change feed của database, lấy insert, update và delete",
+              "Có",
+              "\"deletes must be reflected\", \"minimize load on source\""
+            ],
+            [
+              "**Incremental theo file**",
+              "Chỉ lấy file tạo mới hoặc sửa sau lần chạy trước, dựa vào last-modified time",
+              "Không",
+              "File đổ vào folder mỗi ngày"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Incremental copy in Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+            },
+            {
+              "label": "Load tables in a dimensional model",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+            }
+          ]
+        },
+        {
+          "type": "decision",
+          "title": "Đề nói gì thì chọn gì",
+          "rows": [
+            {
+              "says": "source has a reliable LastModifiedDate column, CDC is not enabled",
+              "pick": "Incremental theo watermark",
+              "why": "Chỉ đọc dòng có watermark lớn hơn lần trước; không cần quyền bật CDC trên source.",
+              "src": {
+                "label": "Incremental copy in Copy job",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+              }
+            },
+            {
+              "says": "rows deleted in the source must also be removed in Fabric",
+              "pick": "CDC (hoặc mirroring)",
+              "why": "Watermark không thấy dòng đã bị xoá; CDC đọc cả delete event.",
+              "src": {
+                "label": "Incremental copy in Copy job",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+              }
+            },
+            {
+              "says": "large fact table, reload takes hours and stresses the source",
+              "pick": "Incremental load, không truncate và reload",
+              "why": "Docs coi truncate và reload fact table lớn là last resort vì tốn compute và ảnh hưởng source.",
+              "src": {
+                "label": "Load tables in a dimensional model",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+              }
+            },
+            {
+              "says": "small lookup table with no change-tracking column",
+              "pick": "Full load (overwrite)",
+              "why": "Không có cột để làm watermark; bảng nhỏ nên copy lại toàn bộ vẫn rẻ.",
+              "src": {
+                "label": "What is Copy job",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job"
+              }
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Dòng có watermark NULL bị bỏ qua",
+          "md": "- Lần incremental sau, Copy job loại mọi dòng có giá trị NULL ở cột watermark vì NULL không so sánh được\n- Cột watermark phải luôn tăng khi insert hoặc update; cột chỉ set lúc insert sẽ bỏ sót update",
+          "src": [
+            {
+              "label": "Incremental copy in Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copy-job",
+      "title": "Copy job: watermark, CDC và SCD Type 2",
+      "icon": "fab-copy-job",
+      "task": "2.1",
+      "blocks": [
+        {
+          "type": "compare",
+          "title": "Read method và write method của Copy job",
+          "items": [
+            {
+              "name": "Watermark-based",
+              "icon": "clock",
+              "tag": "read method",
+              "points": [
+                "Cột hỗ trợ: ROWVERSION, datetime, date, integer, string hiểu như datetime",
+                "Cột date: Copy job tự đọc lùi 1 ngày để không sót dòng",
+                "Bắt insert và update, không bắt delete",
+                "Write thường là Append hoặc Merge"
+              ]
+            },
+            {
+              "name": "CDC-based",
+              "icon": "git-merge",
+              "tag": "read method",
+              "points": [
+                "Source bật CDC thì Copy job tự nhận, không cần chọn cột",
+                "Bắt insert, update và delete",
+                "Write: Merge (SCD Type 1) mặc định, hoặc SCD Type 2",
+                "SCD Type 2 khi dùng CDC đang Preview"
+              ]
+            },
+            {
+              "name": "Write method",
+              "icon": "table-import",
+              "tag": "destination",
+              "points": [
+                "**Append** mặc định, giữ toàn bộ lịch sử",
+                "**Merge** update theo key, mặc định dùng primary key",
+                "**Overwrite** thay toàn bộ data",
+                "**SCD Type 2** thêm Valid_From, Valid_To, Is_Current"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "What is Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job"
+            },
+            {
+              "label": "CDC in Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job"
+            },
+            {
+              "label": "Incremental copy in Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Update method của Copy job",
+          "img": "figs/batch-copy-job-update-method.png",
+          "alt": "Bước Map to destination của Copy job với Update method Append hoặc Merge, Merge được chọn, Key columns là SalesOrderID.",
+          "caption": "Bước Map to destination chọn Append hoặc Merge. Merge cần Key columns để upsert; Append chỉ ghi thêm nên dễ sinh duplicate khi reset incremental copy.",
+          "credit": {
+            "label": "Microsoft Learn: How to Create a Copy Job in Data Factory",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-factory/create-copy-job",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "Copy job 2026",
+          "md": "- **SCD Type 2** là write method có sẵn khi dùng CDC, đang Preview; Oracle chưa hỗ trợ SCD Type 2\n- Watermark nhận thêm ROWVERSION, date và string hiểu như datetime\n- **Audit columns** tự thêm extraction time, run ID, cận dưới và cận trên của incremental window\n- Copy job tự resume từ lần chạy thành công cuối; lỗi không làm đổi state",
+          "src": [
+            {
+              "label": "CDC in Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job"
+            },
+            {
+              "label": "What is Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Reset incremental với Append sinh duplicate",
+          "md": "- Reset chỉ xoá watermark hoặc checkpoint, không truncate destination\n- Write method là Append thì lần chạy sau ghi lại dòng cũ, sinh duplicate\n- Cách tránh: dùng Merge, hoặc bật truncate destination trước full load",
+          "src": [
+            {
+              "label": "Incremental copy in Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dimensional",
+      "title": "Chuẩn bị data cho dimensional model",
+      "icon": "table-options",
+      "task": "2.1",
+      "blocks": [
+        {
+          "type": "steps",
+          "title": "Thứ tự ETL cho star schema",
+          "items": [
+            {
+              "title": "1. Stage data",
+              "md": "- Load source vào schema staging, truncate ở đầu mỗi lần chạy\n- Giảm tải cho source và cho phép chạy lại mà không đọc lại source\n- Data đã ở medallion lakehouse thì đọc thẳng từ bronze, silver hoặc gold"
+            },
+            {
+              "title": "2. Transform",
+              "md": "- Combine theo business key, đổi data type, tính cột như gross revenue\n- Aggregate để nâng grain của fact khi không cần chi tiết đơn"
+            },
+            {
+              "title": "3. Process dimension trước",
+              "md": "- Match source với dimension theo business key, áp SCD type 1, 2 hoặc 3\n- Dimension phụ thuộc nhau (outrigger) thì load theo thứ tự phụ thuộc"
+            },
+            {
+              "title": "4. Process fact sau",
+              "md": "- Lookup surrogate key cho từng dimension key; SCD Type 2 thì lấy version đúng thời điểm\n- Lookup thất bại thì gán member Unknown hoặc tạo inferred member"
+            },
+            {
+              "title": "5. Post-processing",
+              "md": "- Refresh semantic model phụ thuộc, ghi log ETL: số dòng insert, update, delete và lỗi"
+            }
+          ],
+          "src": [
+            {
+              "label": "Load tables in a dimensional model",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "SCD type cần nhớ",
+          "columns": [
+            "Type",
+            "Khi có thay đổi",
+            "Lịch sử",
+            "Cột thường có"
+          ],
+          "rows": [
+            [
+              "**SCD Type 1**",
+              "Update đè attribute trên dòng hiện có",
+              "Mất",
+              "LastModified"
+            ],
+            [
+              "**SCD Type 2**",
+              "Expire dòng hiện tại (end date, current flag = FALSE), insert dòng mới với current flag = TRUE",
+              "Giữ đầy đủ",
+              "Surrogate key, ValidFrom, ValidTo, IsCurrent"
+            ],
+            [
+              "**SCD Type 3**",
+              "Update dòng hiện có, giữ giá trị trước ở cột riêng",
+              "Chỉ 1 giá trị trước",
+              "PreviousX"
+            ],
+            [
+              "**Inferred member**",
+              "Fact đến trước dimension: insert member chỉ có natural key, IsInferredMember = TRUE; khi chi tiết đến thì update, không tạo version SCD",
+              "Không áp dụng",
+              "IsInferredMember"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Load tables in a dimensional model",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+            },
+            {
+              "label": "CDC in Copy job",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Không truncate dimension có surrogate key",
+          "md": "- Truncate rồi reload sinh surrogate key mới, làm hỏng fact đang trỏ tới key cũ và mất version SCD Type 2\n- Source xoá member thì soft delete bằng cột IsDeleted, không xoá dòng\n- Warehouse không enforce foreign key, nên ETL phải tự kiểm tra integrity khi load fact",
+          "src": [
+            {
+              "label": "Load tables in a dimensional model",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "title": "Chọn data store",
+      "icon": "fab-databases",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "decision",
+          "title": "Đề nói gì thì chọn store nào",
+          "rows": [
+            {
+              "says": "team skilled in PySpark, semi-structured and unstructured files, data science",
+              "pick": "Lakehouse",
+              "why": "Lakehouse có Files và Tables (Delta), viết bằng Spark; user T-SQL vẫn đọc qua SQL analytics endpoint.",
+              "src": {
+                "label": "Decision guide: data store",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+              }
+            },
+            {
+              "says": "T-SQL developers, star schema, multi-table transactions, INSERT/UPDATE/DELETE in SQL",
+              "pick": "Warehouse",
+              "why": "Warehouse cho DML và DDL đầy đủ bằng T-SQL, transaction nhiều bảng; SQL analytics endpoint của lakehouse chỉ đọc.",
+              "src": {
+                "label": "Decision guide: data store",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+              }
+            },
+            {
+              "says": "high-granularity time series, logs, telemetry, KQL, interactive analytics",
+              "pick": "Eventhouse (KQL database)",
+              "why": "Tối ưu cho event data theo thời gian và query KQL; OneLake availability là opt-in.",
+              "src": {
+                "label": "Decision guide: data store",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+              }
+            },
+            {
+              "says": "operational app, OLTP, high concurrency, enforced foreign keys",
+              "pick": "SQL database in Fabric",
+              "why": "Cùng engine Azure SQL Database, transaction isolation đầy đủ, tự mirror sang OneLake cho analytics.",
+              "src": {
+                "label": "Decision guide: data store",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+              }
+            },
+            {
+              "says": "NoSQL JSON documents for an AI app",
+              "pick": "Cosmos DB in Fabric",
+              "why": "Decision guide xếp NoSQL vào Cosmos DB in Fabric; vector data dùng Cosmos DB hoặc SQL database.",
+              "src": {
+                "label": "Decision guide: data store",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store"
+              }
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "diagram",
+          "title": "Decision guide chọn data store",
+          "img": "figs/batch-data-store-decision.svg",
+          "alt": "Flowchart chọn data store: streaming event data chọn Eventhouse, NoSQL chọn Cosmos DB in Fabric, OLTP chọn SQL database in Fabric, enterprise data warehouse chọn Fabric Data Warehouse, big data chọn Lakehouse, tất cả trên OneLake.",
+          "caption": "Đọc từ trên xuống: event streaming chi tiết cao chọn Eventhouse, NoSQL chọn Cosmos DB in Fabric, OLTP chọn SQL database, DW bằng SQL chọn Warehouse, big data và data engineering chọn Lakehouse.",
+          "credit": {
+            "label": "Microsoft Learn: Fabric decision guide - choose a data store",
+            "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "SQL analytics endpoint chỉ đọc",
+          "md": "- Endpoint tự tạo cho mỗi lakehouse chỉ cho SELECT, view, function, stored procedure, không INSERT, UPDATE, DELETE\n- Muốn ghi vào lakehouse thì dùng Spark, Dataflow Gen2, pipeline hoặc Copy job\n- Đề có team chỉ biết T-SQL mà cần ghi data thì chọn warehouse",
+          "src": [
+            {
+              "label": "SQL analytics endpoint",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint"
+            },
+            {
+              "label": "T-SQL surface area",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area"
+            },
+            {
+              "label": "Choosing the right Fabric items, DP-700 prep (YouTube)",
+              "url": "https://www.youtube.com/watch?v=lPCBGOStKU4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tool",
+      "title": "Chọn dataflow, notebook hay T-SQL",
+      "icon": "code",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Ba công cụ transform",
+          "columns": [
+            "Tiêu chí",
+            "Dataflow Gen2",
+            "Notebook (Spark)",
+            "T-SQL (Warehouse)"
+          ],
+          "rows": [
+            [
+              "Kiểu code",
+              "No code, low code, Power Query (M)",
+              "Code: PySpark, Scala, Spark SQL, R",
+              "Code: T-SQL, stored procedure"
+            ],
+            [
+              "Persona",
+              "Business analyst, data integrator",
+              "Data engineer, data scientist",
+              "Warehouse developer, SQL developer"
+            ],
+            [
+              "Connector",
+              "150+ connector, 300+ transformation function",
+              "Hàng trăm Spark library",
+              "Bảng trong cùng workspace, OPENROWSET, COPY INTO"
+            ],
+            [
+              "Destination",
+              "Lakehouse, Warehouse, Azure SQL DB và khác",
+              "Delta table trong lakehouse",
+              "Bảng của warehouse"
+            ],
+            [
+              "Incremental",
+              "Incremental refresh theo cột DateTime, bucket thay thế",
+              "Tự viết: watermark, MERGE vào Delta",
+              "MERGE, INSERT...SELECT theo watermark"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Decision guide: copy activity, dataflow, Spark",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+            },
+            {
+              "label": "Ingest data into the warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data"
+            }
+          ]
+        },
+        {
+          "type": "decision",
+          "title": "Đề nói gì thì chọn công cụ nào",
+          "rows": [
+            {
+              "says": "business analysts, no-code, Power Query, many SaaS sources",
+              "pick": "Dataflow Gen2",
+              "why": "Giao diện Power Query với 150+ connector; không cần viết code.",
+              "src": {
+                "label": "Decision guide: copy activity, dataflow, Spark",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+              }
+            },
+            {
+              "says": "complex logic, JSON flattening, ML libraries, large volume in a lakehouse",
+              "pick": "Notebook (PySpark)",
+              "why": "Spark xử lý volume lớn, dùng library tuỳ ý và ghi thẳng Delta table.",
+              "src": {
+                "label": "Decision guide: copy activity, dataflow, Spark",
+                "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark"
+              }
+            },
+            {
+              "says": "SQL team, data already in a warehouse, stored procedures",
+              "pick": "T-SQL trong Warehouse",
+              "why": "CTAS, INSERT...SELECT, MERGE chạy ngay trên warehouse; đọc được lakehouse cùng workspace bằng three-part name.",
+              "src": {
+                "label": "Ingest data using T-SQL",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-tsql"
+              }
+            },
+            {
+              "says": "only refresh the last N days from a foldable source in a dataflow",
+              "pick": "Dataflow Gen2 incremental refresh",
+              "why": "Chia data theo bucket cột DateTime, chỉ lấy bucket có max value đổi, xoá rồi insert lại bucket đó.",
+              "src": {
+                "label": "Incremental refresh in Dataflow Gen2",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-incremental-refresh"
+              }
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Incremental refresh của Dataflow Gen2",
+          "img": "figs/batch-dataflow-incremental-refresh.png",
+          "alt": "Hộp thoại Incremental refresh với cột lọc OrderDate, Extract data from the past 2 Weeks, Bucket size Day, cột ModifiedDate để biết data đã đổi và tuỳ chọn Require incremental refresh query to fully fold.",
+          "caption": "Ba ô bắt buộc: cột Date/DateTime để lọc, khoảng thời gian extract, Bucket size. Ô Only extract new data when the maximum value in this column changes chỉ nạp lại bucket khi cột đó đổi.",
+          "credit": {
+            "label": "Microsoft Learn: Incremental refresh in Dataflow Gen2",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-incremental-refresh",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Điều kiện incremental refresh của Dataflow Gen2",
+          "md": "- Query cần có cột Date, DateTime hoặc DateTimeZone và nên fold về source\n- Destination hỗ trợ: Fabric Lakehouse, Fabric Warehouse, Azure SQL Database\n- Phải đặt destination rõ ràng trong query, default destination không dùng được",
+          "src": [
+            {
+              "label": "Incremental refresh in Dataflow Gen2",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-incremental-refresh"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "medallion",
+      "title": "Medallion trong OneLake và điểm vào của data",
+      "icon": "fab-lakehouse",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "diagram",
+          "title": "Medallion với shortcut, mirroring và Copy job",
+          "caption": "Shortcut không copy data; mirroring và Copy job tạo Delta table trong OneLake.",
+          "dir": "DOWN",
+          "groups": [
+            {
+              "id": "ol",
+              "label": "OneLake",
+              "kind": "cloud"
+            }
+          ],
+          "nodes": [
+            {
+              "id": "adls",
+              "icon": "az-storage-accounts",
+              "label": "ADLS, S3, GCS",
+              "sub": "file sẵn có",
+              "info": "External shortcut trỏ tới data tại chỗ, không copy. S3 và GCS có thể bật shortcut caching để giảm egress."
+            },
+            {
+              "id": "sql",
+              "icon": "az-sql-database",
+              "label": "Azure SQL DB",
+              "sub": "Snowflake, Cosmos DB",
+              "info": "Database mirroring replicate liên tục vào OneLake dạng Delta, compute replicate miễn phí."
+            },
+            {
+              "id": "erp",
+              "icon": "server",
+              "label": "Oracle, on-prem",
+              "sub": "qua gateway",
+              "info": "Copy job hoặc Copy activity, incremental theo watermark hoặc CDC."
+            },
+            {
+              "id": "mir",
+              "icon": "fab-mirrored-generic-database",
+              "label": "Mirrored database",
+              "sub": "Delta, read-only",
+              "info": "Có SQL analytics endpoint chỉ đọc; dùng shortcut từ lakehouse để đưa vào silver.",
+              "group": "ol"
+            },
+            {
+              "id": "bronze",
+              "icon": "fab-lakehouse",
+              "label": "Bronze lakehouse",
+              "sub": "raw, giữ nguyên format",
+              "info": "Lưu data như khi đến; source đã ở ADLS, S3, GCS hoặc OneLake thì dùng shortcut thay vì copy.",
+              "group": "ol"
+            },
+            {
+              "id": "silver",
+              "icon": "fab-lakehouse",
+              "label": "Silver lakehouse",
+              "sub": "clean, dedup, Delta",
+              "info": "Notebook hoặc dataflow chuẩn hoá format, loại duplicate, MERGE theo key.",
+              "group": "ol"
+            },
+            {
+              "id": "gold",
+              "icon": "fab-data-warehouse",
+              "label": "Gold warehouse",
+              "sub": "star schema",
+              "info": "Gold có thể là lakehouse hoặc warehouse; warehouse hợp với team T-SQL.",
+              "group": "ol"
+            }
+          ],
+          "edges": [
+            {
+              "id": "e1",
+              "from": "adls",
+              "to": "bronze",
+              "style": "dashed",
+              "tone": "data"
+            },
+            {
+              "id": "e2",
+              "from": "erp",
+              "to": "bronze",
+              "style": "solid",
+              "tone": "primary"
+            },
+            {
+              "id": "e3",
+              "from": "sql",
+              "to": "mir",
+              "style": "double",
+              "tone": "primary"
+            },
+            {
+              "id": "e4",
+              "from": "mir",
+              "to": "silver",
+              "label": "shortcut",
+              "style": "dashed",
+              "tone": "data"
+            },
+            {
+              "id": "e5",
+              "from": "bronze",
+              "to": "silver",
+              "label": "notebook, dataflow",
+              "style": "solid",
+              "tone": "primary"
+            },
+            {
+              "id": "e6",
+              "from": "silver",
+              "to": "gold",
+              "label": "MERGE, aggregate",
+              "style": "solid",
+              "tone": "primary"
+            }
+          ],
+          "legend": [
+            {
+              "style": "dashed",
+              "tone": "data",
+              "label": "Shortcut, không copy data"
+            },
+            {
+              "style": "double",
+              "tone": "primary",
+              "label": "Mirroring liên tục"
+            },
+            {
+              "style": "solid",
+              "tone": "primary",
+              "label": "Copy job hoặc transform"
+            }
+          ],
+          "steps": [
+            {
+              "title": "1. Điểm vào",
+              "md": "File ở ADLS, S3, GCS đi vào bằng shortcut; database đi vào bằng mirroring; source khác đi bằng Copy job.",
+              "hl": [
+                "e1",
+                "e2",
+                "e3"
+              ]
+            },
+            {
+              "title": "2. Silver",
+              "md": "Notebook hoặc dataflow làm sạch bronze; mirrored table vào silver qua shortcut.",
+              "hl": [
+                "e4",
+                "e5",
+                "silver"
+              ]
+            },
+            {
+              "title": "3. Gold",
+              "md": "MERGE và aggregate vào gold; Power BI đọc gold bằng Direct Lake.",
+              "hl": [
+                "e6",
+                "gold"
+              ]
+            }
+          ],
+          "src": [
+            {
+              "label": "Medallion architecture in Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture"
+            },
+            {
+              "label": "Mirroring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "diagram",
+          "title": "Ba tầng medallion trong OneLake",
+          "img": "figs/batch-medallion-onelake.png",
+          "alt": "Sơ đồ data sources đi qua pipeline và shortcut vào Bronze, notebook, Spark job, dataflow chuyển sang Silver và Gold trong OneLake, Gold phục vụ SQL analytics endpoint và Power BI qua Direct Lake.",
+          "caption": "Pipeline và shortcut đưa data vào Bronze; notebook, Spark job, dataflow chuyển sang Silver rồi Gold. Gold phục vụ SQL analytics endpoint và Power BI qua Direct Lake; cả ba tầng trong ảnh là lakehouse.",
+          "credit": {
+            "label": "Microsoft Learn: Implement Medallion Lakehouse Architecture in Fabric",
+            "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Khuyến nghị của Microsoft",
+          "md": "- Mỗi layer là một lakehouse hoặc warehouse riêng, nên đặt ở workspace riêng để governance theo layer\n- Bronze giữ format gốc; source ở OneLake, ADLS Gen2, S3, Google thì tạo shortcut thay vì copy\n- Silver và gold dùng Delta table\n- Người thi beta nhắc medallion architecture là chủ đề cần ôn kỹ",
+          "src": [
+            {
+              "label": "Medallion architecture in Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture"
+            },
+            {
+              "label": "Sam Debruyn, DP-700 exam experience",
+              "url": "https://debruyn.dev/2024/i-just-took-the-new-fabric-dp-700-data-engineering-exam-heres-what-you-should-know/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shortcuts",
+      "title": "Shortcut: internal và external",
+      "icon": "fab-one-lake",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Shortcut làm gì và ở đâu",
+          "columns": [
+            "Khía cạnh",
+            "Hành vi"
+          ],
+          "rows": [
+            [
+              "Nơi tạo",
+              "Lakehouse và KQL database; warehouse không chứa shortcut"
+            ],
+            [
+              "Tables folder",
+              "Chỉ ở cấp top-level; target là Delta thì tự nhận thành table"
+            ],
+            [
+              "Files folder",
+              "Tạo ở mọi cấp, mọi format, không tự nhận table"
+            ],
+            [
+              "Internal",
+              "Trỏ tới lakehouse, warehouse, KQL database, mirrored database, SQL database, semantic model; khác workspace được"
+            ],
+            [
+              "External",
+              "ADLS Gen2, Azure Blob, Amazon S3, S3 compatible, Google Cloud Storage, Dataverse, Iceberg, OneDrive và SharePoint"
+            ],
+            [
+              "Quyền internal",
+              "OneLake dùng identity của user gọi; user cần quyền đọc ở target"
+            ],
+            [
+              "Quyền external",
+              "Authorization qua cloud connection gắn với shortcut"
+            ],
+            [
+              "Caching",
+              "GCS, S3, S3 compatible, gateway; retention 1 tới 28 ngày; bật ở workspace settings"
+            ],
+            [
+              "Xoá",
+              "Xoá shortcut không xoá target; xoá file bên trong shortcut thì xoá ở target nếu có quyền ghi"
+            ]
+          ],
+          "src": [
+            {
+              "label": "OneLake shortcuts",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+            },
+            {
+              "label": "Create a Dataverse shortcut",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/create-dataverse-shortcut"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "diagram",
+          "title": "Shortcut nối data giữa workspace và cloud",
+          "img": "figs/batch-onelake-shortcuts.png",
+          "alt": "Sơ đồ OneLake với Workspace A và Workspace B nối bằng shortcut, phía dưới là nguồn Azure, Amazon, Dataverse, Google, Amazon S3 Compatible, On-Premises sources.",
+          "caption": "Mũi tên nét đứt trong OneLake là internal shortcut giữa item của Workspace A và Workspace B. Hàng dưới là nguồn của external shortcut: Azure, Amazon, Dataverse, Google, S3 compatible, on-premises; data không bị copy.",
+          "credit": {
+            "label": "Microsoft Learn: OneLake, the unified data lake",
+            "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "trap",
+          "title": "Bẫy hay gặp với shortcut",
+          "md": "- Dataverse shortcut luôn read-only, kể cả khi user có quyền ghi\n- KQL database đọc shortcut như external table bằng hàm external_table()\n- Tên shortcut có dấu cách thì lakehouse không nhận là Delta table",
+          "src": [
+            {
+              "label": "OneLake shortcuts",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+            },
+            {
+              "label": "Create a Dataverse shortcut",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/create-dataverse-shortcut"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mirroring",
+      "title": "Mirroring và open mirroring",
+      "icon": "fab-mirrored-generic-database",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "table",
+          "title": "Ba kiểu mirroring",
+          "columns": [
+            "Kiểu",
+            "Cơ chế",
+            "Source ví dụ"
+          ],
+          "rows": [
+            [
+              "**Database mirroring**",
+              "Replicate data và metadata liên tục thành Delta table trong OneLake, có thể nhanh tới 15 giây",
+              "Azure SQL Database, Azure SQL Managed Instance, SQL Server, Azure Cosmos DB, Snowflake, Azure Database for PostgreSQL, Oracle, Google BigQuery, SAP Datasphere"
+            ],
+            [
+              "**Metadata mirroring**",
+              "Chỉ sync catalog, schema, table; data đọc qua shortcut, không copy",
+              "Azure Databricks (Unity Catalog), Snowflake, Dremio"
+            ],
+            [
+              "**Open mirroring**",
+              "Ứng dụng tự ghi change data vào landing zone, Fabric merge thành Delta",
+              "Ứng dụng tự viết, partner của open mirroring"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Mirroring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "diagram",
+          "title": "Mirroring đưa database vào OneLake",
+          "img": "figs/batch-mirroring-overview.svg",
+          "alt": "Sơ đồ data source ở Azure, on-premises hoặc cloud được mirror thành Delta Parquet in OneLake, có SQL analytics endpoint item, được Warehouse, Lakehouse, Power BI, Spark đọc.",
+          "caption": "Source ở Azure, on-premises hoặc cloud khác được replicate thành Delta Parquet trong OneLake. Mirrored item tự có SQL analytics endpoint; Warehouse, Lakehouse, Power BI, Spark đọc cùng bản Delta đó.",
+          "credit": {
+            "label": "Microsoft Learn: Mirroring",
+            "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Cost và giới hạn của mirroring",
+          "md": "- Compute replicate miễn phí, không trừ capacity; mỗi CU mua được 1 TB storage mirroring miễn phí\n- Query bằng SQL, Spark, Power BI vẫn tính phí bình thường; capacity tạm dừng thì ngừng replicate\n- Mirrored database có SQL analytics endpoint read-only; muốn transform thì đọc sang lakehouse hoặc warehouse",
+          "src": [
+            {
+              "label": "Mirroring overview",
+              "url": "https://learn.microsoft.com/en-us/fabric/mirroring/overview"
+            },
+            {
+              "label": "Open mirroring",
+              "url": "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "tip",
+          "title": "Format landing zone của open mirroring",
+          "md": "- Mỗi folder table có file _metadata.json khai báo keyColumns; thiếu key thì không update hay delete được\n- File Parquet hoặc delimited text, tên 20 chữ số tăng dần\n- Cột cuối __rowMarker__: 0 insert, 1 update, 2 delete, 4 upsert",
+          "src": [
+            {
+              "label": "Open mirroring landing zone format",
+              "url": "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring-landing-zone-format"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pipelines",
+      "title": "Ingest bằng pipeline, Copy activity và Copy job",
+      "icon": "fab-pipeline",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "decision",
+          "title": "Chọn cách đưa data vào",
+          "rows": [
+            {
+              "says": "read-only replica of an operational database for reporting, MOST cost-effective",
+              "pick": "Mirroring",
+              "why": "Replicate liên tục bằng CDC, setup tối thiểu, compute replicate miễn phí; destination read-only.",
+              "src": {
+                "label": "Decision guide: data movement",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement"
+              }
+            },
+            {
+              "says": "data already in ADLS Gen2 or S3, avoid duplicating data",
+              "pick": "Shortcut",
+              "why": "Shortcut trỏ tới data tại chỗ, không copy, không cần lịch chạy.",
+              "src": {
+                "label": "OneLake shortcuts",
+                "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+              }
+            },
+            {
+              "says": "incremental copy with upsert on a schedule, without building a pipeline",
+              "pick": "Copy job",
+              "why": "Copy job có sẵn watermark, CDC, Merge và lịch chạy; tự giữ state của lần chạy trước.",
+              "src": {
+                "label": "Decision guide: data movement",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement"
+              }
+            },
+            {
+              "says": "metadata-driven ingestion, parameterized objects, dependencies with other activities",
+              "pick": "Copy activity trong pipeline",
+              "why": "Copy activity tuỳ biến tối đa, tham số hoá được; nhưng tự quản state watermark.",
+              "src": {
+                "label": "Decision guide: data movement",
+                "url": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement"
+              }
+            }
+          ]
+        },
+        {
+          "type": "steps",
+          "title": "Pattern watermark với Copy activity",
+          "items": [
+            {
+              "title": "1. Bảng watermark",
+              "md": "Tạo bảng lưu giá trị watermark cuối cho mỗi bảng source."
+            },
+            {
+              "title": "2. Hai Lookup activity",
+              "md": "- Lookup 1 đọc watermark cũ từ bảng watermark\n- Lookup 2 đọc giá trị lớn nhất hiện tại của cột watermark ở source"
+            },
+            {
+              "title": "3. Copy activity",
+              "md": "Query source lấy dòng có watermark lớn hơn giá trị cũ và nhỏ hơn hoặc bằng giá trị mới."
+            },
+            {
+              "title": "4. Stored procedure activity",
+              "md": "Chạy khi Copy thành công (On success), ghi giá trị mới vào bảng watermark."
+            }
+          ],
+          "src": [
+            {
+              "label": "Tutorial: incremental copy Warehouse to Lakehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/tutorial-incremental-copy-data-warehouse-lakehouse"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Pipeline watermark trên canvas",
+          "img": "figs/batch-watermark-pipeline.png",
+          "alt": "Pipeline canvas với hai Lookup activity, một Copy data activity và một Stored procedure activity; tab Output liệt kê 4 activity Succeeded.",
+          "caption": "Hai Lookup activity đọc watermark cũ và mới, Copy data chỉ chép dòng nằm giữa hai watermark, Stored procedure ghi watermark mới. Tab Output cho status và duration từng activity.",
+          "credit": {
+            "label": "Microsoft Learn: Incrementally load data from Data Warehouse to Lakehouse",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-factory/tutorial-incremental-copy-data-warehouse-lakehouse",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "spark-quality",
+      "title": "Duplicate, missing, late-arriving và MERGE",
+      "icon": "logo-apache-spark",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "code",
+          "title": "PySpark: dedup, fill missing, MERGE vào Delta",
+          "lang": "python",
+          "code": "from delta.tables import DeltaTable\nfrom pyspark.sql import functions as F\nfrom pyspark.sql.window import Window\n\nsrc = spark.read.table(\"bronze_orders\")\nw = Window.partitionBy(\"order_id\").orderBy(F.col(\"modified_at\").desc())\nlatest = (src.withColumn(\"rn\", F.row_number().over(w))\n             .filter(\"rn = 1\").drop(\"rn\")\n             .fillna({\"channel\": \"Unknown\"}))\n\ntgt = DeltaTable.forName(spark, \"silver_orders\")\n(tgt.alias(\"t\")\n    .merge(latest.alias(\"s\"), \"t.order_id = s.order_id\")\n    .whenMatchedUpdateAll(condition=\"s.modified_at > t.modified_at\")\n    .whenNotMatchedInsertAll()\n    .execute())",
+          "notes": [
+            {
+              "line": 6,
+              "md": "Giữ dòng mới nhất cho mỗi key; source có nhiều dòng khớp cùng một dòng target thì MERGE báo lỗi ambiguous."
+            },
+            {
+              "line": 9,
+              "md": "Missing value gán Unknown thay vì để NULL làm hỏng join và group."
+            },
+            {
+              "line": 14,
+              "md": "Late-arriving: bản cũ đến muộn không ghi đè bản mới hơn."
+            },
+            {
+              "line": 15,
+              "md": "Key chưa có thì insert; MERGE vừa upsert vừa chống duplicate khi chạy lại."
+            }
+          ],
+          "src": [
+            {
+              "label": "Delta Lake: table deletes, updates, and merges",
+              "url": "https://docs.delta.io/latest/delta-update.html"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Vấn đề data và cách xử lý",
+          "columns": [
+            "Vấn đề",
+            "Cách xử lý",
+            "Công cụ"
+          ],
+          "rows": [
+            [
+              "**Duplicate trong batch**",
+              "row_number theo key rồi giữ rn = 1, hoặc dropDuplicates",
+              "PySpark, T-SQL window function, KQL arg_max"
+            ],
+            [
+              "**Duplicate khi chạy lại**",
+              "MERGE theo business key thay vì append; insert-only merge cho log",
+              "Delta MERGE, T-SQL MERGE, Copy job Merge"
+            ],
+            [
+              "**Missing value**",
+              "fillna hoặc COALESCE về giá trị mặc định",
+              "PySpark, T-SQL"
+            ],
+            [
+              "**Missing dimension key**",
+              "Gán member Unknown hoặc tạo inferred member, cập nhật sau",
+              "ETL dimension"
+            ],
+            [
+              "**Late-arriving fact**",
+              "Đọc lùi một khoảng (lookback window), MERGE có điều kiện thời gian",
+              "Delta MERGE, Dataflow Gen2 bucket"
+            ],
+            [
+              "**Late-arriving dimension**",
+              "Update inferred member, set IsInferredMember = FALSE, không tạo version SCD",
+              "ETL dimension"
+            ]
+          ],
+          "src": [
+            {
+              "label": "Delta Lake: table deletes, updates, and merges",
+              "url": "https://docs.delta.io/latest/delta-update.html"
+            },
+            {
+              "label": "Load tables in a dimensional model",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sql-kql",
+      "title": "Denormalize và aggregate bằng T-SQL và KQL",
+      "icon": "sql",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "code",
+          "title": "T-SQL ở Warehouse: COPY INTO, CTAS và MERGE",
+          "lang": "sql",
+          "code": "COPY INTO stg.Sales\nFROM 'https://<account>.dfs.core.windows.net/raw/sales/*.parquet'\nWITH (FILE_TYPE = 'PARQUET');\n\nCREATE TABLE gold.SalesByCategory AS\nSELECT p.Category, CAST(s.OrderDate AS date) AS OrderDate,\n       SUM(s.Amount) AS Revenue, COUNT(*) AS Orders\nFROM stg.Sales AS s\nJOIN SilverLH.dbo.DimProduct AS p ON s.ProductID = p.ProductID\nGROUP BY p.Category, CAST(s.OrderDate AS date);\n\nMERGE dbo.DimCustomer AS t\nUSING stg.Customer AS s ON t.CustomerID = s.CustomerID\nWHEN MATCHED AND t.City <> s.City THEN UPDATE SET t.City = s.City\nWHEN NOT MATCHED BY TARGET THEN INSERT (CustomerID, City) VALUES (s.CustomerID, s.City);",
+          "notes": [
+            {
+              "line": 1,
+              "md": "COPY INTO cho throughput cao nhất từ file CSV, JSONL, Parquet ở ADLS Gen2, Blob hoặc OneLake."
+            },
+            {
+              "line": 5,
+              "md": "CTAS tạo bảng mới từ SELECT: denormalize bằng JOIN, aggregate bằng GROUP BY."
+            },
+            {
+              "line": 9,
+              "md": "Three-part name đọc bảng lakehouse cùng workspace qua SQL analytics endpoint."
+            },
+            {
+              "line": 12,
+              "md": "MERGE trong Warehouse đã GA; dùng cho SCD Type 1 hoặc upsert từ staging."
+            }
+          ],
+          "src": [
+            {
+              "label": "Ingest data into the warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data"
+            },
+            {
+              "label": "Ingest data using T-SQL",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-tsql"
+            },
+            {
+              "label": "MERGE (Transact-SQL)",
+              "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "title": "KQL: dedup rồi summarize theo giờ",
+          "lang": "text",
+          "code": "SalesEvents\n| where Timestamp > ago(1d)\n| summarize arg_max(IngestTime, *) by OrderId\n| summarize Orders = count(), Revenue = sum(Amount) by Region, bin(Timestamp, 1h)",
+          "notes": [
+            {
+              "line": 3,
+              "md": "arg_max(col, *) giữ dòng mới nhất của mỗi OrderId, cách dedup chuẩn trong KQL."
+            },
+            {
+              "line": 4,
+              "md": "summarize ... by là GROUP BY của KQL; bin() gom timestamp thành khung 1 giờ."
+            }
+          ],
+          "src": [
+            {
+              "label": "summarize operator",
+              "url": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "T-SQL mới trong Fabric Warehouse",
+          "md": "- **MERGE** đã GA trong Warehouse, hỗ trợ cả WHEN NOT MATCHED BY SOURCE\n- **QUALIFY** và GROUP BY ALL chạy được trên Warehouse và SQL analytics endpoint\n- IDENTITY column có trong Warehouse, dùng làm surrogate key\n- Vẫn chưa có: trigger, materialized view, recursive query",
+          "src": [
+            {
+              "label": "T-SQL surface area",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area"
+            },
+            {
+              "label": "MERGE (Transact-SQL)",
+              "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
