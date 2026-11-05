@@ -1,0 +1,69 @@
+{
+ "date": "2026-11-05",
+ "hub": "dp-700-hub",
+ "verified": "2026-11-04",
+ "exam": [],
+ "releases": [],
+ "changed": [],
+ "broken": [],
+ "moved": [
+  {
+   "url": "https://docs.delta.io/latest/delta-update.html",
+   "to": "https://docs.delta.io/delta-update/",
+   "where": [
+    "src/data/topics/batch.json#batch#spark-quality",
+    "src/data/quiz/batch.json#bat-23",
+    "src/data/cards/batch.json#bat-c22"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/source-control",
+   "to": "https://learn.microsoft.com/en-us/fabric/data-warehouse/development-deployment",
+   "where": [
+    "src/data/topics/workspace.json#workspace#db-projects"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security",
+   "to": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security",
+   "where": [
+    "src/data/topics/security.json#security#onelake-sec",
+    "src/data/quiz/security.json#sec-15",
+    "src/data/quiz/security.json#sec-16",
+    "src/data/quiz/security.json#sec-17",
+    "src/data/cards/security.json#sec-c13"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security",
+   "to": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
+   "where": [
+    "src/data/glossary-parts/security.json#user-identity-mode",
+    "src/data/glossary-parts/security.json#delegated-identity-mode",
+    "src/data/topics/security.json#security#model",
+    "src/data/topics/security.json#security#ddm",
+    "src/data/topics/security.json#security#sql-mode",
+    "src/data/topics/security.json#security#decide",
+    "src/data/quiz/security.json#sec-15",
+    "src/data/quiz/security.json#sec-18",
+    "src/data/quiz/security.json#sec-19",
+    "src/data/cards/security.json#sec-c16"
+   ]
+  },
+  {
+   "url": "https://www.leapfrogbi.com/?p=75676",
+   "to": "https://www.leapfrogbi.com/blog/microsoft-fabric-certification-dp-700-exam/",
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://www.sqlservercentral.com/?p=4552195",
+   "to": "https://www.sqlservercentral.com/blogs/how-i-passed-the-dp-700-exam",
+   "where": [
+    "src/data/resources.json"
+   ]
+  }
+ ],
+ "unreachable": []
+}

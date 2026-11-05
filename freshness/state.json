@@ -1,0 +1,1301 @@
+{
+ "checked": "2026-11-05",
+ "exam": {
+  "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/": {
+   "date": "2026-11-02",
+   "hash": null,
+   "pdfs": [
+    "https://arch-center.azureedge.net/Credentials/Certification-Poster_en-us.pdf",
+    "https://arch-center.azureedge.net/Credentials/choose-your-microsoft-credential.pdf"
+   ],
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700": {
+   "date": "2026-10-31",
+   "hash": null,
+   "pdfs": [],
+   "status": 200
+  }
+ },
+ "feeds": {
+  "https://community.fabric.microsoft.com/t5/s/rss/board?board.id=fbc_fabricupdatesblogs": "2026-11-04",
+  "https://github.com/MicrosoftDocs/fabric-docs/commits/main/docs/fundamentals/whats-new.md.atom": "2026-11-04"
+ },
+ "urls": {
+  "https://aka.ms/DP700-LearnPA": {
+   "date": "2025-04-11",
+   "final": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/practice/assessment?assessment-type=practice&assessmentId=1704375541&practice-assessment-type=certification",
+   "hash": null,
+   "status": 200
+  },
+  "https://aka.ms/DP700-PA": {
+   "date": null,
+   "final": "https://aiskillsnavigator.microsoft.com/credentials/cert-b2a43e2d791e9170d795887b92b8b677423652c07d79f710ec00ded962f01232?search=Microsoft+Certified%3A+Fabric+Data+Engineer+Associate",
+   "hash": null,
+   "status": 200
+  },
+  "https://aka.ms/examdemo": {
+   "date": null,
+   "final": "https://mscertdemo.starttest.com/",
+   "hash": null,
+   "status": 200
+  },
+  "https://community.fabric.microsoft.com/t5/Data-Engineering/Failed-DP-700-help-suggestions-needed/m-p/4906555": {
+   "date": null,
+   "fails": 1,
+   "final": "https://community.fabric.microsoft.com/t5/Data-Engineering/Failed-DP-700-help-suggestions-needed/m-p/4906555",
+   "hash": null,
+   "status": 403
+  },
+  "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-August-2026-Feature-Summary/ba-p/5325824": {
+   "date": null,
+   "fails": 1,
+   "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-August-2026-Feature-Summary/ba-p/5325824",
+   "hash": null,
+   "status": 403
+  },
+  "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-September-2026-Feature-Summary/ba-p/5325825": {
+   "date": null,
+   "fails": 1,
+   "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-September-2026-Feature-Summary/ba-p/5325825",
+   "hash": null,
+   "status": 403
+  },
+  "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/OneLake-security-Generally-Available/ba-p/5176756": {
+   "date": null,
+   "fails": 1,
+   "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/OneLake-security-Generally-Available/ba-p/5176756",
+   "hash": null,
+   "status": 403
+  },
+  "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/bg-p/fbc_fabricupdatesblogs": {
+   "date": null,
+   "fails": 1,
+   "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/bg-p/fbc_fabricupdatesblogs",
+   "hash": null,
+   "status": 403
+  },
+  "https://debruyn.dev/2024/i-just-took-the-new-fabric-dp-700-data-engineering-exam-heres-what-you-should-know/": {
+   "date": null,
+   "final": "https://debruyn.dev/2024/i-just-took-the-new-fabric-dp-700-data-engineering-exam-heres-what-you-should-know/",
+   "hash": null,
+   "status": 200
+  },
+  "https://debruyndev.pages.dev/2024/i-just-took-the-new-fabric-dp-700-data-engineering-exam-heres-what-you-should-know/": {
+   "date": null,
+   "final": "https://debruyndev.pages.dev/2024/i-just-took-the-new-fabric-dp-700-data-engineering-exam-heres-what-you-should-know/",
+   "hash": null,
+   "status": 200
+  },
+  "https://docs.databricks.com/aws/en/structured-streaming/triggers": {
+   "date": "2026-10-19",
+   "final": "https://docs.databricks.com/aws/en/structured-streaming/triggers",
+   "hash": null,
+   "status": 200
+  },
+  "https://docs.delta.io/latest/delta-update.html": {
+   "date": null,
+   "final": "https://docs.delta.io/delta-update/",
+   "hash": null,
+   "status": 200
+  },
+  "https://github.com/microsoft/fabric-samples/tree/main/workspace-monitoring": {
+   "date": null,
+   "final": "https://github.com/microsoft/fabric-samples/tree/main/workspace-monitoring",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-window-functions": {
+   "date": "2026-03-25",
+   "final": "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-window-functions",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700": {
+   "date": "2026-10-31",
+   "final": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/": {
+   "date": "2026-03-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/admin/endorsement-certification-enable": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/admin/endorsement-certification-enable",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts": {
+   "date": "2026-10-01",
+   "final": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-jobs": {
+   "date": "2026-10-06",
+   "final": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-jobs",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/create-rules": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/create-rules",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-integration-process": {
+   "date": "2026-10-26",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-integration-process",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration": {
+   "date": "2026-10-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches": {
+   "date": "2026-10-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/manage-deployment": {
+   "date": "2026-10-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/manage-deployment",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/tutorial-variable-library": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/tutorial-variable-library",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/variable-library-overview": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/variable-library-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/author-execute-notebook": {
+   "date": "2026-08-10",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/author-execute-notebook",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/autotune": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/autotune",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-high-concurrency-session-notebooks-in-pipelines": {
+   "date": "2026-10-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-high-concurrency-session-notebooks-in-pipelines",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations": {
+   "date": "2026-10-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-resource-profile-configurations",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-starter-pools": {
+   "date": "2026-10-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-starter-pools",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/create-and-use-environment": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/create-and-use-environment",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/create-custom-spark-pools": {
+   "date": "2026-10-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/create-custom-spark-pools",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-z-order": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-z-order",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/high-concurrency-overview": {
+   "date": "2026-10-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/high-concurrency-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sharing",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint": {
+   "date": "2026-10-07",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-streaming-data": {
+   "date": "2026-02-25",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-streaming-data",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview": {
+   "date": "2026-08-10",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities": {
+   "date": "2026-09-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run": {
+   "date": "2026-04-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-notebook-run",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-variable-library": {
+   "date": "2026-04-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebookutils/notebookutils-variable-library",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime": {
+   "date": "2026-10-23",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime-2-0": {
+   "date": "2026-10-23",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime-2-0",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-advisor-introduction": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-advisor-introduction",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-detail-monitoring": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-detail-monitoring",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-job-concurrency-and-queueing": {
+   "date": "2026-10-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-job-concurrency-and-queueing",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-monitoring-overview": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-monitoring-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-overview": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-real-time-mode": {
+   "date": "2026-09-16",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-real-time-mode",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-stateful-processing": {
+   "date": "2026-07-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/structured-streaming-stateful-processing",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction": {
+   "date": "2026-08-26",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/tune-file-size": {
+   "date": "2026-08-26",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/tune-file-size",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-admin-settings": {
+   "date": "2026-10-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-admin-settings",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-concepts": {
+   "date": "2026-06-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-concepts",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-workspace-settings": {
+   "date": "2026-03-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/apache-airflow-jobs-workspace-settings",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job": {
+   "date": "2026-09-10",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/cdc-copy-job",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/copy-activity-performance-and-scalability-guide": {
+   "date": "2026-09-16",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-activity-performance-and-scalability-guide",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/copy-data-activity": {
+   "date": "2026-09-16",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-data-activity",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/create-alerts-for-pipeline-runs",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/create-copy-job": {
+   "date": "2026-10-27",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/create-copy-job",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-incremental-refresh": {
+   "date": "2026-02-03",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-incremental-refresh",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-performance-best-practices": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-performance-best-practices",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-monitor": {
+   "date": "2026-08-07",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-monitor",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement": {
+   "date": "2026-04-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/decision-guide-data-movement",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/expression-language": {
+   "date": "2026-03-31",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/expression-language",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/foreach-activity": {
+   "date": "2026-06-25",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/foreach-activity",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job": {
+   "date": "2026-10-27",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/incremental-copy-job",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/invoke-pipeline-activity": {
+   "date": "2026-05-07",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/invoke-pipeline-activity",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/monitoring-hub-pipeline-runs": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/monitoring-hub-pipeline-runs",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/notebook-activity": {
+   "date": "2026-07-23",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/notebook-activity",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/parameters": {
+   "date": "2026-06-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/parameters",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-run-conditions": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-run-conditions",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/semantic-model-refresh-activity": {
+   "date": "2026-04-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/semantic-model-refresh-activity",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/tutorial-incremental-copy-data-warehouse-lakehouse": {
+   "date": "2026-02-03",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/tutorial-incremental-copy-data-warehouse-lakehouse",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/variable-library-integration-with-data-pipelines": {
+   "date": "2026-06-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/variable-library-integration-with-data-pipelines",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job": {
+   "date": "2026-09-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/data-clustering": {
+   "date": "2026-03-30",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/data-clustering",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/develop-warehouse-project": {
+   "date": "2026-10-01",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/develop-warehouse-project",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables": {
+   "date": "2026-07-06",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-load-tables",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/howto-dynamic-data-masking": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/howto-dynamic-data-masking",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data": {
+   "date": "2026-08-28",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-tsql": {
+   "date": "2026-10-15",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-tsql",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights": {
+   "date": "2026-08-28",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching": {
+   "date": "2026-10-01",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/result-set-caching",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/row-level-security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/security": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/source-control": {
+   "date": "2026-09-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/development-deployment",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics": {
+   "date": "2026-10-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/transactions": {
+   "date": "2026-06-14",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/transactions",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-fabric-data-warehouse": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-fabric-data-warehouse",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area": {
+   "date": "2026-10-14",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/database/sql/source-control": {
+   "date": "2026-07-08",
+   "final": "https://learn.microsoft.com/en-us/fabric/database/sql/source-control",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/enterprise/capacity-planning-plan-deployment": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/enterprise/capacity-planning-plan-deployment",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app": {
+   "date": "2026-11-03",
+   "final": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/enterprise/throttling": {
+   "date": "2026-08-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/enterprise/throttling",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/apply-sensitivity-labels": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/apply-sensitivity-labels",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store": {
+   "date": "2026-09-16",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-pipeline-dataflow-spark",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/endorsement-promote-certify": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/endorsement-promote-certify",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/give-access-workspaces": {
+   "date": "2026-05-01",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/give-access-workspaces",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces": {
+   "date": "2026-08-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/roles-workspaces",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new": {
+   "date": "2026-10-27",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview": {
+   "date": "2026-10-30",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/governance/domains": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/governance/domains",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/governance/information-protection": {
+   "date": "2026-07-16",
+   "final": "https://learn.microsoft.com/en-us/fabric/governance/information-protection",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring": {
+   "date": "2026-09-21",
+   "final": "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring-landing-zone-format": {
+   "date": "2026-02-03",
+   "final": "https://learn.microsoft.com/en-us/fabric/mirroring/open-mirroring-landing-zone-format",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/mirroring/overview": {
+   "date": "2026-08-28",
+   "final": "https://learn.microsoft.com/en-us/fabric/mirroring/overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/create-dataverse-shortcut": {
+   "date": "2026-06-23",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/create-dataverse-shortcut",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/onelake-diagnostics-overview": {
+   "date": "2026-06-23",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-diagnostics-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture": {
+   "date": "2026-08-26",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles": {
+   "date": "2026-10-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/create-manage-roles",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model": {
+   "date": "2026-10-16",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/security/get-started-security": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/get-started-security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security": {
+   "date": "2026-08-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-hub/explore-fabric-job-events": {
+   "date": "2026-10-14",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-hub/explore-fabric-job-events",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-hub/real-time-hub-overview": {
+   "date": "2026-08-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-hub/real-time-hub-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/architecture-medallion": {
+   "date": "2026-04-20",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/architecture-medallion",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-detection-conditions": {
+   "date": "2026-11-01",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-detection-conditions",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction": {
+   "date": "2026-10-13",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-policies": {
+   "date": "2026-03-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-policies",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-kql-database": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-kql-database",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-lakehouse": {
+   "date": "2026-06-15",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/add-destination-lakehouse",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings": {
+   "date": "2026-07-01",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/create-default-derived-streams": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/create-default-derived-streams",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/migrate-from-azure-event-hubs-stream-analytics": {
+   "date": "2026-08-13",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/migrate-from-azure-event-hubs-stream-analytics",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/monitor": {
+   "date": "2026-03-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/monitor",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor": {
+   "date": "2026-09-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-sql-code-editor": {
+   "date": "2026-03-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-sql-code-editor",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/manage-monitor-eventhouse": {
+   "date": "2026-06-15",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/manage-monitor-eventhouse",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/monitor-logs-ingestion-results": {
+   "date": "2026-09-14",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/monitor-logs-ingestion-results",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/overview": {
+   "date": "2026-06-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/real-time-intelligence-compare": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/real-time-intelligence-compare",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/alter-table-cache-policy-command?view=microsoft-fabric": {
+   "date": "2024-08-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/alter-table-cache-policy-command?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric": {
+   "date": "2026-03-17",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/cache-policy?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/ingestion-failures?view=microsoft-fabric": {
+   "date": "2024-08-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/ingestion-failures?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-create?view=microsoft-fabric": {
+   "date": "2026-08-11",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-create?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-overview?view=microsoft-fabric": {
+   "date": "2026-08-11",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-overview?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-use-cases?view=microsoft-fabric": {
+   "date": "2026-08-11",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-use-cases?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/partitioning-policy?view=microsoft-fabric": {
+   "date": "2024-12-03",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/partitioning-policy?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric": {
+   "date": "2026-05-10",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric": {
+   "date": "2026-09-23",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/bin-function?view=microsoft-fabric": {
+   "date": "2025-05-15",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/bin-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/make-series-operator?view=microsoft-fabric": {
+   "date": "2025-06-04",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/make-series-operator?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/row-window-session-function?view=microsoft-fabric": {
+   "date": "2024-08-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/row-window-session-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric": {
+   "date": "2025-05-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces": {
+   "date": "2026-04-20",
+   "final": "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/power-bi/connect-data/refresh-data": {
+   "date": "2026-10-01",
+   "final": "https://learn.microsoft.com/en-us/power-bi/connect-data/refresh-data",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric": {
+   "date": "2026-10-19",
+   "final": "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/stream-analytics-query/windowing-azure-stream-analytics?context=/fabric/context/context-rti&pivots=fabric": {
+   "date": "2025-07-10",
+   "final": "https://learn.microsoft.com/en-us/stream-analytics-query/windowing-azure-stream-analytics?context=/fabric/context/context-rti&pivots=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/training/courses/dp-700t00": {
+   "date": "2026-06-17",
+   "final": "https://learn.microsoft.com/en-us/training/courses/dp-700t00",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/training/modules/introduction-to-data-streaming/3b-understand-windows": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/training/modules/introduction-to-data-streaming/3b-understand-windows",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/training/paths/explore-real-time-analytics-microsoft-fabric/": {
+   "date": "2026-10-28",
+   "final": "https://learn.microsoft.com/en-us/training/paths/explore-real-time-analytics-microsoft-fabric/",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/training/paths/implement-lakehouse-microsoft-fabric/": {
+   "date": "2026-10-28",
+   "final": "https://learn.microsoft.com/en-us/training/paths/implement-lakehouse-microsoft-fabric/",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/training/paths/ingest-data-with-microsoft-fabric/": {
+   "date": "2026-10-28",
+   "final": "https://learn.microsoft.com/en-us/training/paths/ingest-data-with-microsoft-fabric/",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/training/paths/manage-microsoft-fabric-environment/": {
+   "date": "2026-10-28",
+   "final": "https://learn.microsoft.com/en-us/training/paths/manage-microsoft-fabric-environment/",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/training/paths/work-with-data-warehouses-using-microsoft-fabric/": {
+   "date": "2026-10-28",
+   "final": "https://learn.microsoft.com/en-us/training/paths/work-with-data-warehouses-using-microsoft-fabric/",
+   "hash": null,
+   "status": 200
+  },
+  "https://radacad.com/onelake-security-setting-up-row-level-security-from-lakehouse-to-report/": {
+   "date": null,
+   "final": "https://radacad.com/onelake-security-setting-up-row-level-security-from-lakehouse-to-report/",
+   "hash": null,
+   "status": 200
+  },
+  "https://roadmap.fabric.microsoft.com/": {
+   "date": null,
+   "final": "https://roadmap.fabric.microsoft.com/",
+   "hash": null,
+   "status": 200
+  },
+  "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.examtopics.com/exams/microsoft/dp-700/": {
+   "date": null,
+   "final": "https://www.examtopics.com/exams/microsoft/dp-700/",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.leapfrogbi.com/?p=75676": {
+   "date": null,
+   "final": "https://www.leapfrogbi.com/blog/microsoft-fabric-certification-dp-700-exam/",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.red-gate.com/simple-talk/data-analytics/microsoft-fabric/high-concurrency-data-pipelines-in-fabric/": {
+   "date": null,
+   "final": "https://www.red-gate.com/simple-talk/data-analytics/microsoft-fabric/high-concurrency-data-pipelines-in-fabric/",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.reddit.com/r/MicrosoftFabric/": {
+   "date": null,
+   "fails": 1,
+   "final": "https://www.reddit.com/r/MicrosoftFabric/",
+   "hash": null,
+   "status": 403
+  },
+  "https://www.reddit.com/r/MicrosoftFabric/comments/1wlwn8m/passed_dp700_just_earned_the_fabric_data_engineer/": {
+   "date": null,
+   "fails": 1,
+   "final": "https://www.reddit.com/r/MicrosoftFabric/comments/1wlwn8m/passed_dp700_just_earned_the_fabric_data_engineer/",
+   "hash": null,
+   "status": 403
+  },
+  "https://www.reddit.com/r/MicrosoftFabric/comments/1wtygi6/passed_dp700_yesterday_my_prep_journey_why_it_was/": {
+   "date": null,
+   "fails": 1,
+   "final": "https://www.reddit.com/r/MicrosoftFabric/comments/1wtygi6/passed_dp700_yesterday_my_prep_journey_why_it_was/",
+   "hash": null,
+   "status": 403
+  },
+  "https://www.reddit.com/r/MicrosoftFabric/comments/1wva942/dp700_prep_looking_for_advice_from_people_who/": {
+   "date": null,
+   "fails": 1,
+   "final": "https://www.reddit.com/r/MicrosoftFabric/comments/1wva942/dp700_prep_looking_for_advice_from_people_who/",
+   "hash": null,
+   "status": 403
+  },
+  "https://www.sqlservercentral.com/?p=4552195": {
+   "date": null,
+   "final": "https://www.sqlservercentral.com/blogs/how-i-passed-the-dp-700-exam",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/@GuyInACube": {
+   "date": null,
+   "final": "https://www.youtube.com/@GuyInACube",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/@MicrosoftFabric": {
+   "date": null,
+   "final": "https://www.youtube.com/@MicrosoftFabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=-64AAqSavfo": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=-64AAqSavfo",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=0M4t6ljwZ9A": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=0M4t6ljwZ9A",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=8GJj4QlFlsw": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=8GJj4QlFlsw",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=AakV-3RtmuI": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=AakV-3RtmuI",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=JhTl_fDZsE0": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=JhTl_fDZsE0",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=KiB4eAeFRsw": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=KiB4eAeFRsw",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=NVCCMMW9DfE": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=NVCCMMW9DfE",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=RsyQUCOnix4": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=RsyQUCOnix4",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=U7t9j95d1WA": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=U7t9j95d1WA",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=X8ChDW58wzI&list=PLahhVEj9XNTevfHvnTVNF7U99Brd9NJXX": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=X8ChDW58wzI&list=PLahhVEj9XNTevfHvnTVNF7U99Brd9NJXX",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=d0BGZymdTxY": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=d0BGZymdTxY",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=jTDSP7KBavI": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=jTDSP7KBavI",
+   "hash": null,
+   "status": 200
+  },
+  "https://www.youtube.com/watch?v=lPCBGOStKU4": {
+   "date": null,
+   "final": "https://www.youtube.com/watch?v=lPCBGOStKU4",
+   "hash": null,
+   "status": 200
+  }
+ }
+}
