@@ -18,6 +18,11 @@ Static study site for Microsoft DP-700, Fabric Data Engineer Associate, live at 
 | `build.mjs` | Builds `src/` into `dist/`, merges the glossary, creates the search index and the task map |
 | `validate.py` | Content rules (schema, English terms, option counts, at least 1 source per section and 3 hosts per topic) |
 | `SCHEMA.md` | Content format and writing rules |
+| `src/watch.json` | Freshness config: exam guide pages, release-note feeds, date the content was last verified |
+| `freshness.py` | Weekly check of exam guide pages, release notes and every source url; stdlib Python |
+| `FRESHNESS.md` | How the weekly freshness check and the cloud agent keep the content current |
+| `.github/workflows/` | `freshness.yml` runs the weekly check; `freshness-pr.yml` opens a pull request for each `claude/freshness-*` branch |
+| `vercel.json` | Vercel build settings for Git deployments; branch `freshness` is never deployed |
 
 Edit content, then run:
 
@@ -31,4 +36,4 @@ Progress sync uses the Supabase project `hnpixqdvxszxjwovtusr` (RPCs `get_progre
 
 Deploy: after `node build.mjs`, run `npx vercel deploy dist --prod --yes --project dp-700-hub --scope nguyen-hieps-projects` with a token of Vercel account `ntphiep` (Composio connection `legacy`).
 
-The engine files `src/index.html`, `build.mjs`, `diagram.mjs`, `validate.py` and `favicons.mjs` are identical in `/home/harry/W/aib-c01-hub`, `/home/harry/W/databricks-dep-hub` and `/home/harry/W/dp-700-hub`. Change them in one hub, then copy them to the other two.
+The engine files `src/index.html`, `build.mjs`, `diagram.mjs`, `validate.py`, `favicons.mjs`, `freshness.py`, `FRESHNESS.md`, `vercel.json` and `.github/workflows/` are identical in `/home/harry/W/aib-c01-hub`, `/home/harry/W/databricks-dep-hub` and `/home/harry/W/dp-700-hub`. Change them in one hub, then copy them to the other two.

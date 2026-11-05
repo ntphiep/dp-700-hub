@@ -1,0 +1,33 @@
+name: freshness
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: freshness
+          path: state
+      - id: watch
+        run: python3 -I freshness.py --state state/freshness
+      - name: Save state on branch freshness
+        working-directory: state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || { git commit -q -m "Freshness check $(date -u +%F)" && git push -q; }
+      - name: Open issue
+        if: steps.watch.outputs.report != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create freshness --color FBCA04 --description "Weekly freshness report" --force
+          gh issue create --title "Freshness report $(date -u +%F)" --label freshness --body-file "${{ steps.watch.outputs.report }}"

@@ -1,0 +1,12 @@
+{
+  "hub": "dp-700-hub",
+  "verified": "2026-11-04",
+  "exam": [
+    {"label": "DP-700 study guide", "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700"},
+    {"label": "Certification page", "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/"}
+  ],
+  "feeds": [
+    {"label": "Fabric Updates Blog", "url": "https://community.fabric.microsoft.com/t5/s/rss/board?board.id=fbc_fabricupdatesblogs"},
+    {"label": "Fabric docs: What's new page commits", "url": "https://github.com/MicrosoftDocs/fabric-docs/commits/main/docs/fundamentals/whats-new.md.atom"}
+  ]
+}

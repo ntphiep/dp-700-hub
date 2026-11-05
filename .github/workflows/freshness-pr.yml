@@ -1,0 +1,21 @@
+name: freshness-pr
+on:
+  push:
+    branches:
+      - "claude/freshness-*"
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet origin/main...HEAD; then echo "No content change, no pull request"; exit 0; fi
+          if [ -n "$(gh pr list --head "$GITHUB_REF_NAME" --json number -q '.[].number')" ]; then echo "Pull request exists"; exit 0; fi
+          gh pr create --base main --head "$GITHUB_REF_NAME" --title "$(git log -1 --format=%s)" --body "$(git log -1 --format=%b)"
