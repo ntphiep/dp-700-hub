@@ -15,7 +15,7 @@
       "blocks": [
         {
           "type": "text",
-          "md": "- **Control plane**: workspace role và item permission quyết định user làm gì với item (tạo, sửa, share, chạy).\n- **Data plane**: OneLake security role và T-SQL permission quyết định user thấy data nào (folder, table, row, column).\n- Admin, Member, Contributor có Write nên đọc và ghi mọi data trong workspace; OneLake security chỉ giới hạn Viewer và user có item permission Read.\n- T-SQL security (GRANT, RLS, CLS, DDM) chỉ áp khi query qua TDS endpoint của Warehouse hoặc SQL analytics endpoint.",
+          "md": "- **Control plane**: workspace role và item permission quyết định user làm gì với item (tạo, sửa, share, chạy).\n- **Data plane**: OneLake security role và T-SQL permission quyết định user thấy data nào (folder, table, row, column).\n- Admin, Member, Contributor có Write nên đọc và ghi mọi data trong workspace; OneLake security chỉ giới hạn Viewer và user có item permission Read, trừ RLS khi query qua SQL endpoint ở user's identity mode.\n- T-SQL security (GRANT, RLS, CLS, DDM) chỉ áp khi query qua TDS endpoint của Warehouse hoặc SQL analytics endpoint.",
           "src": [
             {
               "label": "Data security in OneLake",
@@ -24,6 +24,10 @@
             {
               "label": "Secure your Fabric Data Warehouse",
               "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/security"
+            },
+            {
+              "label": "OneLake security for SQL analytics endpoints",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
             }
           ]
         },
@@ -199,7 +203,7 @@
             },
             {
               "label": "OneLake security for SQL analytics endpoints",
-              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
             }
           ]
         },
@@ -677,7 +681,7 @@
             },
             {
               "label": "OneLake security for SQL analytics endpoints",
-              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
             }
           ]
         }
@@ -703,7 +707,7 @@
             ],
             [
               "Ai bị giới hạn",
-              "Viewer và user có item permission Read; Admin, Member, Contributor không bị giới hạn"
+              "Viewer và user có item permission Read; Admin, Member, Contributor không bị giới hạn, trừ RLS khi query qua SQL endpoint ở user's identity mode"
             ],
             [
               "Item hỗ trợ",
@@ -731,7 +735,7 @@
             ],
             [
               "Giới hạn",
-              "250 role mỗi item, 500 member mỗi role; đổi role mất khoảng 5 phút"
+              "250 role mỗi item (xin tăng tới 1,000), 500 member mỗi role; đổi role mất khoảng 5 phút, đổi member của group mất khoảng 1 giờ"
             ]
           ],
           "src": [
@@ -745,7 +749,11 @@
             },
             {
               "label": "Table, column, and row-level security in OneLake",
-              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security"
+            },
+            {
+              "label": "OneLake security for SQL analytics endpoints",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
             }
           ]
         },
@@ -799,7 +807,7 @@
             },
             {
               "label": "Table, column, and row-level security in OneLake",
-              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security"
             },
             {
               "label": "How lakehouse sharing works",
@@ -825,6 +833,7 @@
               "tag": "Define once trong OneLake",
               "points": [
                 "Identity của user đi thẳng tới OneLake; OneLake security quyết định table, row, column",
+                "RLS của OneLake áp cho mọi user qua SQL endpoint, kể cả Admin, Member, Contributor",
                 "GRANT, REVOKE trên table bị bỏ qua; GRANT vẫn dùng cho view, procedure, function",
                 "OneLake security không có DDM; RLS, CLS không viết bằng T-SQL",
                 "Đọc được shortcut tới table có RLS, CLS ở lakehouse nguồn",
@@ -847,7 +856,7 @@
           "src": [
             {
               "label": "OneLake security for SQL analytics endpoints",
-              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
             },
             {
               "label": "RADACAD: OneLake Security, RLS from lakehouse to report",
@@ -873,11 +882,11 @@
           "type": "callout",
           "tone": "trap",
           "title": "Đổi mode có giá",
-          "md": "- Chỉ Admin hoặc Member đổi mode, ở tab Security của SQL endpoint\n- Đổi mode cancel mọi query đang chạy ở mọi SQL endpoint trong workspace\n- Sang user's identity mode thì SQL role cũ bị xoá vĩnh viễn\n- RLS và CLS viết bằng T-SQL trong Warehouse không đi theo shortcut; đọc qua shortcut có thể thấy toàn bộ data",
+          "md": "- Chỉ Admin hoặc Member đổi mode, ở tab Security của SQL endpoint\n- Đổi mode cancel mọi query đang chạy ở mọi SQL endpoint trong workspace\n- Sang user's identity mode thì SQL role cũ bị xoá vĩnh viễn; đổi chiều nào cũng xoá TVF và scalar function\n- RLS và CLS viết bằng T-SQL trong Warehouse không đi theo shortcut; đọc qua shortcut có thể thấy toàn bộ data",
           "src": [
             {
               "label": "OneLake security for SQL analytics endpoints",
-              "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
             }
           ]
         }
@@ -920,6 +929,10 @@
             [
               "Inheritance upon creation",
               "Notebook, pipeline, shortcut tạo từ lakehouse nhận label của lakehouse"
+            ],
+            [
+              "Inheritance upon update",
+              "Sửa item, nối data source có label hoặc tạo lineage mới (notebook nối lakehouse) thì label được đánh giá lại"
             ],
             [
               "Programmatic labeling",
@@ -1106,7 +1119,7 @@
               "why": "Rule đặt trong OneLake được mọi engine Fabric tôn trọng; T-SQL security chỉ áp ở TDS endpoint.",
               "src": {
                 "label": "OneLake security for SQL analytics endpoints",
-                "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+                "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
               }
             },
             {

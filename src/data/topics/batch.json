@@ -1045,7 +1045,7 @@
           "src": [
             {
               "label": "Delta Lake: table deletes, updates, and merges",
-              "url": "https://docs.delta.io/latest/delta-update.html"
+              "url": "https://docs.delta.io/delta-update/"
             }
           ]
         },
@@ -1092,7 +1092,7 @@
           "src": [
             {
               "label": "Delta Lake: table deletes, updates, and merges",
-              "url": "https://docs.delta.io/latest/delta-update.html"
+              "url": "https://docs.delta.io/delta-update/"
             },
             {
               "label": "Load tables in a dimensional model",

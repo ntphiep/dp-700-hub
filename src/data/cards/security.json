@@ -110,10 +110,10 @@
  {
   "id": "sec-c13",
   "front": "OneLake security: who is restricted",
-  "back": "Viewers and users with item Read permission. Admin, Member, Contributor keep full access through Write. Thêm Contributor vào role hạn chế không có tác dụng.",
+  "back": "Viewers and users with item Read permission. Admin, Member, Contributor keep full access through Write, except OneLake RLS on the SQL analytics endpoint in user's identity mode. Thêm Contributor vào role hạn chế không có tác dụng.",
   "ref": {
    "label": "Table, column, and row-level security in OneLake",
-   "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security"
   }
  },
  {
@@ -140,7 +140,7 @@
   "back": "Delegated (default): T-SQL security, owner identity. User's identity: OneLake security roles, user identity. Đổi mode cancel mọi query của SQL endpoint trong workspace.",
   "ref": {
    "label": "OneLake security for SQL analytics endpoints",
-   "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
   }
  },
  {

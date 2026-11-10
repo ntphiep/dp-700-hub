@@ -21,7 +21,7 @@
     "links": [
       {"label": "Trang certification", "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/"},
       {"label": "Study guide DP-700", "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700"},
-      {"label": "Practice Assessment", "url": "https://aka.ms/DP700-PA"}
+      {"label": "Practice Assessment (AI Skills Navigator)", "url": "https://aka.ms/DP700-PA"}
     ],
     "tiles": [
       {"k": "Thời gian", "v": "100 phút", "s": "proctored, có thể có câu tương tác"},

@@ -43,7 +43,7 @@ Primary sources: learn.microsoft.com/fabric, the Microsoft Learn DP-700 learning
 
 Every fact is checked, current and traceable. Memory and training data are hypotheses only.
 
-- **Today is 2026-11-04.** Verify every feature name, default, limit and behavior against the current official docs. Use the exam guide names, and give the former name once, for example "Declarative Automation Bundles (formerly Databricks Asset Bundles)". Mark changes from 2025 to 2026 with callout tone `new`.
+- **Content was last verified on the `verified` date in `src/watch.json`.** Verify every feature name, default, limit and behavior against the current official docs. Use the exam guide names, and give the former name once, for example "Declarative Automation Bundles (formerly Databricks Asset Bundles)". Mark changes from 2025 to 2026 with callout tone `new`.
 - **Open every link you cite** with WebFetch and confirm the page says what you cite it for. A link you did not open is never cited. For a YouTube video, confirm title and channel through `https://www.youtube.com/oembed?url=<video url>&format=json`.
 - **Cross-check with several sources.** Official docs are the primary source. Add independent sources that add exam value: official blogs and release notes, conference talks and YouTube walkthroughs from the vendor or known practitioners, reputable practitioner blogs, exam-experience write-ups and community discussions (Reddit, Medium, Microsoft Tech Community, Databricks Community, ExamTopics discussions). Use them for exam tips, traps and what candidates report, and cross-check any technical claim they make against the docs.
 - **When sources disagree**, follow the current official docs and say so in a `trap` callout when the old behavior still circulates.

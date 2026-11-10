@@ -287,7 +287,7 @@
   "cat": "Performance",
   "what": "Bộ Spark config đặt sẵn theo kiểu workload, chọn ở environment hoặc lúc runtime.",
   "means": [
-   "Workspace mới mặc định writeHeavy, V-Order tắt.",
+   "Đang preview; workspace mới mặc định writeHeavy, V-Order tắt.",
    "readHeavyForPBI bật V-Order cho Direct Lake."
   ],
   "related": [

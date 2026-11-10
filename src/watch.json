@@ -1,6 +1,6 @@
 {
   "hub": "dp-700-hub",
-  "verified": "2026-11-04",
+  "verified": "2026-11-10",
   "exam": [
     {"label": "DP-700 study guide", "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700"},
     {"label": "Certification page", "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/"}

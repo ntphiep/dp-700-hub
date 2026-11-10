@@ -164,7 +164,7 @@
  {
   "id": "mon-c19",
   "front": "Filter columns change, high cardinality, no partition rewrite",
-  "back": "Liquid clustering: ALTER TABLE ... CLUSTER BY, applied on OPTIMIZE. Đổi key thì OPTIMIZE FULL (Runtime 2.0).",
+  "back": "Liquid clustering: ALTER TABLE ... CLUSTER BY, applied on OPTIMIZE. Đổi key thì chạy OPTIMIZE FULL để recluster data cũ.",
   "ref": {
    "label": "Liquid clustering",
    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"

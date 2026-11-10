@@ -665,11 +665,11 @@
   "refs": [
    {
     "label": "OneLake security for SQL analytics endpoints",
-    "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
    },
    {
     "label": "Table, column, and row-level security in OneLake",
-    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security"
    }
   ]
  },
@@ -711,7 +711,7 @@
   "refs": [
    {
     "label": "Table, column, and row-level security in OneLake",
-    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security"
    },
    {
     "label": "How OneLake security controls data access",
@@ -757,7 +757,7 @@
   "refs": [
    {
     "label": "Table, column, and row-level security in OneLake",
-    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security"
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security"
    }
   ]
  },
@@ -799,7 +799,7 @@
   "refs": [
    {
     "label": "OneLake security for SQL analytics endpoints",
-    "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
    }
   ]
  },
@@ -841,7 +841,7 @@
   "refs": [
    {
     "label": "OneLake security for SQL analytics endpoints",
-    "url": "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security"
+    "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security"
    },
    {
     "label": "Row-level security in Fabric Data Warehouse",

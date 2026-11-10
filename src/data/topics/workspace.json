@@ -580,7 +580,7 @@
             },
             {
               "label": "Warehouse development and deployment overview",
-              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/source-control"
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/development-deployment"
             }
           ]
         },
@@ -610,8 +610,8 @@
               "url": "https://learn.microsoft.com/en-us/fabric/database/sql/source-control"
             },
             {
-              "label": "Warehouse development and deployment overview",
-              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/source-control"
+              "label": "Git integration for Fabric Data Warehouse",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/git-integration"
             }
           ]
         },
@@ -860,7 +860,7 @@
         },
         {
           "type": "text",
-          "md": "- **Stage**: 2 tới 10, mặc định 3 (Development, Test, Production)\n- **Pairing**: item cùng tên nhưng chưa pair thì deploy tạo bản mới thay vì ghi đè\n- **Data không được copy**, chỉ metadata; semantic model cần refresh sau deploy\n- **Quyền deploy**: pipeline admin và ít nhất Contributor ở workspace nguồn và đích\n- **Rule**: không tạo ở development stage; người tạo phải là owner item; unassign workspace thì mất rule\n- Pipeline không có deployment rule; dùng variable library cho connection, lakehouse theo stage",
+          "md": "- **Stage**: 2 tới 10, mặc định 3 (Development, Test, Production)\n- **Pairing**: item cùng tên nhưng chưa pair thì deploy tạo bản mới thay vì ghi đè\n- **Data không được copy**, chỉ metadata; semantic model cần refresh sau deploy\n- **Quyền deploy**: pipeline admin và ít nhất Contributor ở workspace nguồn và đích\n- **Rule**: không tạo ở development stage; người tạo phải là owner item; unassign workspace thì mất rule\n- Pipeline không có deployment rule; dùng variable library cho connection, lakehouse theo stage\n- **Deployment plan** (preview): gắn tuỳ chọn khi deploy để định thứ tự item, chạy notebook hoặc pipeline trước, sau item",
           "src": [
             {
               "label": "Deployment pipelines process",
@@ -869,6 +869,10 @@
             {
               "label": "Create deployment rules",
               "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/create-rules"
+            },
+            {
+              "label": "What is a deployment plan? (preview)",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-overview"
             }
           ]
         },

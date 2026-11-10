@@ -188,7 +188,7 @@
             ],
             [
               "**Eventstream**",
-              "Tab Data insights và Runtime logs của từng node",
+              "Tab Data insights và Runtime logs của từng node; workspace monitoring (preview) có node status, metrics, error metrics",
               "Cần role Viewer trở lên"
             ],
             [
@@ -560,7 +560,7 @@
             {
               "says": "Alert on Started and Succeeded events and trigger a notebook automatically",
               "pick": "Activator rule trên job events",
-              "why": "Activator hỗ trợ nhiều job event và action chạy pipeline, notebook; schedule failure email chỉ có Failed.",
+              "why": "Activator hỗ trợ nhiều job event và action chạy pipeline, notebook; alert Activator trong Monitor hub cần bật workspace monitoring.",
               "src": {
                 "label": "Set up job alerts in the Monitor hub",
                 "url": "https://learn.microsoft.com/en-us/fabric/admin/monitoring-hub-alerts"
@@ -624,7 +624,7 @@
               "Pipeline",
               "Activity fail vì lỗi tạm thời của source, network",
               "Run detail view: error, input, output",
-              "Bật Enable retries; Retry mặc định 1 lần, interval 30 giây"
+              "Bật Enable retries; Retry mặc định 1 lần, interval Fixed 30 giây; Increasing Delay (exponential back-off) cho outage dài"
             ],
             [
               "Pipeline",
@@ -715,6 +715,10 @@
             {
               "label": "Activity overview",
               "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview"
+            },
+            {
+              "label": "Activity retries",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-retries"
             },
             {
               "label": "Copy activity",
@@ -861,10 +865,10 @@
         {
           "type": "figure",
           "kind": "screenshot",
-          "title": "Bốn view của schema queryinsights",
+          "title": "Các view của schema queryinsights",
           "img": "figs/monitor-query-insights.png",
           "alt": "Explorer của warehouse với schema queryinsights gồm 4 view exec_requests_history, long_running_queries, frequently_run_queries, exec_sessions_history.",
-          "caption": "Schema queryinsights có 4 view: exec_requests_history, long_running_queries, frequently_run_queries, exec_sessions_history. Query bằng T-SQL để tìm query chậm hoặc chạy nhiều lần.",
+          "caption": "Ảnh có 4 view: exec_requests_history, long_running_queries, frequently_run_queries, exec_sessions_history. Bản hiện hành thêm sql_pool_insights và external_api_call_stats. Query bằng T-SQL để tìm query chậm hoặc chạy nhiều lần.",
           "credit": {
             "label": "Microsoft Learn: Query Insights",
             "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights",
@@ -1058,7 +1062,7 @@
           "type": "callout",
           "tone": "new",
           "title": "Mặc định mới cần cập nhật",
-          "md": "- Resource profile ra đời; workspace mới chuyển sang writeHeavy, V-Order Spark tắt\n- Runtime 2.0 (Spark 4.1) là runtime GA mặc định cho workspace mới\n- Result set caching bật mặc định cho Warehouse và SQL analytics endpoint\n- Data compaction preemption của Warehouse bật từ tháng 10 năm 2025",
+          "md": "- Resource profile (preview); workspace mới mặc định writeHeavy, V-Order Spark tắt\n- Runtime 2.0 (Spark 4.1) là runtime GA mặc định cho workspace mới\n- Result set caching bật mặc định cho Warehouse và SQL analytics endpoint\n- Data compaction preemption của Warehouse bật từ tháng 10 năm 2025",
           "src": [
             {
               "label": "Configure resource profile configurations",
@@ -1075,6 +1079,10 @@
             {
               "label": "Performance guidelines in Fabric Data Warehouse",
               "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+            },
+            {
+              "label": "What's new in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new"
             }
           ]
         }
@@ -1113,7 +1121,7 @@
             [
               "**Liquid clustering**",
               "Cột filter đổi theo thời gian, cardinality cao",
-              "CLUSTER BY lưu trong metadata; chỉ cluster khi chạy OPTIMIZE; OPTIMIZE FULL sau khi đổi key (Runtime 2.0)"
+              "CLUSTER BY lưu trong metadata; chỉ cluster khi chạy OPTIMIZE; OPTIMIZE FULL sau khi đổi key; Runtime 2.0 cluster incremental, Runtime 1.3 rewrite cả Z-Cube"
             ],
             [
               "**Optimize write**",
@@ -1131,9 +1139,9 @@
               "Mặc định giữ 7 ngày (168 giờ); DRY RUN để xem trước; mất time travel quá ngưỡng"
             ],
             [
-              "**Lakehouse Maintenance activity** (preview)",
+              "**Lakehouse Maintenance activity**",
               "Chạy OPTIMIZE, V-Order, VACUUM theo lịch trong pipeline",
-              "Run từ portal hiện trong Monitor hub với tên TableMaintenance"
+              "GA từ 09/2026; run từ portal hiện trong Monitor hub với tên TableMaintenance"
             ]
           ],
           "src": [
@@ -1164,6 +1172,14 @@
             {
               "label": "Lakehouse table maintenance",
               "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance"
+            },
+            {
+              "label": "Lakehouse Maintenance activity",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-factory/lakehouse-maintenance-activity"
+            },
+            {
+              "label": "What's new in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new"
             }
           ]
         },
@@ -1344,7 +1360,7 @@
           "type": "callout",
           "tone": "tip",
           "title": "Native execution engine, vai trò giống Photon",
-          "md": "- Engine C++ vectorized dựa trên Velox và Apache Gluten, không cần sửa code\n- Hỗ trợ Runtime 1.3 và 2.0; bật ở tab Acceleration của environment hoặc `spark.native.enabled`\n- Không tự bật; structured streaming, JSON, XML tự fallback về JVM\n- Kiểm tra bằng node có hậu tố Transformer hoặc NativeFileScan trong Spark UI, `df.explain()`",
+          "md": "- Engine C++ vectorized dựa trên Velox và Apache Gluten, không cần sửa code\n- Hỗ trợ Runtime 1.3 và 2.0; bật ở tab Acceleration của environment hoặc `spark.native.enabled`\n- Không tự bật; structured streaming, XML tự fallback về JVM; JSON chỉ được tăng tốc ở bản JSON acceleration (preview)\n- Kiểm tra bằng node có hậu tố Transformer hoặc NativeFileScan trong Spark UI, `df.explain()`",
           "src": [
             {
               "label": "Native execution engine for Fabric Data Engineering",
@@ -1355,8 +1371,12 @@
               "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/runtime-2-0"
             },
             {
-              "label": "Fabric Espresso, Native execution engine for Apache Spark in Fabric",
+              "label": "Azure Synapse Analytics (YouTube): Native execution engine for Apache Spark in Fabric",
               "url": "https://www.youtube.com/watch?v=8GJj4QlFlsw"
+            },
+            {
+              "label": "What's new in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new"
             }
           ]
         },
