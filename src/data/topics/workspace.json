@@ -518,11 +518,15 @@
         },
         {
           "type": "text",
-          "md": "- **Supported items** liên quan đề: Lakehouse, Notebook, Spark Job Definition, Environment, Pipeline, Copy job, Dataflow Gen2, Warehouse, SQL database, Eventhouse, Eventstream, Variable Library\n- Item không hỗ trợ vẫn nằm trong workspace nhưng bị bỏ qua khi commit, update\n- Git chỉ lưu definition; data trong lakehouse, warehouse không vào repo\n- Workflow branched workspace: mỗi developer có workspace và branch riêng, merge vào branch chung qua pull request",
+          "md": "- **Supported items** liên quan đề: Lakehouse, Notebook, Spark Job Definition, Environment, Pipeline, Copy job, Dataflow Gen2, Warehouse, SQL database, Eventhouse, Eventstream, Variable Library\n- Item không hỗ trợ vẫn nằm trong workspace nhưng bị bỏ qua khi commit, update\n- Git chỉ lưu definition; data trong lakehouse, warehouse không vào repo\n- Workflow branched workspace: mỗi developer có workspace và branch riêng, merge vào branch chung qua pull request\n- **Deployment plan** (preview) gắn được khi branch out, sync lần đầu, Update hoặc switch branch để định thứ tự deploy",
           "src": [
             {
               "label": "Overview of Fabric Git integration",
               "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration"
+            },
+            {
+              "label": "Attach a deployment plan (preview)",
+              "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-attach"
             },
             {
               "label": "Manage branches in Fabric",
@@ -596,7 +600,7 @@
             [
               "**Warehouse**",
               "Schema dưới dạng database project",
-              "Warehouse project trong VS Code đang preview; có thể deploy bằng deployment pipeline hoặc CI/CD ngoài"
+              "Git integration và warehouse project trong VS Code đều preview; sync dùng DacFx, chỉ áp phần schema chênh lệch; item definition 2.0 áp bằng Apply system updates; deploy bằng deployment pipeline hoặc CI/CD ngoài"
             ],
             [
               "**SQL database**",
@@ -612,6 +616,10 @@
             {
               "label": "Git integration for Fabric Data Warehouse",
               "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/git-integration"
+            },
+            {
+              "label": "Upgrade Fabric Data Warehouse system files",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/upgrade-warehouse"
             }
           ]
         },
@@ -907,7 +915,7 @@
               "`notebookutils.variableLibrary.getLibrary()` hoặc `get(\"$(/**/lib/var)\")`; `%%configure` để đổi default lakehouse"
             ],
             [
-              "**Shortcut, Copy job, Dataflow Gen2, Eventstream, User data functions**",
+              "**Shortcut, Copy job, Dataflow Gen2, Eventstream, User data functions, Catalog mirroring, action parameter của Deployment plan**",
               "Tham chiếu variable thay cho giá trị cứng"
             ],
             [
@@ -974,7 +982,7 @@
           "type": "callout",
           "tone": "new",
           "title": "Value set dùng thay cho deployment rule",
-          "md": "- Mỗi variable có default value và các alternative value set\n- Mỗi workspace có đúng 1 active value set; mỗi stage của deployment pipeline chọn active value set riêng\n- Number type không dùng được trong pipeline"
+          "md": "- Mỗi variable có default value và các alternative value set\n- Mỗi variable library có đúng 1 active value set trong một workspace; mỗi stage của deployment pipeline chọn active value set riêng\n- Number type không dùng được trong pipeline"
         }
       ]
     },

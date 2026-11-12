@@ -33,7 +33,7 @@
   "cat": "Lifecycle & Ops",
   "what": "Tính năng gom log và metric của item trong workspace vào eventhouse để query bằng KQL.",
   "means": [
-   "Mặc định giữ 30 ngày, không backfill hoạt động trước khi bật.",
+   "Mặc định giữ 30 ngày, đổi được bằng retention policy; không backfill hoạt động trước khi bật.",
    "Query cần ít nhất role Contributor.",
    "Nền cho alert toàn workspace bằng KQL Queryset và Activator."
   ],

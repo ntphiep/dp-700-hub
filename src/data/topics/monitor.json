@@ -103,7 +103,7 @@
           "type": "callout",
           "tone": "new",
           "title": "Monitor hub và workspace monitoring đổi năm 2026",
-          "md": "- **Monitor hub** mới (preview) có các trang Job runs, Alerts, Capacity and cost, Applications, Agents\n- Giao diện cũ vẫn còn, docs gọi là legacy **Monitoring hub**; đề có thể dùng tên cũ\n- Workspace monitoring giờ chạy qua một **monitoring item** gồm eventhouse, Activator, Operations agent\n- Data collection mặc định tắt khi tạo monitoring item và không backfill hoạt động trước đó",
+          "md": "- **Monitor hub** mới (preview) có các trang Job runs, Alerts, Capacity and cost, Applications, Agents\n- Giao diện cũ vẫn còn, docs gọi là legacy **Monitoring hub**; đề có thể dùng tên cũ\n- Workspace monitoring giờ chạy qua một **monitoring item** gồm eventhouse, Activator, Operations agent\n- Data collection mặc định tắt khi tạo monitoring item và không backfill hoạt động trước đó\n- Gom telemetry nhiều workspace: gửi data vào eventhouse của monitoring item khác cùng region; chọn lúc cấu hình, không đổi được sau",
           "src": [
             {
               "label": "What is the Monitor hub",

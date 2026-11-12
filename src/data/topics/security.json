@@ -775,15 +775,11 @@
           "type": "callout",
           "tone": "new",
           "title": "Trạng thái 2026",
-          "md": "- OneLake security GA ngày 06/05/2026 theo Fabric Updates Blog\n- 08/2026: cải tiến cho SQL endpoint (nested group, shortcut, CLS, service principal) GA\n- 09/2026: giao diện Members và Data của OneLake security GA\n- ReadWrite cho phép Viewer ghi vào folder hoặc table qua OneLake, không kèm RLS hay CLS",
+          "md": "- OneLake security không nằm trong danh sách preview của What's new; doc OneLake security không gắn nhãn preview\n- 09/2026: giao diện Members và Data của OneLake security GA\n- ReadWrite cho phép Viewer ghi vào folder hoặc table qua OneLake, không kèm RLS hay CLS",
           "src": [
             {
-              "label": "Fabric Updates Blog: OneLake security (Generally Available)",
-              "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/OneLake-security-Generally-Available/ba-p/5176756"
-            },
-            {
-              "label": "Fabric August 2026 Feature Summary",
-              "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-August-2026-Feature-Summary/ba-p/5325824"
+              "label": "How OneLake security controls data access",
+              "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
             },
             {
               "label": "What's new in Microsoft Fabric",

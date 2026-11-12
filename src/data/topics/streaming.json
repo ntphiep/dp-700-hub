@@ -907,7 +907,7 @@
             ],
             [
               "Real-time mode",
-              "Trigger.RealTime (JVM API)",
+              "Trigger.RealTime (JVM API); PySpark chưa có, khác realTime= của Databricks",
               "Task chạy liên tục, latency thấp nhất",
               "Runtime 2.0; chỉ outputMode update; không ghi Delta"
             ]

@@ -107,7 +107,7 @@
   "what": "Data plane security của OneLake: role Read hoặc ReadWrite trên schema, table, folder, kèm RLS và CLS.",
   "means": [
    "Enforce trong Spark, SQL endpoint ở user's identity mode, Direct Lake on OneLake.",
-   "Chỉ giới hạn Viewer và user có Read; GA từ 05/2026."
+   "Chỉ giới hạn Viewer và user có Read; doc không còn gắn nhãn preview."
   ],
   "related": [
    "defaultreader",
