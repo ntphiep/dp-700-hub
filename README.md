@@ -8,6 +8,7 @@ Static study site for Microsoft DP-700, Fabric Data Engineer Associate, live at 
 | `src/index.html` | App shell shared by all study hubs: navigation, search, light/dark theme, chapters, glossary, sources page, quiz, mock exam, flashcards |
 | `src/data/topics/` | Chapters by exam section, listed in `src/site.json` |
 | `src/data/quiz/`, `src/data/cards/` | Quiz questions and flashcards per chapter |
+| `src/data/cases/` | Case studies; quiz questions link one by field `case`, and the 50-question mock exam ends with one whole case study. Question types are listed in `SCHEMA.md` |
 | `src/data/resources.json` | Curated external study sources shown on the page Nguồn học |
 | `src/data/glossary-parts/` | Glossary terms per chapter; the build merges them and links the first mention in each section to a popover |
 | `src/icons/` | `fab-*`: official Microsoft Fabric icons (`@fabric-msft/svg-icons` 6.1.0 from https://learn.microsoft.com/en-us/fabric/fundamentals/icons); `az-*`: Azure Architecture Icons V24; `logo-*` and `dbx-*`: Databricks icons from https://github.com/oieduardorabelo/databricks-architecture-icons; other names: Tabler outline icons (MIT) recolored to the accent, for generic concepts |

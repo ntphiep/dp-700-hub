@@ -382,5 +382,30 @@
       "label": "MERGE (Transact-SQL)",
       "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric"
     }
+  },
+  {
+    "id": "materialized-lake-view",
+    "term": "Materialized lake view",
+    "full": "",
+    "aliases": [
+      "materialized lake views",
+      "MLV",
+      "MLVs"
+    ],
+    "cat": "Transformation",
+    "what": "Kết quả của một SELECT Spark SQL được lưu thành Delta table trong lakehouse, Fabric tự refresh theo lineage.",
+    "means": [
+      "Dựng medallion bằng SQL khai báo, Fabric tự sắp dependency order và schedule.",
+      "Incremental refresh cần change data feed trên mọi source table.",
+      "Constraint ON MISMATCH DROP hoặc FAIL; mặc định FAIL dừng refresh."
+    ],
+    "related": [
+      "medallion-architecture",
+      "merge"
+    ],
+    "src": {
+      "label": "What are materialized lake views",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/overview-materialized-lake-view"
+    }
   }
 ]

@@ -205,5 +205,23 @@
       "label": "summarize operator",
       "url": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric"
     }
+  },
+  {
+    "id": "bat-c24",
+    "front": "Materialized lake view always runs a full refresh although the query uses only INNER JOIN and SUM",
+    "back": "Enable Delta change data feed (delta.enableChangeDataFeed = true) on every source table. Thiếu CDF thì optimal refresh chỉ chọn no refresh hoặc full refresh.",
+    "ref": {
+      "label": "Optimal refresh for materialized lake views",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view"
+    }
+  },
+  {
+    "id": "bat-c25",
+    "front": "Materialized lake view CONSTRAINT ... CHECK without ON MISMATCH",
+    "back": "Defaults to FAIL: the refresh stops at the first violating row; ON MISMATCH DROP removes the row and lineage shows the dropped count. Databricks expectations mặc định là warn nên dễ nhầm.",
+    "ref": {
+      "label": "Data quality in materialized lake views",
+      "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/data-quality"
+    }
   }
 ]

@@ -270,26 +270,72 @@ def check_quiz(path, d):
         if q.get("id") in seen:
             err(w, "duplicate id")
         seen.add(q.get("id"))
-        keys = [o["k"] for o in q.get("options", [])]
-        if not set(q.get("answer", [])) <= set(keys):
-            err(w, "answer not in options")
-        if len(q.get("answer", [])) != q.get("select"):
-            err(w, "select count != answers")
-        want = {1: 4, 2: 5, 3: 6}.get(q.get("select"))
-        if want is None or len(keys) != want:
-            err(w, f"select {q.get('select')} needs {want} options, has {len(keys)}")
+        t = q.get("type", "choice")
         if q.get("domain") not in DOMAINS:
             err(w, f"bad domain {q.get('domain')}")
         if str(q.get("task", "")) not in TASKS:
             err(w, f"task {q.get('task')!r} not in site.json tasks")
+        if not q.get("stem") or not q.get("explain") or not q.get("refs"):
+            err(w, "need stem + explain + refs")
+        check_src(w, q.get("refs"))
+        if q.get("case"):
+            cp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src", "data", "cases", f"{q['case']}.json")
+            if not os.path.exists(cp):
+                err(w, f"case file missing: {cp}")
+        if t == "hotarea":
+            slots = q.get("slots") or []
+            if not 2 <= len(slots) <= 5:
+                err(w, "hotarea needs 2 to 5 slots")
+            for i, sl in enumerate(slots):
+                opts = sl.get("options") or []
+                if not sl.get("label") or not 2 <= len(opts) <= 5:
+                    err(w, f"slot {i} needs label + 2 to 5 options")
+                if not isinstance(sl.get("answer"), int) or not 0 <= sl["answer"] < len(opts):
+                    err(w, f"slot {i} answer must index its options")
+                if len(set(opts)) != len(opts):
+                    err(w, f"slot {i} duplicate options")
+            for k in ("select", "options", "answer"):
+                if k in q:
+                    err(w, f"hotarea must not have {k}")
+            continue
+        if t not in ("choice", "yesno", "order"):
+            err(w, f"bad type {t}")
+            continue
+        keys = [o["k"] for o in q.get("options", [])]
+        ans = q.get("answer", [])
         if len(keys) != len(set(keys)):
             err(w, "duplicate option keys")
-        if not q.get("explain") or not q.get("refs"):
-            err(w, "need explain + refs")
-        check_src(w, q.get("refs"))
+        if not set(ans) <= set(keys):
+            err(w, "answer not in options")
+        if len(ans) != q.get("select"):
+            err(w, "select count != answers")
+        if t == "choice":
+            want = {1: 4, 2: 5, 3: 6}.get(q.get("select"))
+            if want is None or len(keys) != want:
+                err(w, f"select {q.get('select')} needs {want} options, has {len(keys)}")
+        elif t == "yesno":
+            if [(o["k"], o["t"]) for o in q.get("options", [])] != [("A", "Yes"), ("B", "No")]:
+                err(w, "yesno options must be A Yes, B No")
+            if q.get("select") != 1 or "Solution:" not in q.get("stem", ""):
+                err(w, "yesno needs select 1 and a 'Solution:' line")
+            if not q.get("series"):
+                err(w, "yesno needs series")
+        elif t == "order":
+            if not 4 <= len(keys) <= 7 or not 3 <= len(ans) <= 5 or len(set(ans)) != len(ans):
+                err(w, "order needs 4 to 7 options and 3 to 5 distinct ordered answers")
         for k in keys:
-            if k not in q.get("answer", []) and k not in q.get("wrong", {}):
+            if k not in ans and k not in q.get("wrong", {}):
                 err(w, f"missing wrong-reason for {k}")
+    walk_strings(path, d)
+
+
+def check_case(path, d):
+    w = f"{path} {d.get('id')}"
+    if d.get("id") != os.path.splitext(os.path.basename(path))[0]:
+        err(w, "case id must match file name")
+    tabs = d.get("tabs") or []
+    if not d.get("title") or len(tabs) < 2 or any(not x.get("t") or not x.get("md") for x in tabs):
+        err(w, "case needs title + at least 2 tabs with t and md")
     walk_strings(path, d)
 
 
@@ -386,6 +432,8 @@ def main(argv):
             check_quiz(p, d)
         elif "/cards/" in norm:
             check_cards(p, d)
+        elif "/cases/" in norm:
+            check_case(p, d)
         elif "/services/" in norm:
             check_services(p, d)
         elif norm.endswith("resources.json"):

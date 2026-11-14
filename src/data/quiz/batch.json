@@ -1143,5 +1143,820 @@
         "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
       }
     ]
+  },
+  {
+    "id": "bat-27",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventhouse table named Orders has one row per order. The column Items is a dynamic array, and every element is an object such as {\"productId\": \"P-17\", \"qty\": 3}. Analysts need the total quantity sold per product across all orders, with one output row per productId.\nWhich KQL query should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Orders | evaluate bag_unpack(Items) | summarize TotalQty = sum(toint(qty)) by ProductId = tostring(productId)"
+      },
+      {
+        "k": "B",
+        "t": "Orders | mv-expand Item = Items | summarize TotalQty = sum(toint(Item.qty)) by ProductId = tostring(Item.productId)"
+      },
+      {
+        "k": "C",
+        "t": "Orders | extend Item = Items[0] | summarize TotalQty = sum(toint(Item.qty)) by ProductId = tostring(Item.productId)"
+      },
+      {
+        "k": "D",
+        "t": "Orders | extend ItemCount = array_length(Items) | summarize TotalQty = sum(ItemCount) by OrderId"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "wrong": {
+      "A": "bag_unpack biến key của một property bag thành cột, không tách phần tử mảng thành dòng.",
+      "C": "Items[0] chỉ lấy phần tử đầu tiên, bỏ sót các sản phẩm còn lại của đơn.",
+      "D": "Đếm số item mỗi đơn, không cộng qty và không group theo productId."
+    },
+    "explain": "- Tín hiệu: mỗi phần tử của mảng phải thành một dòng để group theo productId.\n- mv-expand tách dynamic array thành nhiều record, sau đó summarize ... by là phép aggregate thông thường.",
+    "refs": [
+      {
+        "label": "mv-expand operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/mv-expand-operator?view=microsoft-fabric"
+      },
+      {
+        "label": "bag_unpack plugin",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/bag-unpack-plugin?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "bat-28",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "An eventhouse has a table named Payments with one row per payment; an order can be paid in several installments. A table named Orders has exactly one row per OrderId. You run the following query to list every installment with the customer of its order.\n```kql\nPayments\n| join (Orders | project OrderId, CustomerId) on OrderId\n| project PaymentId, OrderId, CustomerId, Amount\n```\nThe result contains only one installment per order. Payments without a matching order must stay excluded.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Change line 2 to use join kind=leftsemi."
+      },
+      {
+        "k": "B",
+        "t": "Change line 2 to use join kind=leftouter."
+      },
+      {
+        "k": "C",
+        "t": "Add hint.strategy=broadcast to the join on line 2."
+      },
+      {
+        "k": "D",
+        "t": "Change line 2 to use join kind=inner."
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "wrong": {
+      "A": "leftsemi chỉ trả về cột của bảng trái, không có CustomerId nên project lỗi.",
+      "B": "leftouter giữ cả payment không có order khớp, trái yêu cầu.",
+      "C": "Hint chỉ đổi cách thực thi, kind vẫn là innerunique."
+    },
+    "explain": "- Kind mặc định của join trong KQL là innerunique: dedup key ở bảng trái trước khi join, nên mỗi OrderId của Payments chỉ còn một dòng.\n- kind=inner giữ mọi cặp dòng khớp, mọi installment đều có mặt và payment không khớp vẫn bị loại.",
+    "refs": [
+      {
+        "label": "join operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/join-operator?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "bat-29",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A KQL table named Sessions stores one row per sign-in with UserId, BusinessUnit, and Timestamp. The billing team charges each business unit for the exact number of distinct users per day, and the result must be identical every time the query runs. The current query is:\n```kql\nSessions\n| summarize Users = dcount(UserId) by BusinessUnit, Day = bin(Timestamp, 1d)\n```\nWhat should you change?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Replace dcount(UserId) with dcount(UserId, 4)."
+      },
+      {
+        "k": "B",
+        "t": "Replace dcount(UserId) with count_distinct(UserId)."
+      },
+      {
+        "k": "C",
+        "t": "Replace dcount(UserId) with count()."
+      },
+      {
+        "k": "D",
+        "t": "Replace bin(Timestamp, 1d) with startofday(Timestamp)."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "wrong": {
+      "A": "Accuracy 4 chỉ giảm sai số, vẫn là ước lượng.",
+      "C": "count() đếm số lần sign-in, không đếm user khác nhau.",
+      "D": "Chỉ đổi cách tạo cột ngày, vẫn dùng dcount ước lượng."
+    },
+    "explain": "- Tín hiệu: exact và kết quả giống nhau mỗi lần chạy.\n- dcount dùng HyperLogLog, trả về số ước lượng và có thể khác giữa các lần chạy; count_distinct đếm chính xác số giá trị khác nhau (giới hạn 100M giá trị).",
+    "refs": [
+      {
+        "label": "count_distinct()",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/count-distinct-aggregation-function?view=microsoft-fabric"
+      },
+      {
+        "label": "dcount()",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/dcount-aggregation-function?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "bat-30",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "type": "hotarea",
+    "stem": "A lakehouse table named bronze_customers receives a full extract every day, so every customer_id appears many times with different updated_at values. Occasionally two rows of the same customer share the same updated_at. The silver table must contain exactly one row per customer, the most recent version.\n```python\nfrom pyspark.sql import functions as F\nfrom pyspark.sql.window import Window\n\nw = Window.partitionBy([1]).orderBy([2])\nlatest = (spark.read.table(\"bronze_customers\")\n    .withColumn(\"rn\", [3].over(w))\n    .filter(F.col(\"rn\") == 1)\n    .drop(\"rn\"))\n```\nWhich values should you select? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "[1] Partition column",
+        "options": [
+          "\"customer_id\"",
+          "\"updated_at\"",
+          "\"rn\""
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[2] Order expression",
+        "options": [
+          "F.col(\"updated_at\").desc()",
+          "F.col(\"updated_at\").asc()",
+          "F.col(\"customer_id\").desc()"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[3] Window function",
+        "options": [
+          "F.row_number()",
+          "F.rank()",
+          "F.dense_rank()"
+        ],
+        "answer": 0
+      }
+    ],
+    "explain": "- [1] customer_id: mỗi partition là một customer.\n- [2] updated_at giảm dần để bản mới nhất nhận rn = 1.\n- [3] row_number đánh số liên tục 1, 2, 3 nên mỗi partition có đúng một dòng rn = 1. rank và dense_rank cho hai dòng cùng updated_at cùng hạng 1, sinh duplicate.",
+    "refs": [
+      {
+        "label": "pyspark.sql.functions.row_number",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.row_number.html"
+      },
+      {
+        "label": "pyspark.sql.functions.rank",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.rank.html"
+      }
+    ]
+  },
+  {
+    "id": "bat-31",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A DataFrame named orders has the columns order_id (string), customer_id (string), discount (double), and channel (string). Before loading the silver table, rows without a customer_id must be removed. A missing discount must become 0 and a missing channel must become \"Unknown\". Rows that miss only discount or channel must be kept.\nWhich PySpark code should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "orders.fillna(0.0).fillna(\"Unknown\")"
+      },
+      {
+        "k": "B",
+        "t": "orders.dropna(subset=[\"customer_id\"]).fillna({\"discount\": 0.0, \"channel\": \"Unknown\"})"
+      },
+      {
+        "k": "C",
+        "t": "orders.dropna().fillna({\"discount\": 0.0, \"channel\": \"Unknown\"})"
+      },
+      {
+        "k": "D",
+        "t": "orders.filter(F.col(\"customer_id\") != None).fillna({\"discount\": 0.0, \"channel\": \"Unknown\"})"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "wrong": {
+      "A": "fillna(\"Unknown\") điền cả customer_id, dòng thiếu customer_id không bị bỏ.",
+      "C": "dropna() mặc định how='any' bỏ mọi dòng có NULL, kể cả dòng chỉ thiếu discount hoặc channel.",
+      "D": "So sánh != với NULL trả về NULL, filter loại mọi dòng; phải dùng isNotNull()."
+    },
+    "explain": "- dropna(subset=[\"customer_id\"]) chỉ bỏ dòng thiếu customer_id.\n- fillna với dict gán giá trị riêng cho từng cột, cột khác giữ nguyên.",
+    "refs": [
+      {
+        "label": "DataFrame.dropna",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.dropna.html"
+      },
+      {
+        "label": "DataFrame.fillna",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.fillna.html"
+      },
+      {
+        "label": "Spark SQL: NULL semantics",
+        "url": "https://spark.apache.org/docs/latest/sql-ref-null-semantics.html"
+      }
+    ]
+  },
+  {
+    "id": "bat-32",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A notebook computes daily revenue per region from a lakehouse table.\n```python\nfrom pyspark.sql import functions as F\n\ndaily = (spark.read.table(\"silver_orders\")\n    .groupBy(\"region\", F.to_date(\"order_ts\").alias(\"order_date\"))\n    .agg(F.sum(\"amount\"), F.countDistinct(\"customer_id\").alias(\"customers\"))\n    .filter(F.col(\"revenue\") > 10000))\n```\nThe cell fails with an AnalysisException because the column revenue can't be resolved. The result must keep only the region and day combinations whose total revenue is above 10,000.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Move the filter before groupBy and change it to F.col(\"amount\") > 10000."
+      },
+      {
+        "k": "B",
+        "t": "Change the filter to use F.col(\"sum_amount\") instead of F.col(\"revenue\")."
+      },
+      {
+        "k": "C",
+        "t": "Add .alias(\"revenue\") to F.sum(\"amount\") inside the agg call."
+      },
+      {
+        "k": "D",
+        "t": "Call .cache() before the filter so that the aggregated columns are materialized."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "wrong": {
+      "A": "Lọc từng dòng amount trước khi group, không phải lọc theo tổng revenue.",
+      "B": "Tên mặc định là sum(amount), không phải sum_amount.",
+      "D": "cache không đổi tên cột, lỗi phân tích vẫn xảy ra."
+    },
+    "explain": "- agg đặt tên mặc định theo biểu thức, ví dụ sum(amount), nên không có cột revenue.\n- alias(\"revenue\") đặt tên cột; filter sau agg đóng vai HAVING, lọc theo tổng của từng nhóm.",
+    "refs": [
+      {
+        "label": "GroupedData.agg",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.GroupedData.agg.html"
+      }
+    ]
+  },
+  {
+    "id": "bat-33",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "type": "hotarea",
+    "stem": "A notebook receives a daily change batch in a view named staged_customers. The view has the same columns as the Delta table silver.customers, including a boolean column is_deleted that marks customers deleted in the source, and it is already deduplicated by customer_id. You must delete removed customers, overwrite changed customers, and insert new customers unless they arrive already marked as deleted.\n```sql\nMERGE INTO silver.customers AS t\nUSING staged_customers AS s\nON t.customer_id = s.customer_id\nWHEN MATCHED AND s.is_deleted = true THEN [1]\nWHEN MATCHED THEN [2]\nWHEN NOT MATCHED AND [3] THEN INSERT *\n```\nWhich values should you select? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "[1] Action",
+        "options": [
+          "DELETE",
+          "UPDATE SET *",
+          "INSERT *"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[2] Action",
+        "options": [
+          "UPDATE SET *",
+          "DELETE",
+          "INSERT *"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[3] Condition",
+        "options": [
+          "s.is_deleted = false",
+          "t.is_deleted = false",
+          "s.is_deleted = true"
+        ],
+        "answer": 0
+      }
+    ],
+    "explain": "- [1] DELETE: whenMatched có thể delete dòng target khớp. Khi có nhiều WHEN MATCHED, chúng chạy theo thứ tự và mọi clause trừ clause cuối phải có điều kiện.\n- [2] UPDATE SET *: ghi đè mọi cột bằng giá trị của source vì hai bên cùng schema.\n- [3] s.is_deleted = false: WHEN NOT MATCHED chạy khi không có dòng target nên điều kiện chỉ xét được cột source; INSERT là action duy nhất của clause này.",
+    "refs": [
+      {
+        "label": "Delta Lake: table deletes, updates, and merges",
+        "url": "https://docs.delta.io/delta-update/"
+      }
+    ]
+  },
+  {
+    "id": "bat-34",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "type": "order",
+    "select": 5,
+    "stem": "Devices send events through an eventstream into a lakehouse table named bronze_events. Every event has a unique event_id and an event_time. Because of retries, the same event can arrive again up to 30 minutes after the first copy. A Spark Structured Streaming query must write every event only once to the Delta table silver_events, and the deduplication state must not grow without limit.\nWhich five code steps should you use in sequence? To answer, move the appropriate steps to the answer area and arrange them in the correct order.",
+    "options": [
+      {
+        "k": "A",
+        "t": ".toTable(\"silver_events\")"
+      },
+      {
+        "k": "B",
+        "t": ".dropDuplicatesWithinWatermark([\"event_id\"])"
+      },
+      {
+        "k": "C",
+        "t": "spark.readStream.table(\"bronze_events\")"
+      },
+      {
+        "k": "D",
+        "t": ".writeStream.option(\"checkpointLocation\", \"Files/checkpoints/silver_events\")"
+      },
+      {
+        "k": "E",
+        "t": ".withWatermark(\"event_time\", \"30 minutes\")"
+      },
+      {
+        "k": "F",
+        "t": ".dropDuplicates([\"event_id\"])"
+      },
+      {
+        "k": "G",
+        "t": ".collect()"
+      }
+    ],
+    "answer": [
+      "C",
+      "E",
+      "B",
+      "D",
+      "A"
+    ],
+    "wrong": {
+      "F": "dropDuplicates chỉ theo event_id, không có cột event time, nên state giữ mọi event_id từ trước tới nay.",
+      "G": "collect là action của batch, streaming DataFrame báo AnalysisException; phải chạy qua writeStream."
+    },
+    "explain": "- dropDuplicatesWithinWatermark chỉ chạy trên streaming DataFrame đã có withWatermark; watermark 30 phút phủ khoảng cách tối đa giữa hai bản trùng.\n- State cũ hơn watermark được dọn nên không tăng mãi.\n- writeStream với checkpoint riêng rồi toTable bắt đầu query ghi vào Delta table.",
+    "refs": [
+      {
+        "label": "DataFrame.dropDuplicatesWithinWatermark",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.dropDuplicatesWithinWatermark.html"
+      },
+      {
+        "label": "Apache Spark: Structured Streaming guide",
+        "url": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html"
+      }
+    ]
+  },
+  {
+    "id": "bat-35",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A notebook appends every hourly file of web logs to a Delta table named logs. Every log record has a unique log_id, and an hourly file never contains the same log_id twice. When a failed run is retried, records that were already written are appended again, so the table contains duplicates. The fix must keep all historical rows and must only add new data to the table.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Call dropDuplicates([\"log_id\"]) on the hourly DataFrame before the append."
+      },
+      {
+        "k": "B",
+        "t": "Write each hourly DataFrame with mode(\"overwrite\") so that a retry replaces the earlier write."
+      },
+      {
+        "k": "C",
+        "t": "Add option(\"mergeSchema\", \"true\") to the append so that Delta detects existing rows."
+      },
+      {
+        "k": "D",
+        "t": "Replace the append with a merge on log_id that has only a whenNotMatchedInsertAll clause."
+      }
+    ],
+    "answer": [
+      "D"
+    ],
+    "wrong": {
+      "A": "File giờ không có duplicate nội bộ; dropDuplicates không so với dòng đã nằm trong table.",
+      "B": "Overwrite xoá toàn bộ data cũ của table.",
+      "C": "mergeSchema chỉ cho phép thêm cột mới, không chống duplicate."
+    },
+    "explain": "- Tín hiệu: duplicate sinh ra khi chạy lại, so với dữ liệu đã có trong table.\n- Insert-only merge chỉ insert log_id chưa có trong table và chỉ append data mới, nên chạy lại không sinh duplicate.",
+    "refs": [
+      {
+        "label": "Delta Lake: table deletes, updates, and merges",
+        "url": "https://docs.delta.io/delta-update/"
+      }
+    ]
+  },
+  {
+    "id": "bat-36",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "type": "hotarea",
+    "stem": "A Fabric Warehouse has a staging table stg.Customer that can contain several versions of the same CustomerID, and two versions can share the same ModifiedDate. You must create the table silver.Customer with exactly one row per CustomerID, the latest version, by using a single T-SQL statement.\n```sql\n[1] silver.Customer AS\nSELECT CustomerID, Email, City, ModifiedDate\nFROM (\n    SELECT CustomerID, Email, City, ModifiedDate,\n           [2] OVER (PARTITION BY CustomerID ORDER BY ModifiedDate DESC) AS rn\n    FROM stg.Customer\n) AS r\n[3] rn = 1;\n```\nWhich values should you select? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "[1] Statement",
+        "options": [
+          "CREATE TABLE",
+          "CREATE VIEW",
+          "INSERT INTO"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[2] Window function",
+        "options": [
+          "ROW_NUMBER()",
+          "RANK()",
+          "DENSE_RANK()"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[3] Clause",
+        "options": [
+          "WHERE",
+          "HAVING",
+          "QUALIFY"
+        ],
+        "answer": 0
+      }
+    ],
+    "explain": "- [1] CREATE TABLE ... AS SELECT (CTAS) tạo table và nạp kết quả trong một lệnh.\n- [2] ROW_NUMBER đánh số không trùng trong partition nên mỗi CustomerID có đúng một dòng rn = 1. Khi trùng ModifiedDate, dòng được chọn không cố định; thêm cột vào ORDER BY nếu cần ổn định.\n- [3] WHERE lọc cột rn của subquery. HAVING dùng sau GROUP BY; QUALIFY (Preview) cần window function trong predicate, còn rn ở đây là cột thường.",
+    "refs": [
+      {
+        "label": "Ingest data using T-SQL",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-tsql"
+      },
+      {
+        "label": "ROW_NUMBER (Transact-SQL)",
+        "url": "https://learn.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql?view=fabric"
+      },
+      {
+        "label": "SELECT - QUALIFY clause",
+        "url": "https://learn.microsoft.com/en-us/sql/t-sql/queries/select-qualify-clause-transact-sql?view=fabric"
+      }
+    ]
+  },
+  {
+    "id": "bat-37",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.1",
+    "source": "original",
+    "select": 1,
+    "stem": "A nightly stored procedure in a Fabric Warehouse loads stg.Product with only the products that changed since the previous run, and then runs the following statement.\n```sql\nMERGE dbo.DimProduct AS t\nUSING stg.Product AS s\nON t.ProductCode = s.ProductCode\nWHEN MATCHED THEN\n    UPDATE SET t.ListPrice = s.ListPrice, t.Category = s.Category\nWHEN NOT MATCHED BY TARGET THEN\n    INSERT (ProductCode, ListPrice, Category) VALUES (s.ProductCode, s.ListPrice, s.Category)\nWHEN NOT MATCHED BY SOURCE THEN\n    DELETE;\n```\nAfter the first run, DimProduct contains only the changed products. Unchanged products must remain in the table.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Run TRUNCATE TABLE dbo.DimProduct before the MERGE statement."
+      },
+      {
+        "k": "B",
+        "t": "Remove the WHEN NOT MATCHED BY SOURCE clause from the statement."
+      },
+      {
+        "k": "C",
+        "t": "Change WHEN NOT MATCHED BY SOURCE to WHEN NOT MATCHED BY TARGET."
+      },
+      {
+        "k": "D",
+        "t": "Replace the MERGE statement with CREATE TABLE AS SELECT from stg.Product."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "wrong": {
+      "A": "TRUNCATE xoá cả product không đổi, kết quả giống lỗi hiện tại.",
+      "C": "MERGE chỉ cho một clause WHEN NOT MATCHED [BY TARGET], và clause đó chỉ INSERT.",
+      "D": "CTAS tạo table chỉ có product thay đổi, mất phần còn lại."
+    },
+    "explain": "- Tín hiệu: staging là incremental, chỉ chứa dòng thay đổi.\n- WHEN NOT MATCHED BY SOURCE xử lý mọi dòng target không có trong source; với DELETE, mọi product không đổi bị xoá. Clause này chỉ hợp với source là full snapshot.",
+    "refs": [
+      {
+        "label": "MERGE (Transact-SQL)",
+        "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric"
+      },
+      {
+        "label": "T-SQL surface area in Fabric Data Warehouse",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area"
+      }
+    ]
+  },
+  {
+    "id": "bat-38",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "type": "hotarea",
+    "stem": "You build the silver layer of a lakehouse with a materialized lake view. A deployment script runs the statement on every release and must replace the existing definition. Orders with a quantity of 0 or less must be removed without stopping the refresh, and the view must be partitioned by order_date.\n```sql\nCREATE [1] MATERIALIZED LAKE VIEW silver.orders_clean\n(\n    CONSTRAINT valid_qty CHECK (quantity > 0) ON MISMATCH [2]\n)\n[3] (order_date)\nAS SELECT o.order_id, o.order_date, o.quantity, p.price\nFROM bronze.orders o\nINNER JOIN bronze.products p ON o.product_id = p.product_id;\n```\nWhich values should you select? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "[1] Option",
+        "options": [
+          "OR REPLACE",
+          "IF NOT EXISTS",
+          "TEMPORARY"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[2] Action",
+        "options": [
+          "DROP",
+          "FAIL"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[3] Clause",
+        "options": [
+          "PARTITIONED BY",
+          "CLUSTER BY",
+          "DISTRIBUTED BY"
+        ],
+        "answer": 0
+      }
+    ],
+    "explain": "- [1] OR REPLACE ghi đè definition cũ. IF NOT EXISTS giữ definition cũ, đứng sau LAKE VIEW và không dùng chung với OR REPLACE.\n- [2] DROP bỏ dòng vi phạm và refresh chạy tiếp; lineage hiện số dòng bị drop. FAIL là mặc định, dừng refresh ở dòng vi phạm đầu tiên.\n- [3] PARTITIONED BY là clause partition trong cú pháp MLV.",
+    "refs": [
+      {
+        "label": "Spark SQL reference for materialized lake views",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view"
+      },
+      {
+        "label": "Data quality in materialized lake views",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/data-quality"
+      }
+    ]
+  },
+  {
+    "id": "bat-39",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "A lakehouse has the following materialized lake view.\n```sql\nCREATE MATERIALIZED LAKE VIEW gold.daily_sales AS\nSELECT o.order_date, p.category, SUM(o.amount) AS revenue\nFROM silver.orders o\nINNER JOIN silver.products p ON o.product_id = p.product_id\nGROUP BY o.order_date, p.category;\n```\nNew rows are only appended to silver.orders. Optimal refresh is on, but every scheduled run rebuilds the whole view and takes 40 minutes. You must shorten the refresh with the LEAST effort.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Redefine the view in PySpark by using the @fmlv.materialized_lake_view decorator."
+      },
+      {
+        "k": "B",
+        "t": "Turn off Optimal refresh in the advanced settings of the schedule."
+      },
+      {
+        "k": "C",
+        "t": "Enable delta.enableChangeDataFeed on silver.orders and silver.products."
+      },
+      {
+        "k": "D",
+        "t": "Add a REFRESH_HINT that declares order_date and category as unique."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "wrong": {
+      "A": "MLV định nghĩa bằng PySpark (Preview) luôn full refresh.",
+      "B": "Tắt optimal refresh làm mọi run đều full refresh.",
+      "D": "REFRESH_HINT (Preview) dành cho update và delete, vẫn cần CDF; data ở đây chỉ append."
+    },
+    "explain": "- Incremental refresh cần Delta change data feed trên mọi source table; thiếu CDF thì optimal refresh chỉ chọn no refresh hoặc full refresh.\n- INNER JOIN và SUM với GROUP BY nằm trong nhóm construct hỗ trợ incremental, SUM không cần partition source.",
+    "refs": [
+      {
+        "label": "Optimal refresh for materialized lake views",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view"
+      },
+      {
+        "label": "Enable optimal refresh for deletes and updates (preview)",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/optimal-refresh-handling-deletes-updates"
+      }
+    ]
+  },
+  {
+    "id": "bat-40",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "select": 1,
+    "stem": "Data engineers maintain the silver and gold transformations of a lakehouse as a chain of Spark SQL notebooks that a pipeline runs in a fixed order every hour. The team wants Fabric to derive the dependency order automatically, skip work when the sources did not change, and drop rows that fail validation rules while recording how many rows were dropped. The solution must have the LEAST operational overhead.\nWhat should you use?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Materialized views in a Fabric Warehouse that use CHECK constraints"
+      },
+      {
+        "k": "B",
+        "t": "Materialized lake views that use ON MISMATCH DROP and a lineage schedule"
+      },
+      {
+        "k": "C",
+        "t": "KQL materialized views in an eventhouse over OneLake shortcuts to the lakehouse tables"
+      },
+      {
+        "k": "D",
+        "t": "Dataflow Gen2 queries with incremental refresh, chained in the existing pipeline"
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "wrong": {
+      "A": "Fabric Warehouse chưa hỗ trợ materialized view.",
+      "C": "KQL materialized view chỉ tạo on table hoặc on materialized-view của KQL database, và không có validation drop row.",
+      "D": "Vẫn phải tự sắp thứ tự trong pipeline, không có rule chất lượng drop row và đếm dòng."
+    },
+    "explain": "- MLV: Fabric suy ra dependency từ definition, refresh theo thứ tự trong lineage, optimal refresh bỏ qua run khi source không đổi.\n- Constraint ON MISMATCH DROP bỏ dòng sai và lineage hiện số dòng bị drop. Docs khuyên không orchestrate refresh MLV từ notebook.",
+    "refs": [
+      {
+        "label": "What are materialized lake views",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/overview-materialized-lake-view"
+      },
+      {
+        "label": "Data quality in materialized lake views",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/data-quality"
+      },
+      {
+        "label": "T-SQL surface area in Fabric Data Warehouse",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area"
+      }
+    ]
+  },
+  {
+    "id": "cs-cr-02",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "case": "contoso-retail",
+    "type": "order",
+    "select": 4,
+    "stem": "You need to configure mirroring for sqldb-pos to meet the technical requirements for the POS data. Fabric must connect by using a SQL authenticated login that has only the permissions that mirroring requires, and only the three Sales tables must be mirrored.\nWhich four actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.",
+    "options": [
+      {
+        "k": "A",
+        "t": "In Retail-Prod, create a Mirrored Azure SQL Database item and connect to sqldb-pos by using the login."
+      },
+      {
+        "k": "B",
+        "t": "Enable change data capture on Sales.Orders, Sales.OrderLines, and Sales.Returns."
+      },
+      {
+        "k": "C",
+        "t": "In the master database of sql-contoso-pos, create a SQL authenticated login for Fabric."
+      },
+      {
+        "k": "D",
+        "t": "Clear Mirror all data, select the three Sales tables, and select Mirror database."
+      },
+      {
+        "k": "E",
+        "t": "In sqldb-pos, create a user for the login and grant SELECT, ALTER ANY EXTERNAL MIRROR, VIEW DATABASE PERFORMANCE STATE, and VIEW DATABASE SECURITY STATE."
+      },
+      {
+        "k": "F",
+        "t": "Add the managed identity of sql-contoso-pos to the Contributor role of Retail-Prod."
+      }
+    ],
+    "answer": [
+      "C",
+      "E",
+      "A",
+      "D"
+    ],
+    "explain": "- Tín hiệu: SQL authenticated login với quyền tối thiểu, chỉ 3 table, table mới không tự mirror.\n- Login tạo trong master trước, rồi database user trong sqldb-pos với đúng 4 quyền SELECT, ALTER ANY EXTERNAL MIRROR, VIEW DATABASE PERFORMANCE STATE, VIEW DATABASE SECURITY STATE.\n- Tạo item Mirrored Azure SQL Database, connect bằng Basic (SQL Authentication) với login đó.\n- Mirror all data tự mirror cả table tạo sau, nên phải bỏ chọn và chọn 3 table, rồi Mirror database.\n- SAMI của sql-contoso-pos đã bật và là primary identity, nên không cần bước đó.",
+    "wrong": {
+      "B": "Azure SQL Database đã bật CDC thì không mirror được; mirroring không cần CDC.",
+      "F": "Khi tạo mirrored database, managed identity của server tự được cấp Read and write trên item; không cần workspace role."
+    },
+    "refs": [
+      {
+        "label": "Tutorial: Configure mirrored databases from Azure SQL Database",
+        "url": "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database-tutorial"
+      },
+      {
+        "label": "Limitations in mirrored databases from Azure SQL Database",
+        "url": "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database-limitations"
+      }
+    ]
+  },
+  {
+    "id": "cs-cr-04",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "case": "contoso-retail",
+    "select": 1,
+    "stem": "You need to meet the technical requirements for the clickstream data. RetailLH must read the files in stcontosoclick without copying them. The storage account allows public network access only from selected virtual networks and IP addresses, and it must accept Fabric requests only from Retail-Prod.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Enable the trusted service exception on stcontosoclick, and create an ADLS Gen2 shortcut in RetailLH."
+      },
+      {
+        "k": "B",
+        "t": "Create a workspace identity for Retail-Prod, add a resource instance rule for Retail-Prod to stcontosoclick by using an ARM template, and create an ADLS Gen2 shortcut in RetailLH."
+      },
+      {
+        "k": "C",
+        "t": "Create a workspace identity for Retail-Prod, and create an ADLS Gen2 shortcut in RetailLH that uses the DFS URL of stcontosoclick, without changing the storage account."
+      },
+      {
+        "k": "D",
+        "t": "Create a pipeline in Retail-Prod that copies the clickstream files into the Files section of RetailLH through an on-premises data gateway."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Tín hiệu: storage account có firewall, đọc không copy, chỉ cho phép đúng workspace Retail-Prod.\n- Trusted workspace access cần workspace identity, capacity F SKU (Contoso có F64) và resource instance rule trỏ tới workspace.\n- Resource instance rule cho Fabric workspace chỉ tạo được bằng ARM template hoặc PowerShell.\n- Shortcut ADLS Gen2 dùng DFS URL; principal của shortcut cần role Storage Blob Data Reader trở lên.",
+    "wrong": {
+      "A": "Trusted service exception cho mọi workspace có workspace identity trong tenant vào được, vi phạm yêu cầu chỉ Retail-Prod; Microsoft cũng không khuyến nghị cách này.",
+      "C": "Thiếu resource instance rule nên firewall của stcontosoclick vẫn chặn request từ Fabric.",
+      "D": "Pipeline copy file vào OneLake, vi phạm yêu cầu không copy."
+    },
+    "refs": [
+      {
+        "label": "Trusted workspace access",
+        "url": "https://learn.microsoft.com/en-us/fabric/security/security-trusted-workspace-access"
+      }
+    ]
+  },
+  {
+    "id": "cs-lw-04",
+    "topic": "batch",
+    "domain": "D2",
+    "task": "2.2",
+    "source": "original",
+    "case": "litware-energy",
+    "select": 1,
+    "stem": "You need to meet the technical requirement for the historical readings. Analysts must query HistoryReadings in LH_History together with MeterReadings in KQL querysets, and the 40 TB of history must not be copied into the eventhouse.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Turn on OneLake availability for MeterDB."
+      },
+      {
+        "k": "B",
+        "t": "Create a OneLake shortcut in MeterDB to the HistoryReadings table, and query it by using the external_table() function."
+      },
+      {
+        "k": "C",
+        "t": "Use Get data in MeterDB to ingest HistoryReadings from OneLake into a new KQL table."
+      },
+      {
+        "k": "D",
+        "t": "Create a OneLake shortcut in LH_History to MeterReadings, and query both tables from a notebook."
+      }
+    ],
+    "answer": [
+      "B"
+    ],
+    "explain": "- Tín hiệu: query bằng KQL, không copy history vào eventhouse.\n- KQL database tạo được OneLake shortcut tới table của lakehouse; shortcut hiện dưới Shortcuts và được query như external table bằng external_table().\n- Có thể union external_table('HistoryReadings') với MeterReadings trong cùng query.\n- Bật Accelerate trên shortcut nếu cần query nhanh hơn.",
+    "wrong": {
+      "A": "OneLake availability đưa data KQL ra OneLake cho engine khác, ngược chiều với yêu cầu.",
+      "C": "Get data ingest 40 TB vào eventhouse, tức là copy data.",
+      "D": "Query chạy trong notebook, không phải KQL queryset như yêu cầu."
+    },
+    "refs": [
+      {
+        "label": "Create OneLake shortcuts in a KQL database",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/onelake-shortcuts"
+      },
+      {
+        "label": "Turn on OneLake availability for an eventhouse",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability"
+      }
+    ]
   }
 ]

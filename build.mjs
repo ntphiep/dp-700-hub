@@ -112,7 +112,7 @@ for (const g of glossary) {
   index.push({ type: "term", title: g.term, sub: plain(g.full ? `${g.full}. ${g.what}` : g.what), href: `#glossary.${g.id}`, text: (g.aliases || []).join(" ") });
 }
 fs.writeFileSync(`${DIST}/data/glossary.json`, JSON.stringify(glossary));
-for (const q of quiz) index.push({ type: "quiz", title: plain(q.stem).slice(0, 120), sub: q.id, href: `#q.${q.id}`, text: q.options.map(o => plain(o.t)).join(" ") });
+for (const q of quiz) index.push({ type: "quiz", title: plain(q.stem).slice(0, 120), sub: q.id, href: `#q.${q.id}`, text: [...(q.options || []).map(o => plain(o.t)), ...(q.slots || []).flatMap(x => [plain(x.label), ...x.options.map(plain)])].join(" ") });
 for (const c of cards) index.push({ type: "card", title: plain(c.front), sub: plain(c.back).slice(0, 140), href: `#cards.${c.topic}`, text: "" });
 for (const e of index) e.text = (e.text || "").slice(0, 1500);
 fs.writeFileSync(`${DIST}/data/search.json`, JSON.stringify(index));

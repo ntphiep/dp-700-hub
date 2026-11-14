@@ -272,6 +272,21 @@ th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-
 .verdict{font-weight:600;font-size:16px}
 .verdict.ok{color:var(--green)} .verdict.no{color:var(--red)}
 .timer{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.case summary{cursor:pointer;line-height:1.6}
+.case .ctabs{margin:10px 0}
+.case .stem{max-height:60vh;overflow:auto}
+.hot{display:flex;flex-direction:column;gap:8px}
+.hrow{display:grid;grid-template-columns:1fr minmax(160px,auto);gap:10px;align-items:center;border:1px solid var(--line-2);border-radius:8px;padding:8px 12px;line-height:1.55}
+.hrow select{font:inherit;max-width:100%;padding:4px 6px;border:1px solid var(--line-2);border-radius:6px;background:var(--panel);color:inherit}
+.hrow.right{border-color:var(--green);background:var(--green-soft)} .hrow.wrong{border-color:var(--red);background:var(--red-soft)}
+.hrow .why{grid-column:1/-1;font-size:13.5px;color:var(--ink-2)}
+.dnd{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dnd>div{display:flex;flex-direction:column;gap:8px;min-width:0}
+.dnd .drow{grid-template-columns:28px 1fr auto;cursor:default}
+.dnd .dbtn{display:flex;gap:4px}
+.dnd .dbtn .btn{padding:2px 8px}
+.qnote{border-left:3px solid var(--amber);background:var(--amber-soft);padding:8px 12px;border-radius:6px;font-size:14px}
+@media (max-width:640px){.dnd{grid-template-columns:1fr}.hrow{grid-template-columns:1fr}}
 /* cards */
 .flash{min-height:220px;display:grid;place-items:center;text-align:center;cursor:pointer;padding:28px;font-size:17px;line-height:1.6;perspective:1000px}
 .flash .side-b{color:var(--ink)}
@@ -355,12 +370,15 @@ function inl(s){
   return t;
 }
 function md(s){
-  const lines=String(s??"").split("\n");let out="",ul=false;
+  const lines=String(s??"").split("\n");let out="",ul=false,fence=null;
   for(const l of lines){
+    if(fence){if(/^\s*```\s*$/.test(l)){out+=`<div class="code">${fence.map((c,i)=>`<div class="ln"><i>${i+1}</i><span>${esc(c)||" "}</span></div>`).join("")}</div>`;fence=null}else fence.push(l);continue}
+    if(/^\s*```/.test(l)){if(ul){out+="</ul>";ul=false}fence=[];continue}
     if(/^\s*-\s+/.test(l)){if(!ul){out+="<ul>";ul=true}out+="<li>"+inl(l.replace(/^\s*-\s+/,""))+"</li>"}
     else{if(ul){out+="</ul>";ul=false}if(l.trim())out+="<p>"+inl(l)+"</p>"}
   }
   if(ul)out+="</ul>";
+  if(fence)out+=`<div class="code">${fence.map((c,i)=>`<div class="ln"><i>${i+1}</i><span>${esc(c)||" "}</span></div>`).join("")}</div>`;
   return `<div class="md">${out}</div>`;
 }
 function srcs(src){
@@ -687,16 +705,16 @@ async function viewQuiz(sub,byId){
   const qs=await allQuiz(),Q=store.state.quiz;
   if(byId){const q=qs.find(x=>x.id===byId);if(q){QZ.mock=null;QZ.filter=q.topic;QZ.only="all";QZ.list=[];QZ.goto=q.id;history.replaceState(null,"","#quiz."+QZ.filter)}}
   else if(sub&&sub!==QZ.filter){QZ.filter=sub;QZ.idx=0;QZ.list=[]}
-  if(QZ.mock)return mockView();
+  if(QZ.mock)return await mockView();
   if(!QZ.list.length){
-    let l=qs.filter(q=>QZ.filter==="all"||(DOMAINS[QZ.filter]?q.domain===QZ.filter:q.topic===QZ.filter));
+    let l=qs.filter(q=>QZ.filter==="all"||(QZ.filter==="case"?!!q.case:DOMAINS[QZ.filter]?q.domain===QZ.filter:q.topic===QZ.filter));
     if(QZ.only==="wrong")l=l.filter(q=>Q[q.id]&&!Q[q.id].ok);
     if(QZ.only==="new")l=l.filter(q=>!Q[q.id]);
     QZ.list=l;QZ.idx=Math.min(QZ.idx,Math.max(0,l.length-1));QZ.picked=[];QZ.shown=false;
   }
   if(QZ.goto){const i=QZ.list.findIndex(x=>x.id===QZ.goto);if(i>=0){QZ.idx=i;QZ.picked=[];QZ.shown=false}QZ.goto=null}
-  const chipsT=[["all","Tất cả"],...Object.keys(DOMAINS).map(k=>[k,k+" "+wl(k)]),...TOPICS.map(t=>[t.id,t.title])];
-  const q=QZ.list[QZ.idx];
+  const chipsT=[["all","Tất cả"],...Object.keys(DOMAINS).map(k=>[k,k+" "+wl(k)]),...TOPICS.map(t=>[t.id,t.title]),...(qs.some(q=>q.case)?[["case","Case study"]]:[])];
+  const q=QZ.list[QZ.idx];await loadCase(q);
   const head=`<header class="hero"><img src="${icon(NI.quiz)}" alt=""><div><h1>Quiz và mock exam</h1></div></header>
    <p class="muted" style="margin:0">Đề luyện thêm ngoài site: trang <a href="#resources">Nguồn học</a>.</p>
    <div class="qtools">${chipsT.map(([k,v])=>`<button class="chip ${QZ.filter===k?"on":""}" data-f="${k}">${esc(v)}</button>`).join("")}</div>
@@ -710,62 +728,128 @@ function wireQuizTools(){
   document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{QZ.filter=b.dataset.f;QZ.list=[];QZ.idx=0;location.hash="quiz."+b.dataset.f});
   const o=$("#only");if(o)o.onchange=()=>{QZ.only=o.value;QZ.list=[];QZ.idx=0;render()};
   const p=$("#qprev"),n=$("#qnext");
-  if(p)p.onclick=()=>{QZ.idx--;QZ.picked=[];QZ.shown=false;render()};
-  if(n)n.onclick=()=>{QZ.idx++;QZ.picked=[];QZ.shown=false;render()};
+  const go=d=>{const a=QZ.list[QZ.idx],b=QZ.list[QZ.idx+d];if(!b||a.case!==b.case)CASE_TAB.i=0;QZ.idx+=d;QZ.picked=[];QZ.shown=false;render()};
+  if(p)p.onclick=()=>go(-1);
+  if(n)n.onclick=()=>go(1);
   document.querySelectorAll("[data-mock]").forEach(b=>b.onclick=()=>startMock(SITE.mocks[+b.dataset.mock]));
 }
-function questionHTML(q,S,practice){
-  const ans=new Set(q.answer),shown=S.shown;
+/* question types: choice (default), yesno, hotarea, order; field case links a case study in data/cases/<id>.json */
+const CASES={},CASE_TAB={i:0,open:true};
+async function loadCase(q){if(q&&q.case&&!(q.case in CASES))CASES[q.case]=await load(`data/cases/${q.case}.json`);return q&&q.case?CASES[q.case]:null}
+const qType=q=>q.type||"choice";
+function keyOf(q){return qType(q)==="hotarea"?q.slots.map(s=>String(s.answer)):q.answer}
+function grade(q,p){p=p||[];const t=qType(q),a=keyOf(q);if(t==="order"||t==="hotarea")return p.length===a.length&&a.every((x,i)=>p[i]===x);return sameSet(p,a)}
+function ready(q,p){if(qType(q)==="hotarea")return q.slots.every((s,i)=>p[i]!=null&&p[i]!=="");return p.length===q.select}
+function ansText(q,p){
+  p=p||[];if(!p.some(x=>x!=null&&x!==""))return"";
+  if(qType(q)==="hotarea")return q.slots.map((s,i)=>`[${i+1}] ${p[i]!=null&&p[i]!==""?s.options[+p[i]]:"?"}`).join("; ");
+  return p.join(qType(q)==="order"?" → ":", ");
+}
+const plainOpt=s=>String(s).replace(/`/g,"");
+function typeChip(q){
+  const t=qType(q);
+  if(t==="yesno")return `<span class="chip">Yes/No series</span>`;
+  if(t==="hotarea")return `<span class="chip">Hot area</span>`;
+  if(t==="order")return `<span class="chip">Drag and drop: xếp ${q.select} bước</span>`;
+  return q.select>1?`<span class="chip">Select ${["","ONE","TWO","THREE"][q.select]}</span>`:"";
+}
+function caseHTML(q){
+  const c=q.case&&CASES[q.case];if(!c)return"";const i=Math.min(CASE_TAB.i,c.tabs.length-1);
+  return `<details class="case card" id="casebox" ${CASE_TAB.open?"open":""}><summary><b>Case study: ${esc(c.title)}</b> <span class="muted">(đọc kịch bản trước khi trả lời)</span></summary>
+   <div class="qtools ctabs">${c.tabs.map((t,j)=>`<button class="chip ${j===i?"on":""}" data-ctab="${j}">${esc(t.t)}</button>`).join("")}</div>
+   <div class="stem">${md(c.tabs[i].md)}</div></details>`;
+}
+function bodyHTML(q,S){
+  const t=qType(q),p=S.picked||[],shown=S.shown;
+  if(t==="hotarea")return `<div class="hot">${q.slots.map((s,i)=>{const v=p[i]??"",ok=v===String(s.answer);
+    return `<label class="hrow ${shown?(ok?"right":"wrong"):""}"><span>${inl(s.label)}</span><select data-slot="${i}" ${shown?"disabled":""} aria-label="${esc(plainOpt(s.label))}"><option value="">Chọn...</option>${s.options.map((o,j)=>`<option value="${j}" ${v===String(j)?"selected":""}>${esc(plainOpt(o))}</option>`).join("")}</select>${shown&&!ok?`<span class="why">Đáp án: ${inl(s.options[s.answer])}</span>`:""}</label>`}).join("")}</div>`;
+  if(t==="order"){
+    const pool=q.options.filter(o=>!p.includes(o.k));
+    return `<div class="dnd"><div><div class="muted">Actions</div>${pool.map(o=>`<button class="opt" data-add="${o.k}" ${shown||p.length>=q.select?"disabled":""}><span class="k">${o.k}</span><span>${inl(o.t)}</span>${shown&&q.wrong?.[o.k]?`<span class="why">${inl(q.wrong[o.k])}</span>`:""}</button>`).join("")||`<div class="empty">Đã dùng hết action.</div>`}</div>
+     <div><div class="muted">Answer area (${p.length}/${q.select})</div>${p.map((k,i)=>{const o=q.options.find(x=>x.k===k)||{t:k};const c=shown?(q.answer[i]===k?"right":"wrong"):"pick";
+      return `<div class="opt drow ${c}"><span class="k">${i+1}</span><span>${inl(o.t)}${shown&&q.wrong?.[k]?`<span class="why">${inl(q.wrong[k])}</span>`:""}</span>${shown?"":`<span class="dbtn"><button class="btn" data-up="${i}" ${i?"":"disabled"} aria-label="Đưa lên">↑</button><button class="btn" data-rm="${i}" aria-label="Bỏ ra">✕</button></span>`}</div>`}).join("")||`<div class="empty">Chọn action bên trái để đưa vào đây theo đúng thứ tự.</div>`}</div></div>`;
+  }
+  const ans=new Set(q.answer);
+  return `<div class="opts">${q.options.map(o=>{
+     const pk=p.includes(o.k);let cls=pk?"pick":"";
+     if(shown){cls=ans.has(o.k)?"right":(pk?"wrong":"")}
+     return `<button class="opt ${cls}" data-k="${o.k}" ${shown?"disabled":""}><span class="k">${o.k}</span><span>${inl(o.t)}</span>${shown&&q.wrong?.[o.k]?`<span class="why">${inl(q.wrong[o.k])}</span>`:""}</button>`}).join("")}</div>`;
+}
+function questionHTML(q,S,practice,note){
+  const shown=S.shown,ok=shown&&grade(q,S.picked);
   const tname=(TOPICS.find(t=>t.id===q.topic)||{title:q.topic}).title;
-  return `<article class="card qcard"><div class="qmeta"><span class="chip">${esc(q.domain)} ${DOMAINS[q.domain]?esc(DOMAINS[q.domain].n):""}</span><span class="chip">${esc(tname)}</span>${q.task?`<span class="chip" title="${esc(TASKS[q.task]||"")}">Task ${esc(q.task)}</span>`:""}${q.select>1?`<span class="chip">Select ${["","ONE","TWO","THREE"][q.select]}</span>`:""}</div>
+  const hint=qType(q)==="hotarea"?"Chọn giá trị cho mọi ô":qType(q)==="order"?`Xếp ${q.select} action theo đúng thứ tự`:`Chọn ${q.select} đáp án`;
+  return `${caseHTML(q)}<article class="card qcard"><div class="qmeta"><span class="chip">${esc(q.domain)} ${DOMAINS[q.domain]?esc(DOMAINS[q.domain].n):""}</span><span class="chip">${esc(tname)}</span>${q.task?`<span class="chip" title="${esc(TASKS[q.task]||"")}">Task ${esc(q.task)}</span>`:""}${q.case?`<span class="chip">Case study</span>`:""}${typeChip(q)}</div>
+   ${note?`<div class="qnote">${note}</div>`:""}
    <div class="stem">${md(q.stem)}</div>
-   <div class="opts">${q.options.map(o=>{
-     const p=S.picked.includes(o.k);let cls=p?"pick":"";
-     if(shown){cls=ans.has(o.k)?"right":(p?"wrong":"")}
-     return `<button class="opt ${cls}" data-k="${o.k}" ${shown?"disabled":""}><span class="k">${o.k}</span><span>${inl(o.t)}</span>${shown&&q.wrong?.[o.k]?`<span class="why">${inl(q.wrong[o.k])}</span>`:""}</button>`}).join("")}</div>
-   ${practice?(shown?`<div class="verdict ${sameSet(S.picked,q.answer)?"ok":"no"}">${sameSet(S.picked,q.answer)?"Đúng":"Chưa đúng. Đáp án: "+q.answer.join(", ")}</div>${md(q.explain)}${srcs(q.refs)}`
-     :`<div class="row"><button class="btn pri" id="qsub" ${S.picked.length===q.select?"":"disabled"}>Chấm câu này</button><span class="muted">Chọn ${q.select} đáp án</span></div>`):""}
+   ${bodyHTML(q,S)}
+   ${practice?(shown?`<div class="verdict ${ok?"ok":"no"}">${ok?"Đúng":"Chưa đúng. Đáp án: "+esc(plainOpt(ansText(q,keyOf(q))))}</div>${md(q.explain)}${srcs(q.refs)}`
+     :`<div class="row"><button class="btn pri" id="qsub" ${ready(q,S.picked)?"":"disabled"}>Chấm câu này</button><span class="muted">${hint}</span></div>`):""}
   </article>`;
 }
 function sameSet(a,b){return a.length===b.length&&a.every(x=>b.includes(x))}
 function wireQuestion(q,S,practice,done){
-  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+  const t=qType(q),cur=()=>(S.picked||[]).slice();
+  document.querySelectorAll(".opt[data-k]").forEach(b=>b.onclick=()=>{
     const k=b.dataset.k;
     if(q.select===1)S.picked=[k];else S.picked=S.picked.includes(k)?S.picked.filter(x=>x!==k):(S.picked.length<q.select?[...S.picked,k]:S.picked);
     done();
   });
-  const s=$("#qsub");if(s)s.onclick=()=>{S.shown=true;const ok=sameSet(S.picked,q.answer);const prev=store.state.quiz[q.id];
+  document.querySelectorAll("[data-slot]").forEach(el=>el.onchange=()=>{const a=Array.from({length:q.slots.length},(_,i)=>(S.picked||[])[i]??"");a[+el.dataset.slot]=el.value;S.picked=a;done()});
+  document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{const a=cur();if(a.length<q.select&&!a.includes(b.dataset.add))a.push(b.dataset.add);S.picked=a;done()});
+  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{const a=cur();a.splice(+b.dataset.rm,1);S.picked=a;done()});
+  document.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{const a=cur(),i=+b.dataset.up;[a[i-1],a[i]]=[a[i],a[i-1]];S.picked=a;done()});
+  document.querySelectorAll("[data-ctab]").forEach(b=>b.onclick=()=>{CASE_TAB.i=+b.dataset.ctab;CASE_TAB.open=true;done()});
+  const cb=$("#casebox");if(cb)cb.ontoggle=()=>{CASE_TAB.open=cb.open};
+  const s=$("#qsub");if(s)s.onclick=()=>{S.shown=true;const ok=grade(q,S.picked);const prev=store.state.quiz[q.id];
     store.state.quiz[q.id]={ok,n:(prev?.n||0)+1,t:Date.now()};store.save();done()};
 }
 async function startMock(m){
-  const n=m.n;
-  const qs=await allQuiz();
-  // Sample by domain weight, then fill any shortfall from the remaining pool.
-  const pick=[];for(const[k,d]of Object.entries(DOMAINS))pick.push(...shuffle(qs.filter(q=>q.domain===k)).slice(0,Math.round(n*d.w/100)));
-  pick.push(...shuffle(qs.filter(q=>!pick.includes(q))).slice(0,Math.max(0,n-pick.length)));
-  const list=shuffle(pick.slice(0,n));
+  const n=m.n,qs=await allQuiz();
+  // A full-length mock ends with one whole case study, as the real exam does.
+  const cids=[...new Set(qs.filter(q=>q.case).map(q=>q.case))];
+  const cid=n>=40&&cids.length?shuffle(cids)[0]:null,caseQs=cid?qs.filter(q=>q.case===cid).sort((a,b)=>a.id<b.id?-1:1):[];
+  const rest=n-caseQs.length;
+  // Units keep a Yes/No series together; sample units by domain weight, then fill any shortfall.
+  const units=[],seen=new Set();
+  for(const q of qs){if(q.case)continue;const u=q.series||q.id;if(seen.has(u))continue;seen.add(u);units.push(q.series?qs.filter(x=>!x.case&&x.series===q.series):[q])}
+  const pick=[];let total=0;
+  for(const[k,d]of Object.entries(DOMAINS)){const want=Math.round(rest*d.w/100);let c=0;for(const u of shuffle(units.filter(u=>u[0].domain===k))){if(c>=want)break;pick.push(u);c+=u.length;total+=u.length}}
+  for(const u of shuffle(units.filter(u=>!pick.includes(u)))){if(total>=rest)break;pick.push(u);total+=u.length}
+  while(total>rest){const i=pick.findIndex(u=>u.length===1);if(i<0)break;pick.splice(i,1);total--}
+  const list=[...shuffle(pick).flat(),...caseQs];
+  CASE_TAB.i=0;CASE_TAB.open=true;
   QZ.mock={list,i:0,ans:{},end:Date.now()+m.min*60000*list.length/n,done:false};
   render();
 }
+// Like the real exam: a Yes/No series item cannot be revisited, and a case study section cannot go back to earlier questions.
+function mockLocked(M){const q=M.list[M.i],p=M.list[M.i-1];return !p||!!q.series||!!p.series||(!!q.case&&p.case!==q.case)}
+function mockNote(M){
+  const q=M.list[M.i],p=M.list[M.i-1];
+  if(q.series)return "Chuỗi Yes/No: các câu cùng mục tiêu, mỗi câu một giải pháp khác. Sau khi sang câu khác, bạn không quay lại câu này được.";
+  if(q.case&&(!p||p.case!==q.case))return "Bắt đầu phần case study. Từ đây không quay lại các câu trước được; trong phần này vẫn quay lại được câu của cùng case.";
+  return "";
+}
 let tick=null;
-function mockView(){
+async function mockView(){
   const M=QZ.mock;
   if(M.done){
-    const res=M.list.map(q=>({q,ok:sameSet(M.ans[q.id]||[],q.answer)}));const score=res.filter(r=>r.ok).length;
+    const res=M.list.map(q=>({q,ok:grade(q,M.ans[q.id])}));const score=res.filter(r=>r.ok).length;
     const byDom=Object.keys(DOMAINS).map(k=>{const r=res.filter(x=>x.q.domain===k);return `<tr><td>${k} ${esc(DOMAINS[k].n)}</td><td>${r.filter(x=>x.ok).length}/${r.length}</td></tr>`}).join("");
     return {html:`<header class="hero"><img src="${icon(NI.quiz)}" alt=""><div><h1>Mock exam: ${score}/${M.list.length} (${Math.round(100*score/M.list.length)}%)</h1></div></header>
       <div class="card"><div class="tbl"><table><thead><tr><th>Domain</th><th>Đúng</th></tr></thead><tbody>${byDom}</tbody></table></div></div>
-      <div class="card"><h3>Xem lại</h3><ol>${res.map(r=>`<li><a href="#q.${r.q.id}">${esc(r.q.id)}</a>: ${r.ok?"đúng":"sai, đáp án "+r.q.answer.join(", ")+", bạn chọn "+((M.ans[r.q.id]||[]).join(", ")||"bỏ trống")}</li>`).join("")}</ol></div>
+      <div class="card"><h3>Xem lại</h3><ol>${res.map(r=>`<li><a href="#q.${r.q.id}">${esc(r.q.id)}</a>${r.q.case?" (case study)":""}: ${r.ok?"đúng":"sai, đáp án "+esc(plainOpt(ansText(r.q,keyOf(r.q))))+", bạn chọn "+(esc(plainOpt(ansText(r.q,M.ans[r.q.id])))||"bỏ trống")}</li>`).join("")}</ol></div>
       <button class="btn pri" id="mclose">Về quiz</button>`,after(){$("#mclose").onclick=()=>{QZ.mock=null;render()}}};
   }
-  const q=M.list[M.i];const S={picked:M.ans[q.id]||[],shown:false};
+  const q=M.list[M.i];await loadCase(q);const S={picked:M.ans[q.id]||[],shown:false};
   return {html:`<div class="row"><b>Mock exam</b><span class="muted">Câu ${M.i+1}/${M.list.length}</span><span class="timer chip" id="tmr"></span><button class="btn" id="mfinish">Nộp bài</button></div>
-     ${questionHTML(q,S,false)}
-     <div class="row"><button class="btn" id="mprev" ${M.i?"":"disabled"}>Câu trước</button><button class="btn pri" id="mnext">${M.i<M.list.length-1?"Câu sau":"Nộp bài"}</button></div>`,
+     ${questionHTML(q,S,false,mockNote(M))}
+     <div class="row"><button class="btn" id="mprev" ${mockLocked(M)?"disabled":""}>Câu trước</button><button class="btn pri" id="mnext">${M.i<M.list.length-1?"Câu sau":"Nộp bài"}</button></div>`,
     after(){
       wireQuestion(q,S,false,()=>{M.ans[q.id]=S.picked;render()});
-      const fin=()=>{M.done=true;clearInterval(tick);for(const x of M.list){const ok=sameSet(M.ans[x.id]||[],x.answer);const prev=store.state.quiz[x.id];store.state.quiz[x.id]={ok,n:(prev?.n||0)+1,t:Date.now()}}store.save();render()};
-      $("#mprev").onclick=()=>{M.i--;render()};$("#mnext").onclick=()=>{if(M.i<M.list.length-1){M.i++;render()}else fin()};$("#mfinish").onclick=fin;
+      const fin=()=>{M.done=true;clearInterval(tick);for(const x of M.list){const ok=grade(x,M.ans[x.id]);const prev=store.state.quiz[x.id];store.state.quiz[x.id]={ok,n:(prev?.n||0)+1,t:Date.now()}}store.save();render()};
+      const step=d=>{const nx=M.list[M.i+d];if(!nx||nx.case!==q.case)CASE_TAB.i=0;M.i+=d;render()};
+      $("#mprev").onclick=()=>step(-1);$("#mnext").onclick=()=>{if(M.i<M.list.length-1)step(1);else fin()};$("#mfinish").onclick=fin;
       const up=()=>{const s=Math.max(0,Math.round((M.end-Date.now())/1000));const el=$("#tmr");if(el)el.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;if(!s)fin()};
       clearInterval(tick);tick=setInterval(up,1000);up();
     }};

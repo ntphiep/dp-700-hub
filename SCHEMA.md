@@ -115,12 +115,24 @@ All blocks accept `"src":[{"label":"...","url":"https://..."}]`.
 
 Each question is `{"id","topic","domain","task","source":"original","select","stem","options":[{"k","t"}],"answer":[...],"explain","wrong":{},"refs":[...]}`. Field `domain` is a key of `domains` and field `task` a key of `tasks` in `src/site.json`.
 
-- **Stem.** English, in the style of the official sample questions: a concrete scenario of 40 to 120 words with the constraint that decides the answer (latency, cost, minimal code, governance, scale). Ends with a direct question. Code snippets are allowed in the stem with `\n` line breaks and backticks.
+- **Stem.** English, in the style of the official sample questions: a concrete scenario of 40 to 120 words with the constraint that decides the answer (latency, cost, minimal code, governance, scale). Ends with a direct question. Code snippets are allowed in the stem: a short name in backticks, multi-line code in a fenced block (a line ```` ```kql ````, ```` ```python ```` or ```` ```sql ````, the code lines with their indentation, then a line ```` ``` ````), rendered with line numbers. Fenced blocks also work in case study tabs.
 - **Style models.** Study the official sample questions, the official practice assessment, YouTube walkthroughs, blogs and community discussions to match difficulty and wording. Write every stem and option yourself.
 - **Option count.** A question with `select` 1 has exactly 4 options, `select` 2 has exactly 5, `select` 3 has exactly 6.
 - **Distractors.** Every option is plausible: a real feature used in the wrong place, an outdated approach, or a setting that breaks the constraint. Do not make the longest option the correct one.
 - **Explain.** Vietnamese bullets with the decisive signal in the stem and why the answer meets it. Field `wrong` gives the specific flaw of each distractor in Vietnamese.
 - **Refs.** Field `refs` points to the docs page that proves the answer.
+
+### Question types
+
+Field `type` picks the format of the real exam; it defaults to `choice`. Every type keeps `id`, `topic`, `domain`, `task`, `source`, `stem`, `explain`, `refs`.
+
+- **`choice`**: the format above.
+- **`yesno`**: one item of a problem-solution series. The stem states the goal, then a line `Solution: ...`, then `Does this meet the goal?`. Options are exactly `[{"k":"A","t":"Yes"},{"k":"B","t":"No"}]`, `select` 1, and `wrong` explains the other option. Items of one series share field `series` (same goal, different solutions) and keep the same stem text up to `Solution:`; a series holds 2 to 4 items.
+- **`hotarea`**: answer area with dropdowns, for completing code or for a Yes/No statement grid. Field `slots` is `[{"label":"<text before the dropdown>","options":["...","..."],"answer":<index of the correct option>}]` with 2 to 5 slots and 2 to 5 options each. No `select`, `options`, `answer` or `wrong`. In a code-completion item the stem shows the code with markers `[1]`, `[2]`, and slot labels start with the same marker. In a statement grid every slot has options `["Yes","No"]` and its label is the statement. Field `explain` gives the reason per slot.
+- **`order`**: drag and drop into a sequence. Field `options` lists 4 to 7 actions `{"k","t"}`, field `answer` is the ordered list of 3 to 5 keys, `select` equals the length of `answer`. Options not in `answer` are distractors and need a reason in `wrong`.
+- **Case study**: any type above with field `case` set to the id of a file `src/data/cases/<id>.json`: `{"id","title","tabs":[{"t":"Overview","md":"..."},{"t":"Existing environment","md":"..."},{"t":"Requirements","md":"..."}]}`, written in English like the real exam. A case study holds 4 to 7 questions; each stem asks about one requirement and names it. The mock exam places one whole case study at the end.
+
+Write every question yourself in the style of the official practice assessment and exam sandbox. Never copy questions from the practice assessment, the exam, or dump sites.
 
 ## Cards `src/data/cards/<topicId>.json`
 

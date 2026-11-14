@@ -1213,5 +1213,1268 @@
     "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/native-execution-engine-overview"
    }
   ]
+ },
+ {
+  "id": "mon-28",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "You mirror an Azure SQL Database into Fabric. A report owner says that the Orders data in OneLake looks hours old while the other 40 mirrored tables look current. You need to check, for every mirrored table, whether replication is running, failed, or running with warnings, how many rows were replicated, and when each table last completed a refresh from the source. The solution must require the least effort.\nWhat should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "The Monitor replication view of the mirrored database"
+   },
+   {
+    "k": "B",
+    "t": "Workspace monitoring with a KQL query on the mirrored database execution logs"
+   },
+   {
+    "k": "C",
+    "t": "queryinsights.exec_requests_history on the SQL analytics endpoint of the mirrored database"
+   },
+   {
+    "k": "D",
+    "t": "The Data insights tab of an eventstream that reads the mirrored database change feed"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: cần status từng table, Rows replicated, Last completed và yêu cầu least effort.\n- Monitor replication có sẵn trong mirrored database: status mức database, danh sách table với status (Running, Running with warning, Stopped, Failed), Rows replicated và Last completed.",
+  "wrong": {
+   "B": "Workspace monitoring có log chi tiết hơn nhưng phải bật monitoring và viết KQL, không phải least effort; workspace monitoring cũng không backfill hoạt động trước khi bật.",
+   "C": "Query insights ghi lịch sử query T-SQL chạy trên endpoint, không ghi trạng thái replication.",
+   "D": "Phải dựng thêm eventstream; Data insights đo event qua eventstream, không đo replication của mirroring."
+  },
+  "refs": [
+   {
+    "label": "Monitor Fabric mirrored database replication",
+    "url": "https://learn.microsoft.com/en-us/fabric/mirroring/monitor"
+   }
+  ]
+ },
+ {
+  "id": "mon-29",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A Copy job copies 25 tables from Azure SQL Database into a Fabric lakehouse. The job uses incremental copy based on a LastModified watermark column. After last night's run, a data steward wants to confirm, for each table, whether the run performed a full or an incremental copy, which watermark range was used, and how many rows were updated in the lakehouse. You need to provide this information with no custom code.\nWhere should you look?",
+  "options": [
+   {
+    "k": "A",
+    "t": "The Gantt view of the Monitoring hub"
+   },
+   {
+    "k": "B",
+    "t": "The per-table metrics in the Copy job panel"
+   },
+   {
+    "k": "C",
+    "t": "The Microsoft Fabric Capacity Metrics app"
+   },
+   {
+    "k": "D",
+    "t": "The DESCRIBE HISTORY output of each lakehouse table"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: cần Load type, watermark range và Rows updated cho từng table, không viết code.\n- Copy job panel liệt kê từng item với Load type, Lower bound, Upper bound (chỉ incremental copy), Rows read, Rows written, và Rows inserted, Rows updated, Rows deleted khi destination là Fabric Lakehouse.",
+  "wrong": {
+   "A": "Gantt view so sánh duration các run theo thanh thời gian, không có watermark hay số row theo table.",
+   "C": "Capacity Metrics app đo CU consumption của capacity, không có metric từng table của Copy job.",
+   "D": "DESCRIBE HISTORY phải chạy cho từng table trong notebook và không biết watermark range Copy job đã dùng."
+  },
+  "refs": [
+   {
+    "label": "How to monitor a Copy job",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/monitor-copy-job"
+   }
+  ]
+ },
+ {
+  "id": "mon-30",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A pipeline runs a notebook every night to transform sales data. The notebook usually takes about 25 minutes, but on some nights it takes over an hour. You need to view the duration trend of all runs of this notebook together with read and write bytes, and you want runs with abnormal duration flagged automatically with expected duration and potential causes. You must not build any custom logging.\nWhat should you use?",
+  "options": [
+   {
+    "k": "A",
+    "t": "The Apache Spark history server of the most recent run"
+   },
+   {
+    "k": "B",
+    "t": "The Gantt view of pipeline runs in the Monitoring hub"
+   },
+   {
+    "k": "C",
+    "t": "Monitor run series for the notebook"
+   },
+   {
+    "k": "D",
+    "t": "The Resources tab of the Spark application detail page"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: xu hướng duration qua nhiều run, read/write bytes, tự đánh dấu run bất thường.\n- Monitor run series gom các run của cùng notebook thành một series, vẽ Duration, Read bytes, Write bytes, tự scan anomaly và hiện Total duration, Expected duration, Potential causes.\n- Anomaly detection chỉ xét run dài từ 5 phút trở lên; notebook này chạy 25 phút nên đủ điều kiện.",
+  "wrong": {
+   "A": "Spark history server phân tích một application, không so sánh nhiều run theo thời gian.",
+   "B": "Gantt view so sánh duration của pipeline run nhưng không có read/write bytes của Spark và không tự đánh dấu anomaly.",
+   "D": "Resources tab cho thấy executor usage của một application, không có trend qua các run."
+  },
+  "refs": [
+   {
+    "label": "Apache Spark monitor run series",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-monitor-run-series"
+   }
+  ]
+ },
+ {
+  "id": "mon-31",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A Dataflow Gen2 transforms CRM data and writes three queries to lakehouse tables through data destinations. Last night's refresh shows Succeeded, but a business analyst reports that the Customers table seems to contain fewer rows than expected. You need to see how many rows that refresh wrote to the Customers destination, without adding any logging steps to the dataflow.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Open the Monitoring hub, select the dataflow, and review the columns of its refresh dashboard"
+   },
+   {
+    "k": "B",
+    "t": "Open the refresh from Recent runs and review the Customers destination activity"
+   },
+   {
+    "k": "C",
+    "t": "Check the Status column of the dataflow in the workspace view"
+   },
+   {
+    "k": "D",
+    "t": "Open the Microsoft Fabric Capacity Metrics app and filter the Compute page on the dataflow item"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: cần số row đã ghi vào một destination của một refresh cụ thể.\n- Trong refresh history, chọn Start time của refresh để xem Tables và Activities; mở activity ghi vào destination để xem Activity statistics như Rows written, Bytes written.\n- Lưu ý: có connector chỉ báo bytes, không báo rows.",
+  "wrong": {
+   "A": "Dashboard của Monitoring hub cho status, start time, duration, submitter, capacity, average duration, số refresh mỗi ngày; không có row theo destination.",
+   "C": "Status column chỉ cho trạng thái refresh cuối và lần save/validate cuối.",
+   "D": "Capacity Metrics app đo CU consumption, không đo số row ghi ra."
+  },
+  "refs": [
+   {
+    "label": "View refresh history and monitor your dataflows",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-monitor"
+   }
+  ]
+ },
+ {
+  "id": "mon-32",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "A workspace hosts 15 Import mode semantic models that refresh overnight. Some refreshes overlap and the last one finishes after 08:00. You need a solution that lets the team use KQL to analyze refresh duration, overlaps between refreshes, and the duration of each processing step for every semantic model in the workspace. The data must remain queryable for at least 30 days.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Install the Microsoft Fabric Capacity Metrics app and use the Compute page"
+   },
+   {
+    "k": "B",
+    "t": "Use the semantic model refresh history in the Monitoring hub"
+   },
+   {
+    "k": "C",
+    "t": "Enable workspace monitoring and query the semantic model operation logs"
+   },
+   {
+    "k": "D",
+    "t": "Query queryinsights.exec_requests_history in the workspace warehouse"
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: KQL, nhiều semantic model, phân tích refresh duration, overlap và processing step.\n- Semantic model operation logs nằm trong workspace monitoring, lưu trong KQL database của Eventhouse; doc nêu rõ dùng log này để phân tích refresh duration, overlaps và processing steps.\n- Monitoring data giữ 30 ngày mặc định.",
+  "wrong": {
+   "A": "Capacity Metrics app là Power BI app về CU consumption và throttling, không cho query KQL từng processing step.",
+   "B": "Monitoring hub cho status và duration của từng run nhưng không cho query KQL các processing step.",
+   "D": "queryinsights chỉ có trong Warehouse và SQL analytics endpoint, ghi query T-SQL, không ghi refresh của semantic model."
+  },
+  "refs": [
+   {
+    "label": "Semantic model operation logs",
+    "url": "https://learn.microsoft.com/en-us/fabric/enterprise/powerbi/semantic-model-operations"
+   },
+   {
+    "label": "Workspace monitoring overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+   }
+  ]
+ },
+ {
+  "id": "mon-33",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "select": 1,
+  "stem": "An eventhouse table named Readings receives sensor data. You create a Fabric Activator alert from a KQL queryset that runs every 5 minutes and posts to a Microsoft Teams channel. Operations wants exactly one Teams message per evaluation that lists every DeviceId whose temperature exceeded 90 in the last 5 minutes, and no message when no device exceeds 90.\nWhich query should you use for the alert?",
+  "options": [
+   {
+    "k": "A",
+    "t": "`Readings | where ingestion_time() > ago(5m) | summarize MaxTemp = max(Temperature) by DeviceId | where MaxTemp > 90`"
+   },
+   {
+    "k": "B",
+    "t": "`Readings | where ingestion_time() > ago(5m) | summarize MaxTemp = max(Temperature) by DeviceId | where MaxTemp > 90 | summarize Devices = make_list(DeviceId) | where array_length(Devices) > 0`"
+   },
+   {
+    "k": "C",
+    "t": "`Readings | where ingestion_time() > ago(5m) | where Temperature > 90 | summarize MaxTemp = max(Temperature) by DeviceId, bin(Timestamp, 1m) | render timechart with (title = 'Devices over 90')`"
+   },
+   {
+    "k": "D",
+    "t": "`Readings | where ingestion_time() > ago(5m) | summarize MaxTemp = max(Temperature) by DeviceId | where MaxTemp > 90 | order by MaxTemp desc | take 1 | project DeviceId, MaxTemp, AlertTime = now()`"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: một message mỗi lần chạy, liệt kê mọi device, không gửi khi không có device nào.\n- Activator gửi một alert cho mỗi record query trả về; doc khuyên gom về một record bằng make_list().\n- summarize không có by luôn trả 1 row, kể cả khi input rỗng, nên cần `where array_length(Devices) > 0` để không gửi message rỗng.",
+  "wrong": {
+   "A": "Trả một record cho mỗi device, nên Activator gửi nhiều message trong một lần chạy.",
+   "C": "Alert trên KQL queryset không hỗ trợ timechart visualization; timechart chỉ hỗ trợ khi tạo alert từ Real-Time Dashboard.",
+   "D": "take 1 chỉ giữ một device, bỏ sót các device khác vượt ngưỡng."
+  },
+  "refs": [
+   {
+    "label": "Create Activator alerts from a KQL queryset",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-alert-queryset"
+   },
+   {
+    "label": "summarize operator",
+    "url": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator?view=microsoft-fabric"
+   },
+   {
+    "label": "array_length() function",
+    "url": "https://learn.microsoft.com/en-us/kusto/query/array-length-function?view=microsoft-fabric"
+   }
+  ]
+ },
+ {
+  "id": "mon-34",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "type": "order",
+  "select": 5,
+  "stem": "A nightly pipeline runs three Copy activities that take two hours in total, followed by a Notebook activity. Last night the Copy activities succeeded and the Notebook activity failed. You need to find the cause, fix the notebook, and complete the run without running the three Copy activities again.\nWhich five actions should you perform in sequence?",
+  "options": [
+   {
+    "k": "A",
+    "t": "In the Monitoring hub, filter the runs by Status and Item type to find the failed pipeline run"
+   },
+   {
+    "k": "B",
+    "t": "Select the pipeline run name to open the run detail view"
+   },
+   {
+    "k": "C",
+    "t": "Under Activity runs, open the output of the failed Notebook activity and read the error"
+   },
+   {
+    "k": "D",
+    "t": "Fix the notebook code and save the notebook"
+   },
+   {
+    "k": "E",
+    "t": "From the run detail view, select Rerun and start from the failed activity"
+   },
+   {
+    "k": "F",
+    "t": "Select the Retry icon on the failed run in the run list"
+   },
+   {
+    "k": "G",
+    "t": "Export the activity runs to CSV and open the file"
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E"
+  ],
+  "explain": "- Tìm run lỗi: Filter pane của Monitoring hub lọc theo Status, Item type, Start time, Submitter, Location.\n- Run detail view hiện pipeline diagram, run ID, status, errors và activity runs; link input/output của từng activity cho thấy error.\n- Sửa notebook trước khi chạy lại, rồi Rerun và chọn bắt đầu từ failed activity để bỏ qua ba Copy activity đã thành công.",
+  "wrong": {
+   "F": "Retry icon trên run list chạy lại cả pipeline run, nên chạy lại ba Copy activity.",
+   "G": "Export to CSV chỉ tải danh sách activity run; không cần cho việc đọc lỗi và không chạy lại gì."
+  },
+  "refs": [
+   {
+    "label": "Monitor pipeline runs in the legacy Monitoring hub",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/monitoring-hub-pipeline-runs"
+   }
+  ]
+ },
+ {
+  "id": "mon-35",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 2,
+  "stem": "A pipeline Copy activity loads a daily CSV extract from Azure Data Lake Storage Gen2 into a lakehouse table. Today the activity failed because a few rows contain text in a numeric column. The business wants the valid rows loaded every day even when some rows are malformed, and the data quality team needs a record of every row that was not loaded so it can follow up with the source owner.\nWhich two settings should you configure on the Copy activity? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Fault tolerance with incompatible rows skipped"
+   },
+   {
+    "k": "B",
+    "t": "Enable logging"
+   },
+   {
+    "k": "C",
+    "t": "Data consistency verification on the Settings tab"
+   },
+   {
+    "k": "D",
+    "t": "Retry count and retry interval on the General tab"
+   },
+   {
+    "k": "E",
+    "t": "Enable staging with the workspace staging storage"
+   }
+  ],
+  "answer": [
+   "A",
+   "B"
+  ],
+  "explain": "- Tín hiệu: vẫn load row hợp lệ và cần danh sách row bị bỏ.\n- Fault tolerance cho phép bỏ qua lỗi giữa chừng như incompatible rows giữa source và destination (enableSkipIncompatibleRow).\n- Enable logging ghi lại copied files, skipped files và skipped rows để đội data quality xem lại.",
+  "wrong": {
+   "C": "Data consistency verification chỉ kiểm tra số row đọc bằng số row ghi cộng số row bị skip; tự nó không bỏ qua row lỗi.",
+   "D": "Retry chạy lại cùng dữ liệu nên lỗi conversion lặp lại.",
+   "E": "Staging là interim store để tối ưu một số kịch bản copy, không xử lý row không tương thích."
+  },
+  "refs": [
+   {
+    "label": "How to copy data using copy activity",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-data-activity"
+   }
+  ]
+ },
+ {
+  "id": "mon-36",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "A Dataflow Gen2 loads a Customers query into a new lakehouse table. Power Query detected the MiddleName column as non-nullable when the destination was created. A new source extract now contains customers without a middle name, and the refresh fails with: \"We can't insert null data into a non-nullable column.\" You need the refresh to succeed and keep the rows that have a null MiddleName.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Keep the existing destination table and change its update method from Replace to Append so that rows are only added"
+   },
+   {
+    "k": "B",
+    "t": "Delete the table and the data destination, set MiddleName to `type nullable text`, then add the destination again"
+   },
+   {
+    "k": "C",
+    "t": "Enable staging on the Customers query so that it is evaluated in the staging lakehouse first"
+   },
+   {
+    "k": "D",
+    "t": "Keep the existing destination table and change the schema option on publish to Fixed schema"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: lỗi E104100 \"We can't insert null data into a non-nullable column\" do cột bị nhận diện non-nullable.\n- Doc hướng dẫn: xoá table ở destination, gỡ data destination, đổi kiểu cột thành nullable bằng `Table.TransformColumnTypes(..., {{\"MiddleName\", type nullable text}})`, rồi thêm lại data destination để table được tạo với cột nullable.",
+  "wrong": {
+   "A": "Append giữ nguyên schema của table cũ, cột vẫn non-nullable; doc nói append không cho đổi schema.",
+   "C": "Staging thay đổi nơi tính toán query, không đổi nullability của cột ở destination.",
+   "D": "Fixed schema giữ nguyên schema hiện có và còn làm publish fail khi schema query khác destination."
+  },
+  "refs": [
+   {
+    "label": "Dataflow Gen2 data destinations and managed settings",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-data-destinations-and-managed-settings"
+   }
+  ]
+ },
+ {
+  "id": "mon-37",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "A notebook appends new orders to a lakehouse Delta table every hour:\n```python\ndf_new.write.format(\"delta\").mode(\"append\").saveAsTable(\"silver.orders\")\n```\nThe source system added a column named promo_code. The next run fails with \"[_LEGACY_ERROR_TEMP_DELTA_0007] A schema mismatch detected when writing to the Delta table\". You need the write to succeed, keep all existing rows and columns, and add promo_code to the table.\nWhat should you change?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add `.option(\"mergeSchema\", \"true\")` to the append write"
+   },
+   {
+    "k": "B",
+    "t": "Add `.option(\"overwriteSchema\", \"true\")` and change the mode to `overwrite`"
+   },
+   {
+    "k": "C",
+    "t": "Run `ALTER TABLE silver.orders SET TBLPROPERTIES ('delta.columnMapping.mode' = 'name')` before the write"
+   },
+   {
+    "k": "D",
+    "t": "Run `ALTER TABLE silver.orders SET TBLPROPERTIES ('delta.enableTypeWidening' = 'true')` before the write"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: thay đổi additive (thêm cột), phải giữ dữ liệu cũ.\n- Delta enforce schema on write nên từ chối write có cột lạ. mergeSchema cho phép thêm cột có trong source mà table chưa có; nó không xoá cột và không đổi type cột cũ.",
+  "wrong": {
+   "B": "overwriteSchema với overwrite thay cả schema lẫn dữ liệu của table, làm mất các row cũ.",
+   "C": "Column mapping phục vụ rename và drop column, không cho write thêm cột mới.",
+   "D": "Type widening dùng để nới type như int sang bigint và còn bật table feature giới hạn client cũ; nó không thêm cột."
+  },
+  "refs": [
+   {
+    "label": "Delta Lake schema evolution",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-schema-evolution"
+   },
+   {
+    "label": "Troubleshoot Spark SQL and schema errors",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/troubleshoot-spark-sql-schema-errors"
+   }
+  ]
+ },
+ {
+  "id": "mon-38",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "An eventhouse table named WebLogs holds billions of rows. The following query fails:\n```kql\nWebLogs\n| where Timestamp > ago(7d)\n| summarize Requests = count(), Urls = make_set(Url) by SessionId\n```\nThe error is: \"Runaway query (E_RUNAWAY_QUERY). Aggregation over string column exceeded the memory budget of 8GB during evaluation.\" SessionId is a string column with very high cardinality. You need the query to return exact results for all sessions.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add `set maxmemoryconsumptionperiterator=32212254720;` before the query to raise the memory limit of each operator to 30 GB"
+   },
+   {
+    "k": "B",
+    "t": "Change the aggregation to `summarize hint.strategy = shuffle Requests = count(), Urls = make_set(Url) by SessionId`"
+   },
+   {
+    "k": "C",
+    "t": "Add `set notruncation;` before the query"
+   },
+   {
+    "k": "D",
+    "t": "Add `| where rand() < 0.1` before the summarize operator to reduce the amount of data that the operator holds in memory"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: E_RUNAWAY_QUERY với thông báo \"Aggregation over string column exceeded the memory budget of 8GB\", và cần kết quả chính xác.\n- Doc nói request option không override được giới hạn này; cách xử lý là dùng shuffle query strategy để chia aggregation ra nhiều node, thường còn nhanh hơn.",
+  "wrong": {
+   "A": "maxmemoryconsumptionperiterator nâng memory cho mỗi operator nhưng doc nói nó không override giới hạn 8GB cho chuỗi trong một operator.",
+   "C": "notruncation bỏ giới hạn result set 500,000 records hoặc 64 MB (E_QUERY_RESULT_SET_TOO_LARGE), không liên quan lỗi memory.",
+   "D": "Sampling giảm memory nhưng chỉ lấy khoảng 10% dữ liệu, vi phạm yêu cầu kết quả chính xác cho mọi session."
+  },
+  "refs": [
+   {
+    "label": "Query limits",
+    "url": "https://learn.microsoft.com/en-us/kusto/concepts/query-limits?view=microsoft-fabric"
+   },
+   {
+    "label": "Shuffle query",
+    "url": "https://learn.microsoft.com/en-us/kusto/query/shuffle-query?view=microsoft-fabric"
+   }
+  ]
+ },
+ {
+  "id": "mon-39",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 1,
+  "stem": "You publish a new eventstream with an Azure SQL Database CDC source and a lakehouse destination, both added and published together. Change events made after publishing arrive in the lakehouse, but the initial snapshot rows of the source tables are missing. The events are still within the eventstream retention period. You need the missing snapshot rows to reach the lakehouse.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Deactivate the Azure SQL Database CDC source, then activate it again by using the Custom time option"
+   },
+   {
+    "k": "B",
+    "t": "Deactivate the lakehouse destination and reactivate it with a Custom time before the publish time"
+   },
+   {
+    "k": "C",
+    "t": "Increase the eventstream throughput level so that the backlog of events is processed faster"
+   },
+   {
+    "k": "D",
+    "t": "Replace the lakehouse destination with an eventhouse destination that uses Direct ingestion mode"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: CDC source, mất đúng phần snapshot đầu, dữ liệu vẫn trong retention.\n- Khi publish, ingestion có thể bắt đầu trước routing, nên một phần snapshot nằm lại trong eventstream mà không tới destination.\n- Lakehouse destination hỗ trợ resume với When streaming was last stopped, Now và Custom time; chọn Custom time sớm hơn để route lại phần dữ liệu đó.\n- Lần sau: bỏ chọn Activate ingestion after adding the data source, publish xong mới activate.",
+  "wrong": {
+   "A": "Azure SQL Database CDC source chỉ hỗ trợ resume từ When streaming was last stopped, không có Custom time.",
+   "C": "Throughput level xử lý backlog do lưu lượng lớn, không route lại event đã bị bỏ qua.",
+   "D": "Eventhouse Direct ingestion không hỗ trợ pause và resume, nên không chọn lại được thời điểm bắt đầu."
+  },
+  "refs": [
+   {
+    "label": "Pause and resume data streams",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/pause-resume-data-streams"
+   }
+  ]
+ },
+ {
+  "id": "mon-40",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "select": 3,
+  "stem": "You migrate a dimension table from SQL Server to a Fabric warehouse. The following statement fails:\n```sql\nCREATE TABLE dbo.DimCustomer (CustomerKey INT NOT NULL, CustomerName NVARCHAR(100), CreatedAt DATETIME, CONSTRAINT PK_DimCustomer PRIMARY KEY (CustomerKey));\n```\nYou need the table, including a primary key on CustomerKey, to be created in the warehouse.\nWhich three changes should you make? Each correct answer presents part of the solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Change NVARCHAR(100) to VARCHAR(100)"
+   },
+   {
+    "k": "B",
+    "t": "Change DATETIME to DATETIME2(6)"
+   },
+   {
+    "k": "C",
+    "t": "Remove the inline constraint and run `ALTER TABLE dbo.DimCustomer ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey) NOT ENFORCED;`"
+   },
+   {
+    "k": "D",
+    "t": "Change INT to BIGINT"
+   },
+   {
+    "k": "E",
+    "t": "Change DATETIME to DATETIMEOFFSET"
+   },
+   {
+    "k": "F",
+    "t": "Keep the constraint inside the CREATE TABLE statement and change it to `CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey) NOT ENFORCED`"
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C"
+  ],
+  "explain": "- nchar và nvarchar không được hỗ trợ cho table trong Warehouse; dùng varchar với UTF-8 collation.\n- datetime và smalldatetime không được hỗ trợ; dùng datetime2, precision tối đa 6.\n- PRIMARY KEY chỉ hỗ trợ với NONCLUSTERED và NOT ENFORCED, và phải thêm bằng ALTER TABLE, không khai báo inline trong CREATE TABLE.",
+  "wrong": {
+   "D": "INT là type được hỗ trợ; đổi sang BIGINT không sửa lỗi nào.",
+   "E": "datetimeoffset cũng nằm trong danh sách type không được hỗ trợ cho table.",
+   "F": "Dù đã dùng NONCLUSTERED và NOT ENFORCED, constraint vẫn không được khai báo inline trong CREATE TABLE; phải thêm bằng ALTER TABLE."
+  },
+  "refs": [
+   {
+    "label": "Data types in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/data-types"
+   },
+   {
+    "label": "Primary keys, foreign keys, and unique keys",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/table-constraints"
+   }
+  ]
+ },
+ {
+  "id": "mon-41",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.2",
+  "source": "original",
+  "type": "hotarea",
+  "stem": "A nightly COPY INTO statement that loads CSV files into a Fabric warehouse fails with Msg 13812, \"Bulk load data conversion error\". Fewer than 100 rows per night are malformed. The load must succeed with the valid rows, and the rejected rows with their error details must be written to the same storage container so that you can query them afterward.\n```sql\nCOPY INTO dbo.TaxiTrips\nFROM 'https://contoso.blob.core.windows.net/files/yellow/'\nWITH (FILE_TYPE = 'CSV', [1] = 100, [2] = 'https://contoso.blob.core.windows.net/files/yellow/');\nSELECT * FROM OPENROWSET(BULK 'https://contoso.blob.core.windows.net/files/yellow/[3]/*/*/error.jsonl');\n```\nHow should you complete the statements?",
+  "slots": [
+   {
+    "label": "[1]",
+    "options": [
+     "FIRSTROW",
+     "MAXERRORS",
+     "ROWTERMINATOR",
+     "FIELDQUOTE"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "[2]",
+    "options": [
+     "ERRORFILE_CREDENTIAL",
+     "CREDENTIAL",
+     "ERRORFILE",
+     "FIELDTERMINATOR"
+    ],
+    "answer": 2
+   },
+   {
+    "label": "[3]",
+    "options": [
+     "_delta_log",
+     "_rejectedrows",
+     "_errors",
+     "rejected"
+    ],
+    "answer": 1
+   }
+  ],
+  "explain": "- [1] MAXERRORS: số row bị reject tối đa trước khi COPY fail; mặc định là 0 nên một row lỗi làm cả lệnh fail.\n- [2] ERRORFILE: thư mục ghi rejected rows và file lỗi, chỉ áp dụng cho CSV; đặt cùng storage với source. ERRORFILE_CREDENTIAL chỉ là credential để ghi vào đó.\n- [3] _rejectedrows: COPY tạo thư mục con tên này, bên dưới là thư mục theo thời gian và statement, chứa error.jsonl và file row bị reject.",
+  "refs": [
+   {
+    "label": "Troubleshoot ingestion errors in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-ingestion-errors"
+   },
+   {
+    "label": "COPY INTO (Transact-SQL)",
+    "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/copy-into-transact-sql?view=fabric"
+   }
+  ]
+ },
+ {
+  "id": "mon-42",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "type": "hotarea",
+  "stem": "Finance reports send queries to a Fabric warehouse with `OPTION (LABEL = 'fin_daily')`. Users say the reports got slower this month. First, you need the query shapes with the highest median execution time over the last 30 days. Then you need the fin_daily query shapes that run most often, so that you can tune the ones with the most successful executions first.\n```sql\nSELECT TOP 10 query_hash, last_run_command, number_of_runs, median_total_elapsed_time_ms\nFROM queryinsights.[1]\nWHERE last_run_command LIKE '%fin_daily%'\nORDER BY [2] DESC;\nSELECT TOP 10 query_hash, last_run_command, number_of_successful_runs FROM queryinsights.[3] WHERE last_run_command LIKE '%fin_daily%' ORDER BY number_of_successful_runs DESC;\n```\nHow should you complete the statements?",
+  "slots": [
+   {
+    "label": "[1]",
+    "options": [
+     "frequently_run_queries",
+     "long_running_queries",
+     "exec_sessions_history",
+     "sql_pool_insights"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "[2]",
+    "options": [
+     "number_of_runs",
+     "last_run_start_time",
+     "median_total_elapsed_time_ms",
+     "last_run_session_id"
+    ],
+    "answer": 2
+   },
+   {
+    "label": "[3]",
+    "options": [
+     "exec_requests_history",
+     "exec_sessions_history",
+     "frequently_run_queries",
+     "sql_pool_insights"
+    ],
+    "answer": 2
+   }
+  ],
+  "explain": "- [1] long_running_queries: gom query theo shape (query_hash) và trả thông tin theo execution time.\n- [2] median_total_elapsed_time_ms: median execution time qua các run, đúng cột để xếp hạng query chậm.\n- [3] frequently_run_queries: gom query theo shape và trả thông tin về query chạy thường xuyên, có cột number_of_successful_runs.\n- exec_requests_history có một row cho mỗi request, không gom theo shape; sql_pool_insights cho pressure của SQL pool.\n- Query insights giữ lịch sử 30 ngày; query xong có thể mất tới 15 phút mới hiện.",
+  "refs": [
+   {
+    "label": "Query insights in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+   },
+   {
+    "label": "queryinsights.long_running_queries",
+    "url": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-long-running-queries-transact-sql?view=fabric"
+   },
+   {
+    "label": "queryinsights.frequently_run_queries",
+    "url": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-frequently-run-queries-transact-sql?view=fabric"
+   }
+  ]
+ },
+ {
+  "id": "mon-43",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 2,
+  "stem": "A query in a Fabric warehouse joins dbo.FactSales (4 billion rows) to two dimensions and aggregates sales by region. It returns a warning, \"One or more non-scalable operation is detected\", and runs for 40 minutes. The query has no TOP clause and no global ORDER BY, so its semantics do not require single-node execution. You must not change the capacity size.\nWhich two actions should you take? Each correct answer presents a complete solution.",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add `OPTION (FORCE DISTRIBUTED PLAN)` to the query"
+   },
+   {
+    "k": "B",
+    "t": "Filter FactSales to the needed date range before the joins"
+   },
+   {
+    "k": "C",
+    "t": "Add `OPTION (LABEL = 'sales_by_region')` to the query"
+   },
+   {
+    "k": "D",
+    "t": "Run `SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED` in the session before running the query"
+   },
+   {
+    "k": "E",
+    "t": "Create a manual statistics object on the FactSales (CustomerKey, DateKey) column pair WITH FULLSCAN"
+   }
+  ],
+  "answer": [
+   "A",
+   "B"
+  ],
+  "explain": "- Tín hiệu: warning non-scalable operation, ngữ nghĩa query không cần single node, không được tăng capacity.\n- Doc đưa hai hướng: giảm kích thước dataset đã filter, và nếu ngữ nghĩa không cần single node thì ép distributed plan bằng `OPTION (FORCE DISTRIBUTED PLAN)`.",
+  "wrong": {
+   "C": "LABEL chỉ gắn nhãn để tìm query trong query insights, không đổi plan.",
+   "D": "Warehouse chỉ dùng snapshot isolation; SET TRANSACTION ISOLATION LEVEL nằm trong danh sách lệnh không hỗ trợ.",
+   "E": "Manually created multi-column stats không được hỗ trợ; Warehouse chỉ cho tạo single-column histogram statistics."
+  },
+  "refs": [
+   {
+    "label": "Performance guidelines in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/guidelines-warehouse-performance"
+   },
+   {
+    "label": "T-SQL surface area in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area"
+   }
+  ]
+ },
+ {
+  "id": "mon-44",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "type": "yesno",
+  "series": "mon-s1",
+  "select": 1,
+  "stem": "A pipeline uses a ForEach activity to iterate over 120 table names. Inside the loop, a Copy activity copies the table from an Azure SQL database into a lakehouse, then a Stored procedure activity logs the result. The tables are independent of each other. The ForEach activity has Sequential selected, and the run takes six hours. The source database can handle at most 20 concurrent copies. You need the pipeline to copy up to 20 tables at the same time.\nSolution: You clear Sequential on the ForEach activity and set Batch count to 20.\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: muốn tối đa 20 table chạy cùng lúc.\n- Bỏ Sequential thì ForEach chạy các item song song; Batch count là số item tối đa xử lý cùng lúc, nên 20 đúng giới hạn của source.\n- Trong mỗi item, Copy rồi Stored procedure vẫn chạy tuần tự với nhau.",
+  "wrong": {
+   "B": "Cấu hình này đáp ứng đúng: song song và chặn ở 20 iteration."
+  },
+  "refs": [
+   {
+    "label": "ForEach activity in Fabric pipelines",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/foreach-activity"
+   },
+   {
+    "label": "ForEach activity in Azure Data Factory (isSequential, batchCount)",
+    "url": "https://learn.microsoft.com/en-us/azure/data-factory/control-flow-for-each-activity"
+   }
+  ]
+ },
+ {
+  "id": "mon-45",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "type": "yesno",
+  "series": "mon-s1",
+  "select": 1,
+  "stem": "A pipeline uses a ForEach activity to iterate over 120 table names. Inside the loop, a Copy activity copies the table from an Azure SQL database into a lakehouse, then a Stored procedure activity logs the result. The tables are independent of each other. The ForEach activity has Sequential selected, and the run takes six hours. The source database can handle at most 20 concurrent copies. You need the pipeline to copy up to 20 tables at the same time.\nSolution: You keep Sequential selected on the ForEach activity and set Batch count to 20.\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Sequential xử lý từng item một; Batch count chỉ điều khiển số iteration song song khi Sequential bị tắt (isSequential = false).\n- Pipeline vẫn chép một table mỗi lần.",
+  "wrong": {
+   "A": "Batch count không có tác dụng khi Sequential đang bật."
+  },
+  "refs": [
+   {
+    "label": "ForEach activity in Fabric pipelines",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/foreach-activity"
+   },
+   {
+    "label": "ForEach activity in Azure Data Factory (isSequential, batchCount)",
+    "url": "https://learn.microsoft.com/en-us/azure/data-factory/control-flow-for-each-activity"
+   }
+  ]
+ },
+ {
+  "id": "mon-46",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "type": "yesno",
+  "series": "mon-s1",
+  "select": 1,
+  "stem": "A pipeline uses a ForEach activity to iterate over 120 table names. Inside the loop, a Copy activity copies the table from an Azure SQL database into a lakehouse, then a Stored procedure activity logs the result. The tables are independent of each other. The ForEach activity has Sequential selected, and the run takes six hours. The source database can handle at most 20 concurrent copies. You need the pipeline to copy up to 20 tables at the same time.\nSolution: You keep Sequential selected on the ForEach activity and set Degree of copy parallelism to 20 on the Copy activity.\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Degree of copy parallelism là số thread tối đa bên trong một Copy activity, không phải số table chạy cùng lúc.\n- ForEach vẫn chạy tuần tự, nên chỉ một table được chép tại một thời điểm.",
+  "wrong": {
+   "A": "Tăng thread trong một Copy activity có thể làm từng lần copy nhanh hơn nhưng không chép nhiều table cùng lúc."
+  },
+  "refs": [
+   {
+    "label": "ForEach activity in Fabric pipelines",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/foreach-activity"
+   },
+   {
+    "label": "ForEach activity in Azure Data Factory (isSequential, batchCount)",
+    "url": "https://learn.microsoft.com/en-us/azure/data-factory/control-flow-for-each-activity"
+   },
+   {
+    "label": "Copy activity performance and scalability guide",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/copy-activity-performance-and-scalability-guide"
+   }
+  ]
+ },
+ {
+  "id": "mon-47",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "type": "hotarea",
+  "stem": "You maintain a lakehouse table named sales in a workspace that uses Fabric Runtime 2.0. The table uses liquid clustering. Last week you ran `ALTER TABLE sales CLUSTER BY (product_id)` to replace the previous clustering key customer_id. Auto compaction is enabled for the table.\nFor each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+  "slots": [
+   {
+    "label": "Regular INSERT operations into sales cluster the inserted rows by product_id at write time.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "Running `OPTIMIZE sales FULL` reclusters files that were clustered by customer_id.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 0
+   },
+   {
+    "label": "`OPTIMIZE sales VORDER` applies V-Order to the rewritten files even if the table property delta.parquet.vorder.enabled is false.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 0
+   },
+   {
+    "label": "Auto compaction runs asynchronously after the write commits, so writers never wait for it.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 1
+   }
+  ],
+  "explain": "- Câu 1 No: liquid clustering áp layout khi OPTIMIZE chạy, không áp lúc write; write thường không cluster dữ liệu.\n- Câu 2 Yes: OPTIMIZE thường không recluster file đã được coi là clustered; OPTIMIZE FULL (từ Runtime 2.0) recluster toàn table theo key mới.\n- Câu 3 Yes: từ khoá VORDER ép V-Order cho file được rewrite, bất kể session hay table setting.\n- Câu 4 No: auto compaction chạy OPTIMIZE đồng bộ ngay sau khi write commit, nên có thể làm tăng latency của write.",
+  "refs": [
+   {
+    "label": "Table compaction",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/table-compaction"
+   },
+   {
+    "label": "Liquid clustering",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering"
+   }
+  ]
+ },
+ {
+  "id": "mon-48",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "select": 1,
+  "stem": "An eventhouse table named Readings contains two billion rows from 50,000 devices. A Real-Time Dashboard tile runs `Readings | summarize arg_max(Timestamp, *) by DeviceId` to show the latest reading per device, and the tile is slow. The dashboard can tolerate data that is up to five minutes old. Devices that have not reported since yesterday must still appear. You need to minimize query cost for the tile.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Run `.create async materialized-view with (backfill=true) LatestReading on table Readings { Readings | summarize arg_max(Timestamp, *) by DeviceId }` and query `materialized_view(\"LatestReading\")`"
+   },
+   {
+    "k": "B",
+    "t": "Run `.create materialized-view LatestReading on table Readings { Readings | summarize arg_max(Timestamp, *) by DeviceId }` and change the dashboard tile query to `materialized_view(\"LatestReading\")`"
+   },
+   {
+    "k": "C",
+    "t": "Create an update policy on Readings that writes `summarize arg_max(Timestamp, *) by DeviceId` into a table named LatestReading"
+   },
+   {
+    "k": "D",
+    "t": "Run `.alter table Readings policy caching hot = 3650d`"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Tín hiệu: aggregation arg_max lặp lại, chấp nhận dữ liệu cũ vài phút, device cũ vẫn phải có.\n- Materialized view giữ sẵn một record cho mỗi DeviceId; backfill=true dựng view từ toàn bộ record hiện có và bắt buộc lệnh create phải async.\n- materialized_view() chỉ đọc phần đã materialize, luôn nhanh hơn query cả view; phù hợp khi chấp nhận đánh đổi freshness.",
+  "wrong": {
+   "B": "Không backfill thì view chỉ materialize record ingest từ lúc tạo, nên phần materialized thiếu device chưa gửi dữ liệu mới.",
+   "C": "Update policy chạy riêng cho từng ingestion batch nên chỉ aggregate trong một batch; doc nói aggregation thì luôn dùng materialized view.",
+   "D": "Caching policy giữ thêm dữ liệu trên SSD nhưng query vẫn phải aggregate hai tỷ row mỗi lần."
+  },
+  "refs": [
+   {
+    "label": "Materialized views overview",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-overview?view=microsoft-fabric"
+   },
+   {
+    "label": ".create materialized-view",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-create?view=microsoft-fabric"
+   },
+   {
+    "label": "Materialized view use cases (vs. update policies)",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-use-cases?view=microsoft-fabric"
+   }
+  ]
+ },
+ {
+  "id": "mon-49",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "type": "order",
+  "select": 4,
+  "stem": "A notebook joins a 2 TB orders table to a customers table. The join stage runs for two hours: most tasks finish in seconds, but a few tasks run for over an hour. You suspect data skew on customer_id. You need to confirm the skew, reduce the stage duration, and verify the improvement across future runs.\nWhich four actions should you perform in sequence?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Open the Spark application detail page of the notebook run from the Monitoring hub"
+   },
+   {
+    "k": "B",
+    "t": "Open the Spark history server and review the Data Skew tab for the slow stage"
+   },
+   {
+    "k": "C",
+    "t": "Set `spark.sql.adaptive.skewJoin.enabled` to true for the notebook session and rerun the notebook"
+   },
+   {
+    "k": "D",
+    "t": "Compare the new run with earlier runs by using Monitor run series"
+   },
+   {
+    "k": "E",
+    "t": "Set `spark.network.timeout` to 800s"
+   },
+   {
+    "k": "F",
+    "t": "Set `spark.sql.autoBroadcastJoinThreshold` to -1"
+   }
+  ],
+  "answer": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "explain": "- Mở Spark application detail page (từ Monitoring hub hoặc Recent runs), rồi mở Spark history server cho application đã kết thúc.\n- Data Skew tab dùng rule mặc định: task đọc hơn 3 lần trung bình và hơn 10 MB; tab cho thấy stage và task bị skew.\n- AQE bật mặc định trong Fabric; sub-setting `spark.sql.adaptive.skewJoin.enabled` tách partition lớn của skewed join lúc runtime. Nếu chưa đủ thì salting.\n- Monitor run series so duration của run mới với các run trước.",
+  "wrong": {
+   "E": "Tăng network timeout dành cho executor exit code 143 do heartbeat timeout, không xử lý skew.",
+   "F": "Tắt broadcast join dành cho trường hợp broadcast table lớn gây OOM; ở đây vấn đề là vài partition quá lớn."
+  },
+  "refs": [
+   {
+    "label": "Troubleshoot Spark memory and performance errors",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/troubleshoot-spark-memory-performance"
+   },
+   {
+    "label": "Apache Spark history server",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-history-server"
+   },
+   {
+    "label": "Spark application detail monitoring",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/spark-detail-monitoring"
+   }
+  ]
+ },
+ {
+  "id": "cs-cr-05",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "case": "contoso-retail",
+  "select": 1,
+  "stem": "You need to meet the monitoring requirement for the mirrored POS database. The operations team must analyze replication status, failures, and latency for each mirrored table over time by using KQL, and build a Real-Time Dashboard on the results. The solution must minimize development effort.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Open Monitor replication in the mirrored database every day and export the table list."
+   },
+   {
+    "k": "B",
+    "t": "Configure workspace monitoring for Retail-Prod and query the MirroredDatabaseTableExecution table in the monitoring KQL database."
+   },
+   {
+    "k": "C",
+    "t": "Use the Microsoft Fabric Capacity Metrics app to view the capacity units that mirroring consumes per table."
+   },
+   {
+    "k": "D",
+    "t": "Create a notebook that calls the mirroring REST API every five minutes and appends the table status to a Delta table."
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: theo thời gian, KQL, Real-Time Dashboard, ít công phát triển.\n- Khi workspace monitoring bật, log của mirrored database tự vào table MirroredDatabaseTableExecution trong monitoring KQL database.\n- Log gồm replication, thay đổi table, status, failure và replication latency; query bằng KQL và dựng dashboard trực tiếp.",
+  "wrong": {
+   "A": "Monitor replication chỉ cho status, rows replicated, last completed hiện tại; export tay không phải KQL và tốn công.",
+   "C": "Compute dùng để replicate vào OneLake là miễn phí, và app không cho status hay latency theo table.",
+   "D": "REST API trả status, nhưng phải viết và maintain notebook, trái với yêu cầu ít công phát triển."
+  },
+  "refs": [
+   {
+    "label": "Monitor Fabric mirrored database replication",
+    "url": "https://learn.microsoft.com/en-us/fabric/mirroring/monitor"
+   },
+   {
+    "label": "Mirroring Azure SQL Database",
+    "url": "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database"
+   }
+  ]
+ },
+ {
+  "id": "cs-cr-06",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "case": "contoso-retail",
+  "type": "hotarea",
+  "stem": "You need to meet the performance requirements for RetailDW and investigate the issue with the StoreSales reports. You write the following T-SQL statements:\n```sql\nSELECT TOP 10 query_hash, number_of_runs, last_run_command FROM queryinsights.[1] ORDER BY [2] DESC;\nSELECT sql_pool_name, timestamp FROM queryinsights.[3] WHERE [4] = 1 AND timestamp >= DATEADD(DAY, -7, GETUTCDATE());\n```\nHow should you complete the statements? To answer, select the appropriate options in the answer area.",
+  "slots": [
+   {
+    "label": "[1]",
+    "options": [
+     "frequently_run_queries",
+     "long_running_queries",
+     "exec_sessions_history",
+     "exec_requests_history"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "[2]",
+    "options": [
+     "last_run_total_elapsed_time_ms",
+     "number_of_runs",
+     "median_total_elapsed_time_ms"
+    ],
+    "answer": 2
+   },
+   {
+    "label": "[3]",
+    "options": [
+     "exec_requests_history",
+     "sql_pool_insights",
+     "long_running_queries"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "[4]",
+    "options": [
+     "is_optimized_for_reads",
+     "is_pool_under_pressure"
+    ],
+    "answer": 1
+   }
+  ],
+  "explain": "- [1] long_running_queries gom query theo query shape (query_hash) và xếp theo thời gian chạy.\n- [2] Yêu cầu nói median duration, nên sắp theo median_total_elapsed_time_ms; last_run chỉ là lần chạy cuối.\n- [3] sql_pool_insights cho metric và trạng thái pressure của từng SQL pool.\n- [4] is_pool_under_pressure = 1 lọc các thời điểm pool bị pressure.\n- Query insights giữ data 30 ngày, nên query 1 không cần lọc ngày.",
+  "refs": [
+   {
+    "label": "Query insights in Fabric data warehousing",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights"
+   },
+   {
+    "label": "queryinsights.long_running_queries",
+    "url": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-long-running-queries-transact-sql?view=fabric"
+   },
+   {
+    "label": "queryinsights.sql_pool_insights",
+    "url": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-sql-pool-insights-transact-sql?view=fabric"
+   }
+  ]
+ },
+ {
+  "id": "cs-lw-05",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.3",
+  "source": "original",
+  "case": "litware-energy",
+  "select": 1,
+  "stem": "You need to meet the performance requirements for EH_Grid and resolve the issue with the first dashboard queries after quiet nights. On weekdays from 05:00 to 09:00, EH_Grid must guarantee at least 16 CUs. Outside those hours, eventhouse cost must stay as low as possible.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Change the caching policy of MeterReadings to hot = 365d."
+   },
+   {
+    "k": "B",
+    "t": "Enable Capacity Planner mode for EH_Grid and set a minimum capacity of 16 CUs in every block of the weekly schedule."
+   },
+   {
+    "k": "C",
+    "t": "Enable Capacity Planner mode for EH_Grid and customize the minimum capacity schedule with 16 CUs in the 05:00 to 09:00 blocks on weekdays and No minimum in all other blocks."
+   },
+   {
+    "k": "D",
+    "t": "Raise the Event throughput level of ES_Meters to High."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: không chờ reactivate, 16 CU trong khung giờ cố định, cost thấp ngoài khung giờ.\n- Capacity Planner mode (trước đây là Always-on) giữ eventhouse luôn active, không suspend khi idle.\n- Schedule chia 60 phút một block; block No minimum dùng mức mặc định 2 CU và autoscale vẫn chạy.\n- Thay đổi schedule mất tới 30 phút mới có hiệu lực.",
+  "wrong": {
+   "A": "Caching policy giữ data trên SSD để query nhanh, không ngăn eventhouse suspend và làm tăng storage cost.",
+   "B": "16 CU cả tuần trả tiền cho capacity ngoài giờ cao điểm, trái với yêu cầu cost thấp nhất.",
+   "D": "Event throughput chỉ scale eventstream cho source và destination, không ảnh hưởng việc eventhouse suspend."
+  },
+  "refs": [
+   {
+    "label": "Schedule smart Eventhouse capacity control",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse-smart-capacity-control"
+   },
+   {
+    "label": "Eventhouse overview",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse"
+   },
+   {
+    "label": "Change data policies",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-policies"
+   },
+   {
+    "label": "Configure settings for a Fabric eventstream",
+    "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/configure-settings"
+   }
+  ]
+ },
+ {
+  "id": "cs-lw-06",
+  "topic": "monitor",
+  "domain": "D3",
+  "task": "3.1",
+  "source": "original",
+  "case": "litware-energy",
+  "type": "hotarea",
+  "stem": "You need to meet the monitoring requirement for Litware-Ingest. As a workspace admin, you configure workspace monitoring to send data to the Eventhouse in the Monitoring Item of Litware-Ingest, and then you turn on data collection.\nFor each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+  "slots": [
+   {
+    "label": "Ana can configure workspace monitoring for Litware-Ingest by using her Contributor role.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "Eventstream error metrics from ES_Meters are collected in the monitoring KQL database.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 0
+   },
+   {
+    "label": "The monitoring KQL database also contains eventhouse ingestion results from the week before collection was turned on.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "To keep the logs for 90 days, you change the retention policy of the monitoring KQL database.",
+    "options": [
+     "Yes",
+     "No"
+    ],
+    "answer": 0
+   }
+  ],
+  "explain": "- Câu 1 No: cấu hình workspace monitoring cần role admin của workspace; Contributor chỉ query được monitoring database.\n- Câu 2 Yes: Eventstream error metrics nằm trong danh sách telemetry được hỗ trợ.\n- Câu 3 No: workspace monitoring không backfill hoạt động trước khi bật collection.\n- Câu 4 Yes: mặc định giữ 30 ngày; đổi retention policy tại Manage > Data policies của monitoring KQL database.\n- Workspace monitoring đang ở preview.",
+  "refs": [
+   {
+    "label": "What is workspace monitoring?",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview"
+   },
+   {
+    "label": "Configure workspace monitoring",
+    "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/enable-workspace-monitoring"
+   }
+  ]
  }
 ]

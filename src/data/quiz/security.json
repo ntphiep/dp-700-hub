@@ -326,7 +326,7 @@
   "task": "1.3",
   "source": "original",
   "select": 1,
-  "stem": "You are migrating row filters from Snowflake to a Fabric warehouse. You created the following function:\n`CREATE FUNCTION sec.fn_region(@Region AS varchar(20)) RETURNS TABLE WITH SCHEMABINDING AS RETURN SELECT 1 AS ok WHERE @Region = USER_NAME();`\nYou need to complete the statement:\n`CREATE ______ RegionFilter ADD FILTER PREDICATE sec.fn_region(Region) ON dbo.Sales WITH (STATE = ON);`\nWhich keyword should you use?",
+  "stem": "You are migrating row filters from Snowflake to a Fabric warehouse. You created the following function:\n```sql\nCREATE FUNCTION sec.fn_region(@Region AS varchar(20)) RETURNS TABLE WITH SCHEMABINDING AS RETURN SELECT 1 AS ok WHERE @Region = USER_NAME();\n```\nYou need to complete the statement:\n```sql\nCREATE ______ RegionFilter ADD FILTER PREDICATE sec.fn_region(Region) ON dbo.Sales WITH (STATE = ON);\n```\nWhich keyword should you use?",
   "options": [
    {
     "k": "A",
@@ -985,6 +985,224 @@
    {
     "label": "Endorsement overview",
     "url": "https://learn.microsoft.com/en-us/fabric/governance/endorsement-overview"
+   }
+  ]
+ },
+ {
+  "id": "sec-23",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "type": "yesno",
+  "series": "sec-s1",
+  "select": 1,
+  "stem": "Note: This item is part of a series that presents the same scenario. Each item in the series offers a different solution. Determine whether the solution meets the stated goal.\nA Fabric warehouse named WH_Finance contains the schemas audit, sales, and hr. The audit schema contains 12 tables, and the finance team adds new tables to it every month. Members of a Microsoft Entra group named Auditors have no role in the workspace.\nYou need to ensure that Auditors can query every current and future table in the audit schema by using T-SQL, and no table in the other schemas. The solution must not require changes when new audit tables are added.\nSolution: You share WH_Finance with Auditors and select Read all data using SQL (ReadData).\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- ReadData tương đương db_datareader: đọc mọi table và view trong warehouse.\n- Auditors sẽ đọc được cả schema sales và hr, vi phạm yêu cầu.",
+  "wrong": {
+   "A": "ReadData mở toàn bộ table của warehouse, không giới hạn ở schema audit."
+  },
+  "refs": [
+   {
+    "label": "Share your data and manage permissions",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+   }
+  ]
+ },
+ {
+  "id": "sec-24",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "type": "yesno",
+  "series": "sec-s1",
+  "select": 1,
+  "stem": "Note: This item is part of a series that presents the same scenario. Each item in the series offers a different solution. Determine whether the solution meets the stated goal.\nA Fabric warehouse named WH_Finance contains the schemas audit, sales, and hr. The audit schema contains 12 tables, and the finance team adds new tables to it every month. Members of a Microsoft Entra group named Auditors have no role in the workspace.\nYou need to ensure that Auditors can query every current and future table in the audit schema by using T-SQL, and no table in the other schemas. The solution must not require changes when new audit tables are added.\nSolution: You share WH_Finance with Auditors without selecting additional permissions. You run GRANT SELECT on each of the 12 tables in the audit schema to Auditors.\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Share không chọn thêm permission chỉ cấp Read, tức quyền connect.\n- GRANT theo từng table chỉ phủ 12 table hiện có; mỗi table mới phải GRANT thêm, trái với yêu cầu không sửa khi có table mới.",
+  "wrong": {
+   "A": "Grant theo table không phủ table tạo sau, nên phải sửa mỗi tháng."
+  },
+  "refs": [
+   {
+    "label": "Share your data and manage permissions",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+   },
+   {
+    "label": "SQL granular permissions in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions"
+   }
+  ]
+ },
+ {
+  "id": "sec-25",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "type": "yesno",
+  "series": "sec-s1",
+  "select": 1,
+  "stem": "Note: This item is part of a series that presents the same scenario. Each item in the series offers a different solution. Determine whether the solution meets the stated goal.\nA Fabric warehouse named WH_Finance contains the schemas audit, sales, and hr. The audit schema contains 12 tables, and the finance team adds new tables to it every month. Members of a Microsoft Entra group named Auditors have no role in the workspace.\nYou need to ensure that Auditors can query every current and future table in the audit schema by using T-SQL, and no table in the other schemas. The solution must not require changes when new audit tables are added.\nSolution: You share WH_Finance with Auditors without selecting additional permissions. You run GRANT SELECT ON SCHEMA::audit TO [Auditors].\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Share không chọn thêm permission cấp Read, đủ để connect nhưng chưa đọc được table nào.\n- SELECT ở scope schema áp cho mọi table trong schema đó, kể cả table tạo sau, vì lúc kiểm tra quyền engine gom cả permission của schema chứa table.\n- Schema sales và hr không được cấp nên Auditors không đọc được.",
+  "wrong": {
+   "B": "Giải pháp cho đúng phạm vi schema audit và tự phủ table mới."
+  },
+  "refs": [
+   {
+    "label": "Share your data and manage permissions",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/share-warehouse-manage-permissions"
+   },
+   {
+    "label": "GRANT schema permissions",
+    "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/grant-schema-permissions-transact-sql?view=fabric"
+   },
+   {
+    "label": "Permissions (Database Engine)",
+    "url": "https://learn.microsoft.com/en-us/sql/relational-databases/security/permissions-database-engine?view=fabric"
+   }
+  ]
+ },
+ {
+  "id": "cs-cr-01",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "case": "contoso-retail",
+  "type": "hotarea",
+  "stem": "You need to meet the security requirements for RetailDW. Store managers must see only the dbo.FactSales rows of their store, marketing analysts must see LoyaltyEmail in masked form without changing their queries, and any contractor query that references UnitCost must fail.\nWhich feature should you implement for each group? To answer, select the appropriate options in the answer area.",
+  "slots": [
+   {
+    "label": "SG-StoreManagers on dbo.FactSales:",
+    "options": [
+     "Column-level security",
+     "Dynamic data masking",
+     "Row-level security",
+     "Object-level security"
+    ],
+    "answer": 2
+   },
+   {
+    "label": "SG-Marketing on dbo.DimCustomer.LoyaltyEmail:",
+    "options": [
+     "Column-level security",
+     "Dynamic data masking",
+     "Row-level security",
+     "Object-level security"
+    ],
+    "answer": 1
+   },
+   {
+    "label": "SG-Contractors on dbo.DimProduct.UnitCost:",
+    "options": [
+     "Column-level security",
+     "Dynamic data masking",
+     "Row-level security",
+     "Object-level security"
+    ],
+    "answer": 0
+   }
+  ],
+  "explain": "- SG-StoreManagers: row-level security dùng security policy với filter predicate, lọc hàng theo người chạy query.\n- SG-Marketing: dynamic data masking che giá trị trong kết quả, data gốc và query giữ nguyên. Marketing analysts không được ở role Admin, Member, Contributor vì các role này thấy giá trị gốc.\n- SG-Contractors: column-level security là GRANT SELECT với danh sách cột bỏ UnitCost; query nhắc tới UnitCost, kể cả SELECT *, bị lỗi.\n- Object-level security cấp quyền theo cả table, view, procedure, không tách riêng hàng hay cột.",
+  "refs": [
+   {
+    "label": "Secure your Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/security"
+   },
+   {
+    "label": "Column-level security in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/column-level-security"
+   },
+   {
+    "label": "Dynamic data masking in Fabric Data Warehouse",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking"
+   }
+  ]
+ },
+ {
+  "id": "cs-lw-02",
+  "topic": "security",
+  "domain": "D1",
+  "task": "1.3",
+  "source": "original",
+  "case": "litware-energy",
+  "select": 1,
+  "stem": "You need to meet the security requirements for MeterDB. Regional operators must see only the MeterReadings rows of their region from every client, including KQL querysets, Real-Time Dashboards, and Power BI. Members of grid-control@litware.com must see all rows.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Enable the restricted_view_access policy on MeterReadings and assign the UnrestrictedViewer role to grid-control@litware.com."
+   },
+   {
+    "k": "B",
+    "t": "Add a Region parameter to the outage Real-Time Dashboard with a default value for each regional group."
+   },
+   {
+    "k": "C",
+    "t": "Create a function that returns all rows for grid-control@litware.com and filters rows by current_principal_is_member_of() for each regional group, and enable the row_level_security policy on MeterReadings with that function."
+   },
+   {
+    "k": "D",
+    "t": "Create a stored function that filters MeterReadings by region, grant the regional groups the database viewer role, and ask operators to query only the function."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: chỉ thấy hàng của region mình, từ mọi client, nhóm grid-control thấy hết.\n- Row level security policy thay mọi truy cập vào table bằng query RLS, áp cho mọi client.\n- RLS áp cho mọi principal, kể cả database admin, nên query phải có nhánh trả mọi hàng cho grid-control@litware.com.\n- current_principal_is_member_of() kiểm tra nhóm Microsoft Entra của người query.",
+  "wrong": {
+   "A": "Restricted view access chặn cả table với ai không có UnrestrictedViewer, không lọc theo hàng; policy này cũng không dùng chung được với RLS.",
+   "B": "Parameter chỉ áp trong dashboard; operator vẫn query toàn bộ table từ KQL queryset hay Power BI.",
+   "D": "Viewer vẫn query trực tiếp MeterReadings; function không chặn được truy cập table."
+  },
+  "refs": [
+   {
+    "label": "Row level security policy",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/row-level-security-policy?view=microsoft-fabric"
+   },
+   {
+    "label": "Restricted view access policy",
+    "url": "https://learn.microsoft.com/en-us/kusto/management/restricted-view-access-policy?view=microsoft-fabric"
    }
   ]
  }

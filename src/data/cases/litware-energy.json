@@ -1,0 +1,22 @@
+{
+ "id": "litware-energy",
+ "title": "Litware, Inc. (energy)",
+ "tabs": [
+  {
+   "t": "Overview",
+   "md": "Litware, Inc. is an electric utility that serves 2 million customers in three regions: North, Central, and South.\n- Every smart meter sends a reading every 15 seconds.\n- A grid control center in Denver supervises all regions. Each region has its own team of operators.\n- A data science team builds anomaly detection models in Python."
+  },
+  {
+   "t": "Existing environment",
+   "md": "**Streaming**\n- Meter readings arrive in an Azure Event Hubs event hub named meter-readings that has 32 partitions.\n- Each JSON event contains MeterId, SubstationId, Region, Timestamp, VoltageV, and PowerKw.\n\n**Fabric**\n- Litware has an F128 capacity and two workspaces: Litware-Ingest and Litware-DataSci.\n- Litware-Ingest contains an eventhouse named EH_Grid with a KQL database named MeterDB, a table named MeterReadings, and an eventstream named ES_Meters that reads from meter-readings.\n- Litware-DataSci contains a lakehouse named LH_History with a Delta table named HistoryReadings that holds 40 TB of readings from 2019 to 2025.\n- Data scientists have the Contributor role in Litware-DataSci. Ana is an operations engineer with the Contributor role in Litware-Ingest.\n\n**Identity**\n- Microsoft Entra groups: grid-control@litware.com, ops-north@litware.com, ops-central@litware.com, and ops-south@litware.com."
+  },
+  {
+   "t": "Requirements",
+   "md": "**Planned changes**\n- Detect outages in real time and notify on-call engineers.\n- Score readings with the anomaly detection model as they arrive.\n- Make the historical readings available to KQL analysts.\n\n**Technical requirements**\n- Readings with a null MeterId must be dropped. Valid readings must be routed to both MeterDB and a lakehouse table, without writing code.\n- Each reading must be scored by the existing Python model of the data science team, and the scores must be merged into a Delta table.\n- Analysts must run ad hoc time-series queries over three years of readings and get results in seconds.\n- The on-call engineer must receive a Microsoft Teams message when the voltage of a substation drops below 207 V.\n- Analysts must query HistoryReadings together with MeterReadings in KQL querysets. The history must not be copied into the eventhouse.\n- All notebooks and Spark job definitions in Litware-DataSci, including notebooks that pipelines run, must have the Python library pvlib 0.11 without per-notebook setup. Data scientists must not change the shared library set.\n\n**Security requirements**\n- Regional operators must see only the MeterReadings rows of their region from every client, including KQL querysets, Real-Time Dashboards, and Power BI.\n- Members of grid-control@litware.com must see all rows.\n\n**Performance and monitoring requirements**\n- Outage dashboard queries must never wait for EH_Grid to reactivate.\n- On weekdays from 05:00 to 09:00, EH_Grid must guarantee at least 16 CUs. Outside those hours, eventhouse cost must stay as low as possible.\n- Operations must analyze eventstream errors and eventhouse ingestion results of Litware-Ingest by using KQL, and keep these logs for 90 days."
+  },
+  {
+   "t": "Issues",
+   "md": "- After quiet nights, the first outage dashboard queries at 05:00 take several seconds longer than later queries."
+  }
+ ]
+}

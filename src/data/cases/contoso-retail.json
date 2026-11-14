@@ -1,0 +1,22 @@
+{
+ "id": "contoso-retail",
+ "title": "Contoso, Ltd. (retail)",
+ "tabs": [
+  {
+   "t": "Overview",
+   "md": "Contoso, Ltd. is a retail company that runs 120 stores in North America and an online store.\n- The head office is in Seattle.\n- A central data team of six data engineers builds the analytics platform in Microsoft Fabric.\n- Store managers, marketing analysts, and contractors from a product supplier consume the data."
+  },
+  {
+   "t": "Existing environment",
+   "md": "**Fabric**\n- Contoso has an F64 capacity and three workspaces: Retail-Dev, Retail-Test, and Retail-Prod.\n- You have the Member role in Retail-Prod. Data engineers have the Contributor role.\n- Retail-Prod contains a lakehouse named RetailLH, a warehouse named RetailDW, a pipeline named PL_StoreFiles, and a Direct Lake semantic model named StoreSales.\n\n**Point of sale**\n- Store transactions are stored in an Azure SQL database named sqldb-pos on the logical server sql-contoso-pos.\n- sqldb-pos contains the tables Sales.Orders, Sales.OrderLines, and Sales.Returns, and 40 other tables. Developers add new tables every quarter.\n- The system assigned managed identity of sql-contoso-pos is enabled and is the primary identity. Change data capture is not enabled.\n\n**Clickstream**\n- The online store writes about 2 TB of JSON clickstream files to the container clickstream in an Azure Data Lake Storage Gen2 account named stcontosoclick.\n- Public network access on stcontosoclick is enabled only from selected virtual networks and IP addresses.\n\n**Store files**\n- Every night each store uploads one inventory CSV file to an SFTP server. PL_StoreFiles lists the 120 files by using a Get Metadata activity.\n- The SFTP server accepts at most 20 concurrent connections.\n\n**RetailDW**\n- dbo.FactSales has a StoreID column. dbo.DimCustomer has a LoyaltyEmail column. dbo.DimProduct has a UnitCost column.\n- Microsoft Entra groups: SG-StoreManagers, SG-Marketing, and SG-Contractors."
+  },
+  {
+   "t": "Requirements",
+   "md": "**Planned changes**\n- Mirror the POS sales tables into Retail-Prod.\n- Make the clickstream files available in RetailLH.\n- Automate the nightly load of the store files by using PL_StoreFiles.\n\n**Technical requirements**\n- POS data: mirror only Sales.Orders, Sales.OrderLines, and Sales.Returns. Tables added to sqldb-pos later must not be mirrored automatically. Fabric must connect by using a SQL authenticated login that has only the permissions that mirroring requires.\n- Clickstream: RetailLH must read the files without copying them. stcontosoclick must accept Fabric requests only from Retail-Prod, not from other Fabric workspaces in the tenant.\n- Store files: PL_StoreFiles must load the 120 files by using Copy activities and no custom code, with at most 20 files loading at the same time.\n\n**Security requirements**\n- Store managers must see only the dbo.FactSales rows of their own store.\n- Marketing analysts must see LoyaltyEmail values in masked form, without changes to their existing queries.\n- Contractors must query dbo.DimProduct, but any query that references UnitCost must fail.\n\n**Performance and monitoring requirements**\n- The operations team must analyze replication status, failures, and latency of the mirrored POS tables over time by using KQL, and build a Real-Time Dashboard, with minimal development effort.\n- The data team must find the RetailDW query shapes that have the highest median duration over the last 30 days, and check whether the SQL pool was under pressure during the last 7 days."
+  },
+  {
+   "t": "Issues",
+   "md": "- BI analysts report that StoreSales reports are slow on Monday mornings.\n- Nobody knows which RetailDW queries cause the slowdown."
+  }
+ ]
+}

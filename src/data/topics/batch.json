@@ -1172,7 +1172,7 @@
           "type": "callout",
           "tone": "new",
           "title": "T-SQL mới trong Fabric Warehouse",
-          "md": "- **MERGE** đã GA trong Warehouse, hỗ trợ cả WHEN NOT MATCHED BY SOURCE\n- **QUALIFY** và GROUP BY ALL chạy được trên Warehouse và SQL analytics endpoint\n- IDENTITY column có trong Warehouse, dùng làm surrogate key\n- Vẫn chưa có: trigger, materialized view, recursive query",
+          "md": "- **MERGE** đã GA trong Warehouse, hỗ trợ cả WHEN NOT MATCHED BY SOURCE\n- **QUALIFY** và GROUP BY ALL (Preview) chạy được trên Warehouse và SQL analytics endpoint\n- IDENTITY column có trong Warehouse, dùng làm surrogate key\n- Vẫn chưa có: trigger, materialized view, recursive query",
           "src": [
             {
               "label": "T-SQL surface area",
@@ -1181,6 +1181,140 @@
             {
               "label": "MERGE (Transact-SQL)",
               "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql?view=fabric"
+            },
+            {
+              "label": "What's new in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mlv",
+      "title": "Materialized lake view: medallion khai báo bằng Spark SQL",
+      "icon": "layers-intersect",
+      "task": "2.2",
+      "blocks": [
+        {
+          "type": "text",
+          "md": "- **Materialized lake view (MLV)** là kết quả của một SELECT, lưu thành Delta table trong lakehouse và được Fabric tự refresh\n- Gần với materialized view kèm expectations trong Lakeflow pipelines của Databricks\n- Fabric đọc definition để dựng lineage, refresh theo dependency order từ bronze tới gold\n- Đọc như table thường từ mọi engine, cùng permission của lakehouse\n- Không dùng cho ML inference, gọi API, Python phức tạp (chọn notebook) hay streaming dưới 1 giây (chọn Real-Time Intelligence)",
+          "src": [
+            {
+              "label": "What are materialized lake views",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/overview-materialized-lake-view"
+            },
+            {
+              "label": "Databricks: manage data quality with pipeline expectations",
+              "url": "https://docs.databricks.com/aws/en/ldp/expectations"
+            }
+          ]
+        },
+        {
+          "type": "code",
+          "title": "Spark SQL: tạo MLV có constraint và bật CDF",
+          "lang": "sql",
+          "code": "ALTER TABLE bronze.orders SET TBLPROPERTIES (delta.enableChangeDataFeed = true);\nALTER TABLE bronze.products SET TBLPROPERTIES (delta.enableChangeDataFeed = true);\n\nCREATE OR REPLACE MATERIALIZED LAKE VIEW silver.orders_clean\n(\n    CONSTRAINT valid_qty CHECK (quantity > 0) ON MISMATCH DROP\n)\nPARTITIONED BY (order_date)\nTBLPROPERTIES (delta.enableChangeDataFeed = true)\nAS SELECT o.order_id, o.order_date, o.quantity,\n          o.quantity * p.price AS revenue\nFROM bronze.orders o\nINNER JOIN bronze.products p ON o.product_id = p.product_id;\n\nREFRESH MATERIALIZED LAKE VIEW silver.orders_clean FULL;",
+          "notes": [
+            {
+              "line": 1,
+              "md": "Incremental refresh cần Delta change data feed trên mọi source table; thiếu CDF thì chỉ có no refresh hoặc full refresh."
+            },
+            {
+              "line": 4,
+              "md": "OR REPLACE ghi đè definition; IF NOT EXISTS giữ bản cũ. Không dùng chung hai option."
+            },
+            {
+              "line": 6,
+              "md": "Mặc định là FAIL: refresh dừng ở dòng vi phạm đầu tiên. DROP bỏ dòng và lineage hiện số dòng bị drop."
+            },
+            {
+              "line": 8,
+              "md": "PARTITIONED BY chia Delta table của MLV theo cột, giúp query có filter đọc ít file hơn."
+            },
+            {
+              "line": 13,
+              "md": "INNER JOIN, LEFT OUTER JOIN, GROUP BY với SUM, COUNT, MIN, MAX và UNION ALL hỗ trợ incremental."
+            },
+            {
+              "line": 15,
+              "md": "Ép full refresh một lần, ví dụ sau khi sửa data nguồn."
+            }
+          ],
+          "src": [
+            {
+              "label": "Spark SQL reference for materialized lake views",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view"
+            },
+            {
+              "label": "Optimal refresh for materialized lake views",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view"
+            },
+            {
+              "label": "Data quality in materialized lake views",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/data-quality"
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "kind": "screenshot",
+          "title": "Lineage của materialized lake views",
+          "img": "figs/batch-mlv-lineage.png",
+          "alt": "Tab Manage của Materialized lake views: banner Save refresh and cost với nút Activate CDF, toolbar Run, Manage schedules, Extended lineage, và lineage từ các table bronze qua hai view silver tới các view gold.",
+          "caption": "Banner báo 2 trên 11 MLV refresh rẻ hơn nếu bật CDF trên source. Lineage do Fabric dựng từ definition, đi từ bronze bên trái qua silver tới gold; Run và Manage schedules refresh theo thứ tự đó.",
+          "credit": {
+            "label": "Microsoft Learn: Manage Fabric materialized lake views lineage",
+            "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/view-lineage",
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+          }
+        },
+        {
+          "type": "callout",
+          "tone": "new",
+          "title": "GA tháng 9/2026, phần còn Preview",
+          "md": "- **GA**: MLV định nghĩa bằng Spark SQL; analytics và insights của run GA từ tháng 7/2026\n- **Preview**: MLV định nghĩa bằng PySpark với @fmlv.materialized_lake_view, không có incremental refresh và chỉ refresh qua lineage schedule\n- **Preview**: REFRESH_HINT để incremental refresh khi source có update và delete\n- **Preview**: event-triggered refresh và activity Refresh Materialized Lake View trong pipeline",
+          "src": [
+            {
+              "label": "What's new in Microsoft Fabric",
+              "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new"
+            },
+            {
+              "label": "PySpark reference for materialized lake views (preview)",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view-pyspark"
+            },
+            {
+              "label": "Enable optimal refresh for deletes and updates (preview)",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/optimal-refresh-handling-deletes-updates"
+            },
+            {
+              "label": "Schedule a materialized lake view refresh",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/schedule-lineage-run"
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "exam",
+          "title": "Bẫy refresh và giới hạn của MLV",
+          "md": "- Window function, DISTINCT, hàm non-deterministic như current_timestamp() hoặc source không phải Delta làm refresh về full\n- Không INSERT, UPDATE, DELETE vào MLV; definition không dùng time travel, UDF hay temp view\n- Không orchestrate refresh từ notebook; dùng lineage và schedule, khoảng tối thiểu 5 phút\n- Constraint của Databricks mặc định warn; constraint của MLV mặc định FAIL",
+          "src": [
+            {
+              "label": "Optimal refresh for materialized lake views",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view"
+            },
+            {
+              "label": "Spark SQL reference for materialized lake views",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view"
+            },
+            {
+              "label": "Schedule a materialized lake view refresh",
+              "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/schedule-lineage-run"
+            },
+            {
+              "label": "Databricks: manage data quality with pipeline expectations",
+              "url": "https://docs.databricks.com/aws/en/ldp/expectations"
             }
           ]
         }

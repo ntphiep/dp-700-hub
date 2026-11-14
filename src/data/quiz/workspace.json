@@ -1071,5 +1071,205 @@
     "url": "https://learn.microsoft.com/en-us/fabric/data-factory/invoke-pipeline-activity"
    }
   ]
+ },
+ {
+  "id": "ws-25",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "type": "yesno",
+  "series": "ws-s1",
+  "select": 1,
+  "stem": "Note: This item is part of a series that presents the same scenario. Each item in the series offers a different solution. Determine whether the solution meets the stated goal.\nA Fabric workspace named WS-Billing is connected to the main branch of an Azure Repos repository. Yesterday a developer changed a notebook named NB_Invoice in WS-Billing and committed the change to main. The change breaks the nightly run. Nobody has saved any change in WS-Billing since the commit.\nYou need to restore NB_Invoice in WS-Billing to the version before the commit. The repository history must be kept, and WS-Billing must stay connected to and in sync with main.\nSolution: In Azure Repos, you revert the commit through a pull request into main. In the Source control panel of WS-Billing, you select Update all.\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "A"
+  ],
+  "explain": "- Revert commit trên Git giữ nguyên history và đưa NB_Invoice về bản trước trên main.\n- Source control panel báo có commit mới; Update all kéo commit revert vào workspace và cập nhật item.\n- WS-Billing vẫn nối với main và đồng bộ với commit mới nhất.",
+  "wrong": {
+   "B": "Giải pháp đạt cả ba điều kiện: NB_Invoice về bản cũ, history còn, workspace đồng bộ với main."
+  },
+  "refs": [
+   {
+    "label": "Get started with Git integration",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+   },
+   {
+    "label": "Git integration process",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-integration-process"
+   }
+  ]
+ },
+ {
+  "id": "ws-26",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "type": "yesno",
+  "series": "ws-s1",
+  "select": 1,
+  "stem": "Note: This item is part of a series that presents the same scenario. Each item in the series offers a different solution. Determine whether the solution meets the stated goal.\nA Fabric workspace named WS-Billing is connected to the main branch of an Azure Repos repository. Yesterday a developer changed a notebook named NB_Invoice in WS-Billing and committed the change to main. The change breaks the nightly run. Nobody has saved any change in WS-Billing since the commit.\nYou need to restore NB_Invoice in WS-Billing to the version before the commit. The repository history must be kept, and WS-Billing must stay connected to and in sync with main.\nSolution: In the Source control panel of WS-Billing, you select NB_Invoice and select Undo.\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Undo chỉ trả item về trạng thái của lần sync cuối, dành cho thay đổi đã save mà chưa commit.\n- Lần sync cuối chính là commit lỗi và không có thay đổi chưa commit, nên NB_Invoice giữ nguyên bản lỗi.",
+  "wrong": {
+   "A": "Undo không quay về trước commit đã sync; nó chỉ bỏ thay đổi chưa commit."
+  },
+  "refs": [
+   {
+    "label": "Get started with Git integration",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-get-started"
+   }
+  ]
+ },
+ {
+  "id": "ws-27",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.2",
+  "source": "original",
+  "type": "yesno",
+  "series": "ws-s1",
+  "select": 1,
+  "stem": "Note: This item is part of a series that presents the same scenario. Each item in the series offers a different solution. Determine whether the solution meets the stated goal.\nA Fabric workspace named WS-Billing is connected to the main branch of an Azure Repos repository. Yesterday a developer changed a notebook named NB_Invoice in WS-Billing and committed the change to main. The change breaks the nightly run. Nobody has saved any change in WS-Billing since the commit.\nYou need to restore NB_Invoice in WS-Billing to the version before the commit. The repository history must be kept, and WS-Billing must stay connected to and in sync with main.\nSolution: In the Source control panel of WS-Billing, you select Checkout new branch and create a branch named restore-invoice.\nDoes this meet the goal?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Yes"
+   },
+   {
+    "k": "B",
+    "t": "No"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Checkout new branch tạo branch từ commit đã sync cuối và đổi Git connection của workspace sang branch đó.\n- Nội dung workspace không đổi, nên NB_Invoice vẫn là bản lỗi, và WS-Billing không còn nối với main.",
+  "wrong": {
+   "A": "Checkout new branch không đổi nội dung workspace và làm workspace rời main."
+  },
+  "refs": [
+   {
+    "label": "Git integration process",
+    "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/git-integration-process"
+   }
+  ]
+ },
+ {
+  "id": "cs-cr-03",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.4",
+  "source": "original",
+  "case": "contoso-retail",
+  "select": 1,
+  "stem": "You need to meet the technical requirements for the store files. PL_StoreFiles uses a Get Metadata activity that returns the list of the 120 store files. The SFTP server accepts at most 20 concurrent connections, and the load must use Copy activities without custom code.\nWhat should you configure in PL_StoreFiles?",
+  "options": [
+   {
+    "k": "A",
+    "t": "A ForEach activity over the file list with Sequential selected and Batch count set to 20, containing a Copy activity"
+   },
+   {
+    "k": "B",
+    "t": "A ForEach activity over the file list with Sequential cleared and Batch count set to 20, containing a Copy activity"
+   },
+   {
+    "k": "C",
+    "t": "An Until activity that runs a Copy activity and increments a file counter variable until it reaches 120"
+   },
+   {
+    "k": "D",
+    "t": "A Notebook activity that calls notebookutils.notebook.runMultiple with concurrency set to 20"
+   }
+  ],
+  "answer": [
+   "B"
+  ],
+  "explain": "- Tín hiệu: 120 file, tối đa 20 file cùng lúc, Copy activity, không custom code.\n- ForEach bỏ chọn Sequential thì chạy song song; Batch count giới hạn số item chạy cùng lúc.\n- Copy activity bên trong dùng @item() để lấy tên file hiện tại.",
+  "wrong": {
+   "A": "Sequential xử lý từng item một, nên chỉ 1 file tại một thời điểm và load kéo dài.",
+   "C": "Until là vòng do-until, vòng sau chỉ chạy khi vòng trước xong; không có Batch count để chạy song song.",
+   "D": "runMultiple chạy notebook, là custom code và không dùng Copy activity."
+  },
+  "refs": [
+   {
+    "label": "ForEach activity",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/foreach-activity"
+   },
+   {
+    "label": "Until activity",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-factory/until-activity"
+   }
+  ]
+ },
+ {
+  "id": "cs-lw-03",
+  "topic": "workspace",
+  "domain": "D1",
+  "task": "1.1",
+  "source": "original",
+  "case": "litware-energy",
+  "select": 1,
+  "stem": "You need to meet the technical requirement for the pvlib library. All notebooks and Spark job definitions in Litware-DataSci, including notebooks that pipelines run, must have pvlib 0.11 without per-notebook setup. Data scientists have the Contributor role and must not change the shared library set.\nWhat should you do?",
+  "options": [
+   {
+    "k": "A",
+    "t": "Add %pip install pvlib==0.11 to the first cell of every notebook in Litware-DataSci."
+   },
+   {
+    "k": "B",
+    "t": "Create a custom Spark pool and set it as the default pool of Litware-DataSci."
+   },
+   {
+    "k": "C",
+    "t": "Create an environment that installs pvlib 0.11 from PyPI, publish it, and turn on Set default environment in the workspace Spark settings with that environment selected."
+   },
+   {
+    "k": "D",
+    "t": "Upload the pvlib wheel file to the Resources folder of each notebook and install it at the start of each session."
+   }
+  ],
+  "answer": [
+   "C"
+  ],
+  "explain": "- Tín hiệu: mọi notebook và Spark job definition, kể cả pipeline run, không setup từng notebook, Contributor không được sửa.\n- Workspace settings, Data Engineering/Science, Spark settings, tab Environment: bật Set default environment và chọn environment.\n- Notebook dùng Workspace default sẽ thừa hưởng library của environment đó.\n- Khi environment là workspace default, chỉ workspace admin sửa được nội dung của nó.\n- Full mode cho snapshot library ổn định, phù hợp pipeline và workload dùng chung.",
+  "wrong": {
+   "A": "Phải sửa từng notebook; inline command bị tắt mặc định trong pipeline run và không giữ qua session.",
+   "B": "Spark pool chỉ định nghĩa compute; library được quản lý trong environment.",
+   "D": "Library trong Resources folder chỉ có hiệu lực cho notebook hoặc session hiện tại, và phải làm cho từng notebook."
+  },
+  "refs": [
+   {
+    "label": "Create, configure, and use an environment in Fabric",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/create-and-use-environment"
+   },
+   {
+    "label": "Library management in Fabric environments",
+    "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/library-management"
+   }
+  ]
  }
 ]

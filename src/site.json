@@ -21,13 +21,16 @@
     "links": [
       {"label": "Trang certification", "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/"},
       {"label": "Study guide DP-700", "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700"},
-      {"label": "Practice Assessment (AI Skills Navigator)", "url": "https://aka.ms/DP700-PA"}
+      {"label": "Practice Assessment (AI Skills Navigator)", "url": "https://aka.ms/DP700-PA"},
+      {"label": "Exam sandbox", "url": "https://aka.ms/examdemo"}
     ],
     "tiles": [
       {"k": "Thời gian", "v": "100 phút", "s": "proctored, có thể có câu tương tác"},
       {"k": "Điểm đậu", "v": "700", "s": "thang 1 tới 1.000"},
       {"k": "Trọng số", "v": "3 x 30-35%", "s": "3 skill area ngang nhau"},
-      {"k": "Gia hạn", "v": "Miễn phí", "s": "assessment online trên Microsoft Learn"}
+      {"k": "Gia hạn", "v": "Miễn phí", "s": "assessment online trên Microsoft Learn"},
+      {"k": "Dạng câu", "v": "40-60 câu", "s": "case study, hot area, drag and drop, chuỗi Yes/No ([exam experience](https://learn.microsoft.com/en-us/credentials/support/exam-duration-exam-experience))"},
+      {"k": "Microsoft Learn", "v": "Được mở", "s": "chia đôi màn hình, đồng hồ vẫn chạy, không vào Q&A"}
     ],
     "domainTitle": "Skill area, trọng số và tiến độ quiz",
     "domainSrc": [
@@ -60,6 +63,6 @@
     "3.2": "Identify and resolve errors",
     "3.3": "Optimize performance"
   },
-  "mocks": [{"n": 20, "min": 40}, {"n": 50, "min": 100, "note": "thời gian như đề thật, số câu thật không công bố"}],
+  "mocks": [{"n": 20, "min": 40}, {"n": 50, "min": 100, "note": "thời gian như đề thật, cuối đề có 1 case study"}],
   "glCats": ["OneLake & Storage", "Ingestion", "Transformation", "Real-Time Intelligence", "Security & Governance", "Lifecycle & Ops", "Performance"]
 }

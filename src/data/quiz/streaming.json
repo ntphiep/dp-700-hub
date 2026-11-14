@@ -1010,5 +1010,326 @@
         "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-sql-code-editor"
       }
     ]
+  },
+  {
+    "id": "str-23",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "type": "hotarea",
+    "stem": "A KQL table named Readings in an eventhouse holds 18 months of telemetry and receives new rows continuously. Dashboards need the most recent reading of every device, with all columns, without scanning the raw table. The view must also cover the rows that already exist in Readings, not only rows ingested after it is created.\nYou need to complete the command.\n```kql\n.create [1] materialized-view with ([2]) LatestReading on table Readings\n{\n    Readings\n    | summarize [3] by DeviceId\n}\n```\nWhich values should you select? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "[1] Command option",
+        "options": [
+          "async",
+          "ifnotexists"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[2] View property",
+        "options": [
+          "backfill=true",
+          "lookback=6h",
+          "autoUpdateSchema=true",
+          "effectiveDateTime=datetime(2026-01-01)"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[3] Aggregation",
+        "options": [
+          "arg_max(Timestamp, *)",
+          "take_any(*)",
+          "max(Timestamp)",
+          "arg_min(Timestamp, *)"
+        ],
+        "answer": 0
+      }
+    ],
+    "explain": "- [1] async: tạo view có backfill bắt buộc chạy async; theo dõi tiến độ bằng .show operations.\n- [2] backfill=true: view được tạo từ mọi record đang có trong Readings; mặc định false chỉ lấy record ingest sau khi tạo. effectiveDateTime chỉ giới hạn backfill và cũng cần backfill=true.\n- [3] arg_max(Timestamp, *): giữ nguyên dòng có Timestamp lớn nhất cho mỗi DeviceId, đủ mọi cột. take_any lấy dòng bất kỳ, max chỉ trả về một cột, arg_min lấy dòng cũ nhất.",
+    "refs": [
+      {
+        "label": ".create materialized-view",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/materialized-views/materialized-view-create?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-24",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "type": "hotarea",
+    "stem": "An eventstream lands raw JSON in a KQL table named RawTelemetry that has one string column named Payload. A table named Telemetry has the columns Timestamp (datetime), DeviceId (string), and Temperature (real). Every row ingested into RawTelemetry must be parsed into Telemetry automatically, without a scheduler.\nYou need to complete the commands.\n```kql\n.create-or-alter function ParseTelemetry() {\n    RawTelemetry\n    | extend d = [1]\n    | project Timestamp = todatetime(d.ts),\n              DeviceId = tostring(d.deviceId),\n              Temperature = [2]\n}\n\n.alter table [3] policy update\n@'[{\"IsEnabled\": true, \"Source\": \"RawTelemetry\", \"Query\": \"ParseTelemetry()\", \"IsTransactional\": true}]'\n```\nWhich values should you select? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "[1] Parse expression",
+        "options": [
+          "parse_json(Payload)",
+          "parse_csv(Payload)",
+          "parse_url(Payload)"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[2] Conversion",
+        "options": [
+          "toreal(d.temp)",
+          "tostring(d.temp)",
+          "todynamic(d.temp)"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[3] Table",
+        "options": [
+          "Telemetry",
+          "RawTelemetry"
+        ],
+        "answer": 0
+      }
+    ],
+    "explain": "- [1] parse_json: chuyển chuỗi JSON thành dynamic để đọc d.ts, d.deviceId, d.temp.\n- [2] toreal: schema output của function phải khớp tên, kiểu và thứ tự cột của target table; Temperature là real. tostring hoặc todynamic làm lệch kiểu nên policy không hợp lệ.\n- [3] Telemetry: update policy đặt trên target table, còn source table ghi trong thuộc tính Source.",
+    "refs": [
+      {
+        "label": ".alter table policy update",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/alter-table-update-policy-command?view=microsoft-fabric"
+      },
+      {
+        "label": "Update policy overview",
+        "url": "https://learn.microsoft.com/en-us/kusto/management/update-policy?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-25",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "type": "hotarea",
+    "stem": "A KQL table named Clicks stores UserId and Timestamp for every click in a web application. A session of a user starts with a click. A gap of 20 minutes or more between two clicks starts a new session, and a session can't span 4 hours or more. You need the session start time for every click and then the clicks per session.\n```kql\nClicks\n| where Timestamp > ago(1d)\n| [1]\n| extend SessionStart = row_window_session(Timestamp, [2], [3], UserId != prev(UserId))\n| summarize Clicks = count(), SessionEnd = max(Timestamp) by UserId, SessionStart\n```\nWhich values should you select? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "[1] Statement",
+        "options": [
+          "sort by UserId asc, Timestamp asc",
+          "summarize by UserId, Timestamp",
+          "sort by Timestamp desc",
+          "distinct UserId, Timestamp"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[2] MaxDistanceFromFirst",
+        "options": [
+          "4h",
+          "20m"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "[3] MaxDistanceBetweenNeighbors",
+        "options": [
+          "20m",
+          "4h"
+        ],
+        "answer": 0
+      }
+    ],
+    "explain": "- [1] row_window_session và prev() chỉ chạy trên row set đã serialize. sort tạo row set serialized và xếp click của từng user theo thời gian tăng dần; summarize và distinct trả về row set nonserialized.\n- [2] 4h: tham số thứ hai là khoảng cách tối đa từ click đầu session.\n- [3] 20m: tham số thứ ba là khoảng cách tối đa giữa hai click liền nhau. Điều kiện UserId != prev(UserId) bắt đầu session mới khi đổi user.",
+    "refs": [
+      {
+        "label": "row_window_session()",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/row-window-session-function?view=microsoft-fabric"
+      },
+      {
+        "label": "serialize operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/serialize-operator?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-26",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "type": "order",
+    "select": 4,
+    "stem": "An eventstream writes log events into a KQL table named DeviceLogs. A tile on a Real-Time Dashboard must show a bar chart of the five devices that produced the most events with Level equal to \"Error\" during the last hour.\nYou need to write the query that follows the table name.\nWhich four statements should you use in sequence? To answer, move the appropriate statements to the answer area and arrange them in the correct order.",
+    "options": [
+      {
+        "k": "A",
+        "t": "| take 5"
+      },
+      {
+        "k": "B",
+        "t": "| summarize Errors = count() by DeviceId"
+      },
+      {
+        "k": "C",
+        "t": "| render barchart"
+      },
+      {
+        "k": "D",
+        "t": "| where Timestamp > ago(1h) and Level == \"Error\""
+      },
+      {
+        "k": "E",
+        "t": "| distinct DeviceId"
+      },
+      {
+        "k": "F",
+        "t": "| top 5 by Errors desc"
+      },
+      {
+        "k": "G",
+        "t": "| sort by Timestamp desc"
+      }
+    ],
+    "answer": [
+      "D",
+      "B",
+      "F",
+      "C"
+    ],
+    "wrong": {
+      "A": "take trả về 5 dòng bất kỳ, không theo số lỗi.",
+      "E": "distinct bỏ mất số lần lỗi, không xếp hạng được.",
+      "G": "Sau summarize không còn cột Timestamp; trước summarize thì sort không đổi kết quả đếm."
+    },
+    "explain": "- where lọc theo thời gian và Level trước, vì sau summarize hai cột này không còn.\n- summarize count() by DeviceId tạo cột Errors; top 5 by Errors desc lấy 5 device nhiều lỗi nhất.\n- render luôn là statement cuối để vẽ chart.",
+    "refs": [
+      {
+        "label": "top operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/top-operator?view=microsoft-fabric"
+      },
+      {
+        "label": "render operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/render-operator?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "str-27",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "select": 1,
+    "stem": "You need the time between consecutive readings of each sensor in a KQL table named Readings. You write the following query.\n```kql\nReadings\n| where Timestamp > ago(6h)\n| summarize by SensorId, Timestamp\n| extend Gap = Timestamp - prev(Timestamp)\n```\nThe query returns an error for the prev() function. The gap must never be calculated between readings of two different sensors.\nWhat should you do?",
+    "options": [
+      {
+        "k": "A",
+        "t": "Add `| serialize` after line 3 and keep the Gap expression on line 4 exactly as it is written."
+      },
+      {
+        "k": "B",
+        "t": "Replace line 3 with `| sort by Timestamp asc` and keep the Gap expression on line 4 exactly as it is."
+      },
+      {
+        "k": "C",
+        "t": "Replace line 3 with `| sort by SensorId asc, Timestamp asc` and test SensorId == prev(SensorId) in Gap."
+      },
+      {
+        "k": "D",
+        "t": "Keep line 3 unchanged and replace prev(Timestamp) with next(Timestamp) in the Gap expression on line 4."
+      }
+    ],
+    "answer": [
+      "C"
+    ],
+    "wrong": {
+      "A": "serialize sửa được lỗi nhưng thứ tự dòng sau summarize không xác định, Gap trộn sensor và thời gian.",
+      "B": "Đã serialize nhưng reading của các sensor xen kẽ nhau, Gap tính giữa hai sensor khác nhau.",
+      "D": "next() cũng chỉ chạy trên row set serialized nên vẫn lỗi."
+    },
+    "explain": "- prev() cần row set serialized; summarize trả về row set nonserialized nên báo lỗi.\n- sort theo SensorId rồi Timestamp vừa serialize vừa xếp reading của từng sensor liền nhau; điều kiện SensorId == prev(SensorId), ví dụ trong iff(), chặn phép trừ giữa hai sensor.",
+    "refs": [
+      {
+        "label": "prev()",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/prev-function?view=microsoft-fabric"
+      },
+      {
+        "label": "serialize operator",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/serialize-operator?view=microsoft-fabric"
+      }
+    ]
+  },
+  {
+    "id": "cs-lw-01",
+    "topic": "streaming",
+    "domain": "D2",
+    "task": "2.3",
+    "source": "original",
+    "case": "litware-energy",
+    "type": "hotarea",
+    "stem": "You need to meet the technical requirements for the meter readings. Each requirement must be implemented with the most appropriate Real-Time Intelligence or Spark engine, and the data science team wants to reuse its Python code.\nWhich engine should you use for each requirement? To answer, select the appropriate options in the answer area.",
+    "slots": [
+      {
+        "label": "Send a Teams message when substation voltage drops below 207 V:",
+        "options": [
+          "Eventstream",
+          "Spark Structured Streaming",
+          "Eventhouse (KQL)",
+          "Activator"
+        ],
+        "answer": 3
+      },
+      {
+        "label": "Drop readings with a null MeterId and route valid readings to MeterDB and a lakehouse without code:",
+        "options": [
+          "Eventstream",
+          "Spark Structured Streaming",
+          "Eventhouse (KQL)",
+          "Activator"
+        ],
+        "answer": 0
+      },
+      {
+        "label": "Run ad hoc time-series queries over three years of readings in seconds:",
+        "options": [
+          "Eventstream",
+          "Spark Structured Streaming",
+          "Eventhouse (KQL)",
+          "Activator"
+        ],
+        "answer": 2
+      },
+      {
+        "label": "Score each reading with the Python model and merge the scores into a Delta table:",
+        "options": [
+          "Eventstream",
+          "Spark Structured Streaming",
+          "Eventhouse (KQL)",
+          "Activator"
+        ],
+        "answer": 1
+      }
+    ],
+    "explain": "- Teams message: Activator là no-code detection engine, theo dõi rule như value < threshold và gửi Teams message.\n- Lọc null và route nhiều destination không code: eventstream có Filter transformation và nhiều destination.\n- Query time-series trên tỷ event trong vài giây: eventhouse với KQL.\n- Model Python có sẵn và merge vào Delta: Spark Structured Streaming ghi vào Delta table, Delta hỗ trợ upsert.",
+    "refs": [
+      {
+        "label": "What is Fabric Activator?",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction"
+      },
+      {
+        "label": "Microsoft Fabric eventstreams overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview"
+      },
+      {
+        "label": "Eventhouse overview",
+        "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse"
+      },
+      {
+        "label": "Stream data into a lakehouse with Spark structured streaming",
+        "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-streaming-data"
+      }
+    ]
   }
 ]
