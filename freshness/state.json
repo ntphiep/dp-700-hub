@@ -1,8 +1,8 @@
 {
- "checked": "2026-11-05",
+ "checked": "2026-11-23",
  "exam": {
   "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/": {
-   "date": "2026-11-02",
+   "date": "2026-11-05",
    "hash": null,
    "pdfs": [
     "https://arch-center.azureedge.net/Credentials/Certification-Poster_en-us.pdf",
@@ -11,15 +11,15 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700": {
-   "date": "2026-10-31",
+   "date": "2026-11-05",
    "hash": null,
    "pdfs": [],
    "status": 200
   }
  },
  "feeds": {
-  "https://community.fabric.microsoft.com/t5/s/rss/board?board.id=fbc_fabricupdatesblogs": "2026-11-04",
-  "https://github.com/MicrosoftDocs/fabric-docs/commits/main/docs/fundamentals/whats-new.md.atom": "2026-11-04"
+  "https://community.fabric.microsoft.com/t5/s/rss/board?board.id=fbc_fabricupdatesblogs": "2026-11-20",
+  "https://github.com/MicrosoftDocs/fabric-docs/commits/main/docs/fundamentals/whats-new.md.atom": "2026-11-19"
  },
  "urls": {
   "https://aka.ms/DP700-LearnPA": {
@@ -42,35 +42,21 @@
   },
   "https://community.fabric.microsoft.com/t5/Data-Engineering/Failed-DP-700-help-suggestions-needed/m-p/4906555": {
    "date": null,
-   "fails": 1,
+   "fails": 2,
    "final": "https://community.fabric.microsoft.com/t5/Data-Engineering/Failed-DP-700-help-suggestions-needed/m-p/4906555",
-   "hash": null,
-   "status": 403
-  },
-  "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-August-2026-Feature-Summary/ba-p/5325824": {
-   "date": null,
-   "fails": 1,
-   "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-August-2026-Feature-Summary/ba-p/5325824",
    "hash": null,
    "status": 403
   },
   "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-September-2026-Feature-Summary/ba-p/5325825": {
    "date": null,
-   "fails": 1,
+   "fails": 2,
    "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-September-2026-Feature-Summary/ba-p/5325825",
-   "hash": null,
-   "status": 403
-  },
-  "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/OneLake-security-Generally-Available/ba-p/5176756": {
-   "date": null,
-   "fails": 1,
-   "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/OneLake-security-Generally-Available/ba-p/5176756",
    "hash": null,
    "status": 403
   },
   "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/bg-p/fbc_fabricupdatesblogs": {
    "date": null,
-   "fails": 1,
+   "fails": 2,
    "final": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/bg-p/fbc_fabricupdatesblogs",
    "hash": null,
    "status": 403
@@ -81,19 +67,19 @@
    "hash": null,
    "status": 200
   },
-  "https://debruyndev.pages.dev/2024/i-just-took-the-new-fabric-dp-700-data-engineering-exam-heres-what-you-should-know/": {
-   "date": null,
-   "final": "https://debruyndev.pages.dev/2024/i-just-took-the-new-fabric-dp-700-data-engineering-exam-heres-what-you-should-know/",
+  "https://docs.databricks.com/aws/en/ldp/expectations": {
+   "date": "2026-11-13",
+   "final": "https://docs.databricks.com/aws/en/ldp/expectations",
    "hash": null,
    "status": 200
   },
   "https://docs.databricks.com/aws/en/structured-streaming/triggers": {
-   "date": "2026-10-19",
+   "date": "2026-11-10",
    "final": "https://docs.databricks.com/aws/en/structured-streaming/triggers",
    "hash": null,
    "status": 200
   },
-  "https://docs.delta.io/latest/delta-update.html": {
+  "https://docs.delta.io/delta-update/": {
    "date": null,
    "final": "https://docs.delta.io/delta-update/",
    "hash": null,
@@ -105,6 +91,12 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/azure/data-factory/control-flow-for-each-activity": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/azure/data-factory/control-flow-for-each-activity",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-window-functions": {
    "date": "2026-03-25",
    "final": "https://learn.microsoft.com/en-us/azure/stream-analytics/stream-analytics-window-functions",
@@ -112,13 +104,13 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/": {
-   "date": "2026-11-02",
+   "date": "2026-11-05",
    "final": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/",
    "hash": null,
    "status": 200
   },
   "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700": {
-   "date": "2026-10-31",
+   "date": "2026-11-05",
    "final": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700",
    "hash": null,
    "status": 200
@@ -160,7 +152,7 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines": {
-   "date": "2026-09-29",
+   "date": "2026-11-19",
    "final": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines",
    "hash": null,
    "status": 200
@@ -168,6 +160,18 @@
   "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process": {
    "date": "2026-11-02",
    "final": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/understand-the-deployment-process",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-attach": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-attach",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-overview": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-plan/deployment-plan-overview",
    "hash": null,
    "status": 200
   },
@@ -184,7 +188,7 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration": {
-   "date": "2026-10-17",
+   "date": "2026-11-19",
    "final": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration",
    "hash": null,
    "status": 200
@@ -208,8 +212,20 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/variable-library-overview": {
-   "date": "2026-09-29",
+   "date": "2026-11-18",
    "final": "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/variable-library-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-history-server": {
+   "date": "2026-05-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-history-server",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-monitor-run-series": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/apache-spark-monitor-run-series",
    "hash": null,
    "status": 200
   },
@@ -255,6 +271,12 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-schema-evolution": {
+   "date": "2026-07-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-schema-evolution",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum": {
    "date": "2026-08-04",
    "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/delta-lake-vacuum",
@@ -286,7 +308,7 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint": {
-   "date": "2026-10-07",
+   "date": "2026-11-19",
    "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint",
    "hash": null,
    "status": 200
@@ -303,9 +325,63 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/library-management": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/library-management",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering": {
    "date": "2026-08-04",
    "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/liquid-clustering",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view": {
+   "date": "2026-11-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view-pyspark": {
+   "date": "2026-08-04",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view-pyspark",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/data-quality": {
+   "date": "2026-11-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/data-quality",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/optimal-refresh-handling-deletes-updates": {
+   "date": "2026-10-15",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/optimal-refresh-handling-deletes-updates",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/overview-materialized-lake-view": {
+   "date": "2026-09-30",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/overview-materialized-lake-view",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view": {
+   "date": "2026-11-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/schedule-lineage-run": {
+   "date": "2026-11-19",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/schedule-lineage-run",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/view-lineage": {
+   "date": "2026-09-30",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/view-lineage",
    "hash": null,
    "status": 200
   },
@@ -316,7 +392,7 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities": {
-   "date": "2026-09-18",
+   "date": "2026-11-19",
    "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities",
    "hash": null,
    "status": 200
@@ -393,6 +469,18 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/troubleshoot-spark-memory-performance": {
+   "date": "2026-08-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/troubleshoot-spark-memory-performance",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-engineering/troubleshoot-spark-sql-schema-errors": {
+   "date": "2026-08-02",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/troubleshoot-spark-sql-schema-errors",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/data-engineering/tune-file-size": {
    "date": "2026-08-26",
    "final": "https://learn.microsoft.com/en-us/fabric/data-engineering/tune-file-size",
@@ -408,6 +496,12 @@
   "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview": {
    "date": "2026-09-29",
    "final": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/activity-retries": {
+   "date": "2026-08-26",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-retries",
    "hash": null,
    "status": 200
   },
@@ -450,6 +544,12 @@
   "https://learn.microsoft.com/en-us/fabric/data-factory/create-copy-job": {
    "date": "2026-10-27",
    "final": "https://learn.microsoft.com/en-us/fabric/data-factory/create-copy-job",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-data-destinations-and-managed-settings": {
+   "date": "2026-11-18",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-data-destinations-and-managed-settings",
    "hash": null,
    "status": 200
   },
@@ -501,6 +601,18 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/lakehouse-maintenance-activity": {
+   "date": "2026-04-10",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/lakehouse-maintenance-activity",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/monitor-copy-job": {
+   "date": "2026-02-03",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/monitor-copy-job",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/data-factory/monitoring-hub-pipeline-runs": {
    "date": "2026-09-29",
    "final": "https://learn.microsoft.com/en-us/fabric/data-factory/monitoring-hub-pipeline-runs",
@@ -543,6 +655,12 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/data-factory/until-activity": {
+   "date": "2026-02-20",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-factory/until-activity",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/data-factory/variable-library-integration-with-data-pipelines": {
    "date": "2026-06-22",
    "final": "https://learn.microsoft.com/en-us/fabric/data-factory/variable-library-integration-with-data-pipelines",
@@ -550,7 +668,7 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job": {
-   "date": "2026-09-17",
+   "date": "2026-11-09",
    "final": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job",
    "hash": null,
    "status": 200
@@ -567,9 +685,21 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/data-types": {
+   "date": "2026-06-11",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/data-types",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/data-warehouse/develop-warehouse-project": {
    "date": "2026-10-01",
    "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/develop-warehouse-project",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/development-deployment": {
+   "date": "2026-09-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/development-deployment",
    "hash": null,
    "status": 200
   },
@@ -582,6 +712,12 @@
   "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking": {
    "date": "2026-09-02",
    "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/dynamic-data-masking",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/git-integration": {
+   "date": "2026-09-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/git-integration",
    "hash": null,
    "status": 200
   },
@@ -610,7 +746,7 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights": {
-   "date": "2026-08-28",
+   "date": "2026-11-18",
    "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights",
    "hash": null,
    "status": 200
@@ -639,12 +775,6 @@
    "hash": null,
    "status": 200
   },
-  "https://learn.microsoft.com/en-us/fabric/data-warehouse/source-control": {
-   "date": "2026-09-22",
-   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/development-deployment",
-   "hash": null,
-   "status": 200
-  },
   "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions": {
    "date": "2026-09-02",
    "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/sql-granular-permissions",
@@ -654,6 +784,12 @@
   "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics": {
    "date": "2026-10-29",
    "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/statistics",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/table-constraints": {
+   "date": "2026-09-09",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/table-constraints",
    "hash": null,
    "status": 200
   },
@@ -669,9 +805,21 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-ingestion-errors": {
+   "date": "2026-10-15",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/troubleshoot-ingestion-errors",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area": {
    "date": "2026-10-14",
    "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/data-warehouse/upgrade-warehouse": {
+   "date": "2026-07-31",
+   "final": "https://learn.microsoft.com/en-us/fabric/data-warehouse/upgrade-warehouse",
    "hash": null,
    "status": 200
   },
@@ -688,13 +836,19 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app": {
-   "date": "2026-11-03",
+   "date": "2026-11-20",
    "final": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app",
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/enterprise/powerbi/semantic-model-operations": {
+   "date": "2026-02-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/enterprise/powerbi/semantic-model-operations",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/enterprise/throttling": {
-   "date": "2026-08-18",
+   "date": "2026-11-20",
    "final": "https://learn.microsoft.com/en-us/fabric/enterprise/throttling",
    "hash": null,
    "status": 200
@@ -723,6 +877,12 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/fundamentals/enable-workspace-monitoring": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/enable-workspace-monitoring",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/fundamentals/endorsement-promote-certify": {
    "date": "2026-02-17",
    "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/endorsement-promote-certify",
@@ -742,19 +902,19 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items": {
-   "date": "2026-02-17",
+   "date": "2026-11-17",
    "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items",
    "hash": null,
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new": {
-   "date": "2026-10-27",
+   "date": "2026-11-19",
    "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new",
    "hash": null,
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview": {
-   "date": "2026-10-30",
+   "date": "2026-11-19",
    "final": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview",
    "hash": null,
    "status": 200
@@ -780,6 +940,30 @@
   "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview": {
    "date": "2026-09-29",
    "final": "https://learn.microsoft.com/en-us/fabric/governance/protection-policies-overview",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database": {
+   "date": "2026-11-06",
+   "final": "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database-limitations": {
+   "date": "2026-11-06",
+   "final": "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database-limitations",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database-tutorial": {
+   "date": "2026-11-06",
+   "final": "https://learn.microsoft.com/en-us/fabric/mirroring/azure-sql-database-tutorial",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/mirroring/monitor": {
+   "date": "2026-07-06",
+   "final": "https://learn.microsoft.com/en-us/fabric/mirroring/monitor",
    "hash": null,
    "status": 200
   },
@@ -826,7 +1010,7 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts": {
-   "date": "2026-09-29",
+   "date": "2026-11-08",
    "final": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts",
    "hash": null,
    "status": 200
@@ -849,21 +1033,15 @@
    "hash": null,
    "status": 200
   },
-  "https://learn.microsoft.com/en-us/fabric/onelake/security/row-level-security": {
+  "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security": {
+   "date": "2026-11-21",
+   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security": {
    "date": "2026-08-19",
    "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/table-column-row-security",
-   "hash": null,
-   "status": 200
-  },
-  "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security": {
-   "date": "2026-09-09",
-   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
-   "hash": null,
-   "status": 200
-  },
-  "https://learn.microsoft.com/en-us/fabric/onelake/sql-analytics-endpoint-onelake-security": {
-   "date": "2026-09-09",
-   "final": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
    "hash": null,
    "status": 200
   },
@@ -882,6 +1060,12 @@
   "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/architecture-medallion": {
    "date": "2026-04-20",
    "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/architecture-medallion",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-alert-queryset": {
+   "date": "2026-07-17",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-alert-queryset",
    "hash": null,
    "status": 200
   },
@@ -946,13 +1130,19 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview": {
-   "date": "2026-11-02",
+   "date": "2026-11-17",
    "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview",
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/pause-resume-data-streams": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/pause-resume-data-streams",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor": {
-   "date": "2026-09-02",
+   "date": "2026-11-11",
    "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor",
    "hash": null,
    "status": 200
@@ -964,8 +1154,14 @@
    "status": 200
   },
   "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse": {
-   "date": "2026-09-09",
+   "date": "2026-11-08",
    "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse-smart-capacity-control": {
+   "date": "2026-11-22",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse-smart-capacity-control",
    "hash": null,
    "status": 200
   },
@@ -981,6 +1177,12 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/onelake-shortcuts": {
+   "date": "2026-07-30",
+   "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/onelake-shortcuts",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/overview": {
    "date": "2026-06-17",
    "final": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/overview",
@@ -993,9 +1195,27 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/fabric/security/security-trusted-workspace-access": {
+   "date": "2026-09-29",
+   "final": "https://learn.microsoft.com/en-us/fabric/security/security-trusted-workspace-access",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/concepts/query-limits?view=microsoft-fabric": {
+   "date": "2026-03-30",
+   "final": "https://learn.microsoft.com/en-us/kusto/concepts/query-limits?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/kusto/management/alter-table-cache-policy-command?view=microsoft-fabric": {
    "date": "2024-08-20",
    "final": "https://learn.microsoft.com/en-us/kusto/management/alter-table-cache-policy-command?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/alter-table-update-policy-command?view=microsoft-fabric": {
+   "date": "2026-06-23",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/alter-table-update-policy-command?view=microsoft-fabric",
    "hash": null,
    "status": 200
   },
@@ -1035,9 +1255,21 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/kusto/management/restricted-view-access-policy?view=microsoft-fabric": {
+   "date": "2024-08-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/restricted-view-access-policy?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric": {
    "date": "2026-05-10",
    "final": "https://learn.microsoft.com/en-us/kusto/management/retention-policy?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/management/row-level-security-policy?view=microsoft-fabric": {
+   "date": "2026-05-11",
+   "final": "https://learn.microsoft.com/en-us/kusto/management/row-level-security-policy?view=microsoft-fabric",
    "hash": null,
    "status": 200
   },
@@ -1047,9 +1279,39 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/kusto/query/array-length-function?view=microsoft-fabric": {
+   "date": "2024-08-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/array-length-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/bag-unpack-plugin?view=microsoft-fabric": {
+   "date": "2025-10-03",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/bag-unpack-plugin?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/kusto/query/bin-function?view=microsoft-fabric": {
    "date": "2025-05-15",
    "final": "https://learn.microsoft.com/en-us/kusto/query/bin-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/count-distinct-aggregation-function?view=microsoft-fabric": {
+   "date": "2025-05-15",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/count-distinct-aggregation-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/dcount-aggregation-function?view=microsoft-fabric": {
+   "date": "2025-05-22",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/dcount-aggregation-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/join-operator?view=microsoft-fabric": {
+   "date": "2025-09-25",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/join-operator?view=microsoft-fabric",
    "hash": null,
    "status": 200
   },
@@ -1059,9 +1321,39 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/kusto/query/mv-expand-operator?view=microsoft-fabric": {
+   "date": "2025-06-04",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/mv-expand-operator?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/prev-function?view=microsoft-fabric": {
+   "date": "2024-08-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/prev-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/render-operator?view=microsoft-fabric": {
+   "date": "2026-05-27",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/render-operator?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/kusto/query/row-window-session-function?view=microsoft-fabric": {
    "date": "2024-08-20",
    "final": "https://learn.microsoft.com/en-us/kusto/query/row-window-session-function?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/serialize-operator?view=microsoft-fabric": {
+   "date": "2025-02-06",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/serialize-operator?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/kusto/query/shuffle-query?view=microsoft-fabric": {
+   "date": "2025-02-10",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/shuffle-query?view=microsoft-fabric",
    "hash": null,
    "status": 200
   },
@@ -1071,8 +1363,14 @@
    "hash": null,
    "status": 200
   },
+  "https://learn.microsoft.com/en-us/kusto/query/top-operator?view=microsoft-fabric": {
+   "date": "2024-08-20",
+   "final": "https://learn.microsoft.com/en-us/kusto/query/top-operator?view=microsoft-fabric",
+   "hash": null,
+   "status": 200
+  },
   "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces": {
-   "date": "2026-04-20",
+   "date": "2026-11-20",
    "final": "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces",
    "hash": null,
    "status": 200
@@ -1080,6 +1378,54 @@
   "https://learn.microsoft.com/en-us/power-bi/connect-data/refresh-data": {
    "date": "2026-10-01",
    "final": "https://learn.microsoft.com/en-us/power-bi/connect-data/refresh-data",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/relational-databases/security/permissions-database-engine?view=fabric": {
+   "date": "2026-10-20",
+   "final": "https://learn.microsoft.com/en-us/sql/relational-databases/security/permissions-database-engine?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-frequently-run-queries-transact-sql?view=fabric": {
+   "date": "2026-08-24",
+   "final": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-frequently-run-queries-transact-sql?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-long-running-queries-transact-sql?view=fabric": {
+   "date": "2026-08-24",
+   "final": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-long-running-queries-transact-sql?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-sql-pool-insights-transact-sql?view=fabric": {
+   "date": "2026-11-18",
+   "final": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-sql-pool-insights-transact-sql?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql?view=fabric": {
+   "date": "2026-11-02",
+   "final": "https://learn.microsoft.com/en-us/sql/t-sql/functions/row-number-transact-sql?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/t-sql/queries/select-qualify-clause-transact-sql?view=fabric": {
+   "date": "2026-10-19",
+   "final": "https://learn.microsoft.com/en-us/sql/t-sql/queries/select-qualify-clause-transact-sql?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/t-sql/statements/copy-into-transact-sql?view=fabric": {
+   "date": "2026-11-18",
+   "final": "https://learn.microsoft.com/en-us/sql/t-sql/statements/copy-into-transact-sql?view=fabric",
+   "hash": null,
+   "status": 200
+  },
+  "https://learn.microsoft.com/en-us/sql/t-sql/statements/grant-schema-permissions-transact-sql?view=fabric": {
+   "date": "2026-09-21",
+   "final": "https://learn.microsoft.com/en-us/sql/t-sql/statements/grant-schema-permissions-transact-sql?view=fabric",
    "hash": null,
    "status": 200
   },
@@ -1149,6 +1495,48 @@
    "hash": null,
    "status": 200
   },
+  "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.dropDuplicatesWithinWatermark.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.dropDuplicatesWithinWatermark.html",
+   "hash": null,
+   "status": 200
+  },
+  "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.dropna.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.dropna.html",
+   "hash": null,
+   "status": 200
+  },
+  "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.fillna.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.fillna.html",
+   "hash": null,
+   "status": 200
+  },
+  "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.GroupedData.agg.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.GroupedData.agg.html",
+   "hash": null,
+   "status": 200
+  },
+  "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.rank.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.rank.html",
+   "hash": null,
+   "status": 200
+  },
+  "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.row_number.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.row_number.html",
+   "hash": null,
+   "status": 200
+  },
+  "https://spark.apache.org/docs/latest/sql-ref-null-semantics.html": {
+   "date": null,
+   "final": "https://spark.apache.org/docs/latest/sql-ref-null-semantics.html",
+   "hash": null,
+   "status": 200
+  },
   "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html": {
    "date": null,
    "final": "https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html",
@@ -1161,7 +1549,7 @@
    "hash": null,
    "status": 200
   },
-  "https://www.leapfrogbi.com/?p=75676": {
+  "https://www.leapfrogbi.com/blog/microsoft-fabric-certification-dp-700-exam/": {
    "date": null,
    "final": "https://www.leapfrogbi.com/blog/microsoft-fabric-certification-dp-700-exam/",
    "hash": null,
@@ -1175,33 +1563,33 @@
   },
   "https://www.reddit.com/r/MicrosoftFabric/": {
    "date": null,
-   "fails": 1,
+   "fails": 2,
    "final": "https://www.reddit.com/r/MicrosoftFabric/",
    "hash": null,
    "status": 403
   },
   "https://www.reddit.com/r/MicrosoftFabric/comments/1wlwn8m/passed_dp700_just_earned_the_fabric_data_engineer/": {
    "date": null,
-   "fails": 1,
+   "fails": 2,
    "final": "https://www.reddit.com/r/MicrosoftFabric/comments/1wlwn8m/passed_dp700_just_earned_the_fabric_data_engineer/",
    "hash": null,
    "status": 403
   },
   "https://www.reddit.com/r/MicrosoftFabric/comments/1wtygi6/passed_dp700_yesterday_my_prep_journey_why_it_was/": {
    "date": null,
-   "fails": 1,
+   "fails": 2,
    "final": "https://www.reddit.com/r/MicrosoftFabric/comments/1wtygi6/passed_dp700_yesterday_my_prep_journey_why_it_was/",
    "hash": null,
    "status": 403
   },
   "https://www.reddit.com/r/MicrosoftFabric/comments/1wva942/dp700_prep_looking_for_advice_from_people_who/": {
    "date": null,
-   "fails": 1,
+   "fails": 2,
    "final": "https://www.reddit.com/r/MicrosoftFabric/comments/1wva942/dp700_prep_looking_for_advice_from_people_who/",
    "hash": null,
    "status": 403
   },
-  "https://www.sqlservercentral.com/?p=4552195": {
+  "https://www.sqlservercentral.com/blogs/how-i-passed-the-dp-700-exam": {
    "date": null,
    "final": "https://www.sqlservercentral.com/blogs/how-i-passed-the-dp-700-exam",
    "hash": null,

@@ -1,0 +1,521 @@
+{
+ "date": "2026-11-23",
+ "hub": "dp-700-hub",
+ "verified": "2026-11-10",
+ "exam": [
+  {
+   "label": "DP-700 study guide",
+   "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700",
+   "why": "updated 2026-10-31 -> 2026-11-05"
+  },
+  {
+   "label": "Certification page",
+   "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/",
+   "why": "updated 2026-11-02 -> 2026-11-05"
+  }
+ ],
+ "releases": [
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "On-premises data gateway November 2026 release",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/On-premises-data-gateway-November-2026-release/ba-p/5430005",
+   "date": "2026-11-20"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Fabric Data Warehouse at Ignite: Built for AI-era analytics",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-Data-Warehouse-at-Ignite-Built-for-AI-era-analytics/ba-p/5414274",
+   "date": "2026-11-20"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Run proactive operations with Real-Time Intelligence in Microsoft Fabric",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Run-proactive-operations-with-Real-Time-Intelligence-in/ba-p/5414256",
+   "date": "2026-11-19"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Fabric November 2026 Feature Summary",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-November-2026-Feature-Summary/ba-p/5414311",
+   "date": "2026-11-18"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Bringing trusted Fabric IQ context to wherever people and agents work",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Bringing-trusted-Fabric-IQ-context-to-wherever-people-and-agents/ba-p/5423049",
+   "date": "2026-11-18"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Build and operate intelligent apps with Microsoft Fabric: New capabilities at Ignite 2026",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Build-and-operate-intelligent-apps-with-Microsoft-Fabric-New/ba-p/5423020",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Microsoft Fabric is Fueling Frontier Transformation",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Microsoft-Fabric-is-Fueling-Frontier-Transformation/ba-p/5422989",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Build governed data apps with Microsoft Fabric Apps (Generally Available)",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Build-governed-data-apps-with-Microsoft-Fabric-Apps-Generally/ba-p/5423011",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "OneLake: The unified foundation for data, context, governance, and AI",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/OneLake-The-unified-foundation-for-data-context-governance-and/ba-p/5423035",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Fabric Influencers Spotlight: October 2026",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-Influencers-Spotlight-October-2026/ba-p/5420043",
+   "date": "2026-11-15"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Use OneLake as native storage for Azure Databricks",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Use-OneLake-as-native-storage-for-Azure-Databricks/ba-p/5377939",
+   "date": "2026-11-13"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "The next chapter for CI/CD in Fabric Warehouse (Preview)",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/The-next-chapter-for-CI-CD-in-Fabric-Warehouse-Preview/ba-p/5401222",
+   "date": "2026-11-11"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Unifying SQL Pools: Upcoming changes to UI and APIs",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Unifying-SQL-Pools-Upcoming-changes-to-UI-and-APIs/ba-p/5397390",
+   "date": "2026-11-09"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "A Leader in Data Integration—six years running",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/A-Leader-in-Data-Integration-six-years-running/ba-p/5400776",
+   "date": "2026-11-09"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Securing and governing your medallion layers in Fabric Data Warehouse",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Securing-and-governing-your-medallion-layers-in-Fabric-Data/ba-p/5377539",
+   "date": "2026-11-09"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Join us at FABCON + SQLCON 2027 in Atlanta and save",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Join-us-at-FABCON-SQLCON-2027-in-Atlanta-and-save/ba-p/5400304",
+   "date": "2026-11-06"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Build more connected workflows with Fabric Actions and Business Actions in Fabric Pipelines (Preview)",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Build-more-connected-workflows-with-Fabric-Actions-and-Business/ba-p/5377911",
+   "date": "2026-11-05"
+  },
+  {
+   "feed": "Fabric Updates Blog",
+   "title": "Regular expression functions in Microsoft Fabric Data Warehouse (Preview)",
+   "link": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Regular-expression-functions-in-Microsoft-Fabric-Data-Warehouse/ba-p/5382375",
+   "date": "2026-11-05"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "Update SQL Analytics Endpoint doc for upgrade to V2 (#17338)",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/45a1d367a113bbcee940c128979b5936cf35fb19",
+   "date": "2026-11-19"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "Document Business Events GA and add Events in Fabric navigation (#17393)",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/0a98b1086a15d6a551dfc2ce896cd5335694c01b",
+   "date": "2026-11-18"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "Merge branch 'main' into surge-protection-workspace-ga",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/803000118906b27451552559c2afb2857575b96d",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "Release ignite26 release (#17404)",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/cbcc6944c7e091fa728fc0db61b751b2b229a056",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "Address surge protection review feedback and GA month",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/ffaab124c85acc388277d31a381d04033ecb24fc",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "Complete workspace surge protection GA cleanup",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/44d467e973d3414f67f37fffa29b4b287567206b",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "Remove preview labeling from workspace-level surge protection (GA)",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/b6ffcb1c6cb244c354918546775636f1d4ca18cc",
+   "date": "2026-11-17"
+  },
+  {
+   "feed": "Fabric docs: What's new page commits",
+   "title": "20261104 minor edits (#17230)",
+   "link": "https://github.com/MicrosoftDocs/fabric-docs/commit/a90fa64dad72eb96917430636d3de427b54d54db",
+   "date": "2026-11-06"
+  }
+ ],
+ "changed": [
+  {
+   "url": "https://docs.databricks.com/aws/en/ldp/expectations",
+   "why": "page updated 2026-11-13, content verified 2026-11-10",
+   "where": [
+    "src/data/topics/batch.json#batch#mlv"
+   ]
+  },
+  {
+   "url": "https://docs.databricks.com/aws/en/structured-streaming/triggers",
+   "why": "page updated 2026-11-10, content verified 2026-10-19",
+   "where": [
+    "src/data/topics/streaming.json#streaming#spark",
+    "src/data/quiz/streaming.json#str-11"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/",
+   "why": "page updated 2026-11-05, content verified 2026-11-02",
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-700",
+   "why": "page updated 2026-11-05, content verified 2026-10-31",
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/cicd/deployment-pipelines/intro-to-deployment-pipelines",
+   "why": "page updated 2026-11-19, content verified 2026-09-29",
+   "where": [
+    "src/data/topics/workspace.json#workspace#deploy-pipelines",
+    "src/data/glossary-parts/workspace.json#deployment-pipeline"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/cicd/git-integration/intro-to-git-integration",
+   "why": "page updated 2026-11-19, content verified 2026-10-17",
+   "where": [
+    "src/data/topics/workspace.json#workspace#git",
+    "src/data/glossary-parts/workspace.json#git-integration",
+    "src/data/cards/workspace.json#ws-c12"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/cicd/variable-library/variable-library-overview",
+   "why": "page updated 2026-11-18, content verified 2026-09-29",
+   "where": [
+    "src/data/topics/workspace.json#workspace#variable-library",
+    "src/data/quiz/workspace.json#ws-16",
+    "src/data/glossary-parts/workspace.json#variable-library",
+    "src/data/cards/workspace.json#ws-c18"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint",
+   "why": "page updated 2026-11-19, content verified 2026-10-07",
+   "where": [
+    "src/data/topics/batch.json#batch#store",
+    "src/data/quiz/batch.json#bat-11",
+    "src/data/quiz/batch.json#bat-13",
+    "src/data/glossary-parts/batch.json#sql-analytics-endpoint",
+    "src/data/cards/batch.json#bat-c12"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/create-materialized-lake-view",
+   "why": "page updated 2026-11-19, content verified 2026-11-10",
+   "where": [
+    "src/data/topics/batch.json#batch#mlv",
+    "src/data/quiz/batch.json"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/refresh-materialized-lake-view",
+   "why": "page updated 2026-11-19, content verified 2026-11-10",
+   "where": [
+    "src/data/topics/batch.json#batch#mlv",
+    "src/data/quiz/batch.json#bat-39",
+    "src/data/cards/batch.json#bat-c24"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/materialized-lake-views/schedule-lineage-run",
+   "why": "page updated 2026-11-19, content verified 2026-11-10",
+   "where": [
+    "src/data/topics/batch.json#batch#mlv"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/notebook-utilities",
+   "why": "page updated 2026-11-19, content verified 2026-09-18",
+   "where": [
+    "src/data/glossary-parts/workspace.json#notebookutils"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflow-gen2-data-destinations-and-managed-settings",
+   "why": "page updated 2026-11-18, content verified 2026-11-10",
+   "where": [
+    "src/data/quiz/monitor.json#mon-36"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-factory/what-is-copy-job",
+   "why": "page updated 2026-11-09, content verified 2026-09-17",
+   "where": [
+    "src/data/topics/batch.json#batch#full-incr",
+    "src/data/topics/batch.json#batch#copy-job",
+    "src/data/glossary-parts/batch.json#copy-job",
+    "src/data/cards/batch.json#bat-c05"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/query-insights",
+   "why": "page updated 2026-11-18, content verified 2026-08-28",
+   "where": [
+    "src/data/topics/monitor.json#monitor#mon-tools",
+    "src/data/topics/monitor.json#monitor#mon-diagnose",
+    "src/data/quiz/monitor.json#mon-18",
+    "src/data/quiz/monitor.json",
+    "src/data/glossary-parts/monitor.json#query-insights"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app",
+   "why": "page updated 2026-11-20, content verified 2026-11-03",
+   "where": [
+    "src/data/topics/monitor.json#monitor#mon-tools",
+    "src/data/topics/monitor.json#monitor#mon-capacity",
+    "src/data/quiz/monitor.json#mon-03",
+    "src/data/glossary-parts/monitor.json#capacity-metrics-app",
+    "src/data/cards/monitor.json#mon-c03"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/enterprise/throttling",
+   "why": "page updated 2026-11-20, content verified 2026-08-18",
+   "where": [
+    "src/data/topics/monitor.json#monitor#mon-capacity",
+    "src/data/quiz/monitor.json#mon-04",
+    "src/data/glossary-parts/monitor.json#throttling"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/share-items",
+   "why": "page updated 2026-11-17, content verified 2026-02-17",
+   "where": [
+    "src/data/topics/security.json#security#item-perms",
+    "src/data/quiz/security.json#sec-02",
+    "src/data/glossary-parts/security.json#item-permission"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/whats-new",
+   "why": "page updated 2026-11-19, content verified 2026-10-27",
+   "where": [
+    "src/data/resources.json",
+    "src/data/topics/batch.json#batch#sql-kql",
+    "src/data/topics/batch.json#batch#mlv",
+    "src/data/topics/monitor.json#monitor#mon-opt-map",
+    "src/data/topics/monitor.json#monitor#mon-delta",
+    "src/data/topics/monitor.json#monitor#mon-spark",
+    "src/data/topics/security.json#security#onelake-sec"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/fundamentals/workspace-monitoring-overview",
+   "why": "page updated 2026-11-19, content verified 2026-10-30",
+   "where": [
+    "src/data/topics/monitor.json#monitor#mon-tools",
+    "src/data/topics/monitor.json#monitor#mon-ingest-transform",
+    "src/data/topics/monitor.json#monitor#mon-alerts",
+    "src/data/quiz/monitor.json#mon-02",
+    "src/data/quiz/monitor.json#mon-08",
+    "src/data/quiz/monitor.json#mon-32",
+    "src/data/quiz/monitor.json",
+    "src/data/glossary-parts/monitor.json#workspace-monitoring",
+    "src/data/cards/monitor.json#mon-c02"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts",
+   "why": "page updated 2026-11-08, content verified 2026-09-29",
+   "where": [
+    "src/data/topics/batch.json#batch#shortcuts",
+    "src/data/topics/batch.json#batch#pipelines",
+    "src/data/topics/workspace.json#workspace#domain-onelake-airflow",
+    "src/data/quiz/batch.json#bat-17",
+    "src/data/quiz/batch.json#bat-18",
+    "src/data/quiz/batch.json#bat-26",
+    "src/data/quiz/workspace.json#ws-07",
+    "src/data/glossary-parts/batch.json#onelake-shortcut",
+    "src/data/cards/batch.json#bat-c16",
+    "src/data/cards/batch.json#bat-c17",
+    "src/data/cards/batch.json#bat-c18",
+    "src/data/cards/workspace.json#ws-c10"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/sql-analytics-endpoint-onelake-security",
+   "why": "page updated 2026-11-21, content verified 2026-09-09",
+   "where": [
+    "src/data/topics/security.json#security#model",
+    "src/data/topics/security.json#security#ddm",
+    "src/data/topics/security.json#security#onelake-sec",
+    "src/data/topics/security.json#security#sql-mode",
+    "src/data/topics/security.json#security#decide",
+    "src/data/quiz/security.json#sec-15",
+    "src/data/quiz/security.json#sec-18",
+    "src/data/quiz/security.json#sec-19",
+    "src/data/glossary-parts/security.json#user-identity-mode",
+    "src/data/glossary-parts/security.json#delegated-identity-mode",
+    "src/data/cards/security.json#sec-c16"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/overview",
+   "why": "page updated 2026-11-17, content verified 2026-11-02",
+   "where": [
+    "src/data/topics/streaming.json#streaming#rti-map",
+    "src/data/topics/streaming.json#streaming#engine",
+    "src/data/topics/streaming.json#streaming#eventstream",
+    "src/data/quiz/streaming.json#str-01",
+    "src/data/quiz/streaming.json#str-21",
+    "src/data/quiz/streaming.json",
+    "src/data/glossary-parts/streaming.json#eventstream",
+    "src/data/cards/streaming.json#str-c02"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/process-events-using-event-processor-editor",
+   "why": "page updated 2026-11-11, content verified 2026-09-02",
+   "where": [
+    "src/data/topics/streaming.json#streaming#eventstream",
+    "src/data/topics/streaming.json#streaming#derived",
+    "src/data/quiz/streaming.json#str-01",
+    "src/data/quiz/streaming.json#str-12",
+    "src/data/cards/streaming.json#str-c05"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse",
+   "why": "page updated 2026-11-08, content verified 2026-09-09",
+   "where": [
+    "src/data/topics/streaming.json#streaming#engine",
+    "src/data/quiz/monitor.json#cs-lw-05",
+    "src/data/quiz/streaming.json",
+    "src/data/glossary-parts/streaming.json#eventhouse",
+    "src/data/glossary-parts/streaming.json#kql-database"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse-smart-capacity-control",
+   "why": "page updated 2026-11-22, content verified 2026-11-10",
+   "where": [
+    "src/data/quiz/monitor.json#cs-lw-05"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-roles-new-workspaces",
+   "why": "page updated 2026-11-20, content verified 2026-04-20",
+   "where": [
+    "src/data/topics/security.json#security#ws-roles",
+    "src/data/quiz/security.json#sec-05",
+    "src/data/cards/security.json#sec-c03"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/sql/relational-databases/system-views/queryinsights-sql-pool-insights-transact-sql?view=fabric",
+   "why": "page updated 2026-11-18, content verified 2026-11-10",
+   "where": [
+    "src/data/quiz/monitor.json"
+   ]
+  },
+  {
+   "url": "https://learn.microsoft.com/en-us/sql/t-sql/statements/copy-into-transact-sql?view=fabric",
+   "why": "page updated 2026-11-18, content verified 2026-11-10",
+   "where": [
+    "src/data/quiz/monitor.json"
+   ]
+  }
+ ],
+ "broken": [],
+ "moved": [],
+ "unreachable": [
+  {
+   "url": "https://community.fabric.microsoft.com/t5/Data-Engineering/Failed-DP-700-help-suggestions-needed/m-p/4906555",
+   "status": 403,
+   "error": null,
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/Fabric-September-2026-Feature-Summary/ba-p/5325825",
+   "status": 403,
+   "error": null,
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://community.fabric.microsoft.com/t5/Fabric-Updates-Blog/bg-p/fbc_fabricupdatesblogs",
+   "status": 403,
+   "error": null,
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://www.reddit.com/r/MicrosoftFabric/",
+   "status": 403,
+   "error": null,
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://www.reddit.com/r/MicrosoftFabric/comments/1wlwn8m/passed_dp700_just_earned_the_fabric_data_engineer/",
+   "status": 403,
+   "error": null,
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://www.reddit.com/r/MicrosoftFabric/comments/1wtygi6/passed_dp700_yesterday_my_prep_journey_why_it_was/",
+   "status": 403,
+   "error": null,
+   "where": [
+    "src/data/resources.json"
+   ]
+  },
+  {
+   "url": "https://www.reddit.com/r/MicrosoftFabric/comments/1wva942/dp700_prep_looking_for_advice_from_people_who/",
+   "status": 403,
+   "error": null,
+   "where": [
+    "src/data/resources.json"
+   ]
+  }
+ ]
+}
